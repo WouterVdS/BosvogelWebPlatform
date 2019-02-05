@@ -1,0 +1,44 @@
+
+### Custom ###
+
+# secrets
+secrets.yml
+
+### Django ###
+*.log
+*.pot
+*.pyc
+__pycache__/
+db.sqlite3
+
+# Byte-compiled / optimized / DLL files
+*.py[cod]
+*$py.class
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+.hypothesis/
+.pytest_cache/
+
+# Environments
+venv/
+
+
+# Rope project settings
+.ropeproject
+
+### PyCharm ###
+
+.idea/*
