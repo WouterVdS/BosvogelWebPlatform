@@ -1,2 +1,4 @@
 django==2.1.7
+coverage==4.5
 pyyaml==3.13
+pillow==5.4.1
