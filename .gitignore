@@ -1,5 +1,7 @@
-
 ### Custom ###
+
+# development
+dev-media-root
 
 # secrets
 secrets.yml
@@ -35,10 +37,8 @@ coverage.xml
 # Environments
 venv/
 
-
 # Rope project settings
 .ropeproject
 
 ### PyCharm ###
-
 .idea/*

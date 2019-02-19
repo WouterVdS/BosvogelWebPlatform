@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 """
 
 import os
+
 import yaml
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -24,11 +25,17 @@ with open(os.path.join(BASE_DIR, 'secrets.yml'), 'r') as yamlfile:
     yamlconfig = yaml.safe_load(yamlfile)
     DEBUG = yamlconfig['debug']
     SECRET_KEY = yamlconfig['secretKey']
+    MEDIA_ROOT = yamlconfig['mediaRoot']
     ALLOWED_HOSTS = yamlconfig['allowedHosts']
+
+MEDIA_URL = '/media/'
+if DEBUG:
+    MEDIA_ROOT = os.path.join(BASE_DIR, 'dev-media-root')
 
 # Application definition
 
 INSTALLED_APPS = [
+    'apps.home',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
