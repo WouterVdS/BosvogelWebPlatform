@@ -15,8 +15,7 @@ class WerkjaarManager(models.Manager):
         september_first = date(now.year, 9, 1)
         if now >= september_first:
             return self.get(year=now.year)
-        else:
-            return self.get(year=now.year - 1)
+        return self.get(year=now.year - 1)
 
     def last_year(self, now=date.today()):
         return self.current_year(now).previous_year()
@@ -41,9 +40,8 @@ class Werkjaar(models.Model):
     def next_year(self):
         if self == Werkjaar.objects.current_year():  # todo log
             return None
-        else:
-            werkjaar, created = Werkjaar.objects.get_or_create(year=self.year + 1)  # todo log if created is true
-            return werkjaar
+        werkjaar, created = Werkjaar.objects.get_or_create(year=self.year + 1)  # todo log if created is true
+        return werkjaar
 
     def previous_year(self):
         werkjaar, created = Werkjaar.objects.get_or_create(year=self.year - 1)  # todo log if created is true
