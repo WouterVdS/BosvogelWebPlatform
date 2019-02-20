@@ -38,7 +38,7 @@ class ModelUtilsTestCase(TestCase):
         storage.save(name=file.name, content=file)
 
         # Check
-        self.assertEqual(os.listdir(self.test_dir), ['test_image.png'], 'The test image should have been created')
+        self.assertEqual(os.listdir(self.test_dir), ['test_image.png'], 'The test img should have been created')
 
     def test_overwriting_file_with_same_name(self):
         self.assertEqual(os.listdir(self.test_dir), [], 'No file should exist yet')
@@ -60,7 +60,7 @@ class ModelUtilsTestCase(TestCase):
         # Operate
         storage.save(name=first_file.name, content=first_file)
         old_image = Image.open(os.path.join(self.test_dir, TEST_IMAGE_NAME))
-        self.assertEqual(old_image.size, (500, 500), 'The red 500x500px image should be saved')
+        self.assertEqual(old_image.size, (500, 500), 'The red 500x500px img should be saved')
         storage.save(name=second_file.name, content=second_file)
 
         # Check
@@ -68,4 +68,4 @@ class ModelUtilsTestCase(TestCase):
 
         new_image = Image.open(os.path.join(self.test_dir, TEST_IMAGE_NAME))
         self.assertEqual(new_image.size, (100, 100),
-                         'The red 500x500px image should be replaced with a green 100x100px')
+                         'The red 500x500px img should be replaced with a green 100x100px')

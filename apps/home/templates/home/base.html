@@ -1,0 +1,25 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>De Bosvogels{{ title_suffix }}</title> {# TODO change to something dynamic or add to list of things to change when forking the project #}
+    <link rel="shortcut icon" href="{%  static 'home/img/favicon.png' %}"> {# TODO change to something dynamic or add to list of things to change when forking the project #}
+</head>
+<body>
+
+{# Navbar style navigation trough the website #}
+{% block navbar %}
+    <ul>
+    <li><a href="{% url 'index' %}">Home/Landing</a></li>
+    </ul>
+{% endblock navbar %}
+
+{#  Main content for the page #}
+{% block content %}{% endblock content %}
+
+{# Custom JS scripts #}
+{% block javascript %}{% endblock javascript %}
+
+</body>
+</html>

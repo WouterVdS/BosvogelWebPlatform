@@ -1,5 +1,5 @@
-from django.http import HttpResponse
+from django.shortcuts import render
 
 
 def index(request):
-    return HttpResponse("Homepage, welcome!")
+    return render(request, 'home/landing.html', {'title_suffix': ' - Home'})
