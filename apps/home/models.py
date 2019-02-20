@@ -1,9 +1,11 @@
+import logging
 from datetime import date
 
 from django.db import models
 
 from utils.model_utils import OverwriteOnSameNameStorage
 
+logger = logging.getLogger(__name__)
 
 def get_yeartheme_logo_path(instance, filename):
     filename_extension = filename.split('.')[-1]
@@ -38,11 +40,16 @@ class Werkjaar(models.Model):
         ordering = ['-year']
 
     def next_year(self):
-        if self == Werkjaar.objects.current_year():  # todo log
+        if self == Werkjaar.objects.current_year():
+            logger.warning("werkjaar.next_year() is called on the current year and thus returned null")
             return None
-        werkjaar, created = Werkjaar.objects.get_or_create(year=self.year + 1)  # todo log if created is true
+        werkjaar, created = Werkjaar.objects.get_or_create(year=self.year + 1)
+        if created:
+            logger.warning("A new werkjaar object was created due to calling werkjaar.next_year()")
         return werkjaar
 
     def previous_year(self):
-        werkjaar, created = Werkjaar.objects.get_or_create(year=self.year - 1)  # todo log if created is true
+        werkjaar, created = Werkjaar.objects.get_or_create(year=self.year - 1)
+        if created:
+            logger.warning("A new werkjaar object was created due to calling werkjaar.previous_year()")
         return werkjaar
