@@ -32,8 +32,10 @@ MEDIA_URL = '/media/'
 if DEBUG:
     MEDIA_ROOT = os.path.join(BASE_DIR, 'dev-media-root')
 
-# Application definition
+if os.getenv('BUILD_ON_TRAVIS', None):
+    SECRET_KEY = "SecretKeyForUseOnTravis"
 
+# Application definition
 INSTALLED_APPS = [
     'apps.home',
     'django.contrib.admin',
