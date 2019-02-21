@@ -29,7 +29,7 @@ class Werkjaar(models.Model):
     yearTheme = models.CharField(blank=True, max_length=255)
     yearThemeLogo = models.ImageField(blank=True,
                                       storage=OverwriteOnSameNameStorage(),
-                                      upload_to=get_yeartheme_logo_path)  # todo is not removed when Werkjaar is removed
+                                      upload_to=get_yeartheme_logo_path)
     yearThemeSong = models.URLField(blank=True)
 
     def __str__(self):
