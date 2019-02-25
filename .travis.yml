@@ -7,7 +7,7 @@ env:
     - BUILD_ON_TRAVIS=true
 addons:
   sonarcloud:
-    organization: "Wouter Van der Schraelen"
+    organization: "woutervds-github"
 install:
   - pip install -r requirements.txt
   - cp templateSecrets.yml secrets.yml
