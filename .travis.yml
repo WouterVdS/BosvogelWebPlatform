@@ -5,14 +5,13 @@ python:
 env:
   global:
     - BUILD_ON_TRAVIS=true
-addons:
-  sonarcloud:
-    organization: "woutervds-github"
 install:
   - pip install -r requirements.txt
+  - pip install python-coveralls
   - cp templateSecrets.yml secrets.yml
   - python manage.py makemigrations
 script:
   - coverage run manage.py test
   - coverage xml -i
-  - sonar-scanner
+after_success:
+  - coveralls
