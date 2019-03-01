@@ -11,7 +11,6 @@ install:
   - cp templateSecrets.yml secrets.yml
   - python manage.py makemigrations
 script:
-  - coverage run --omit="*/virtualenv*" --branch manage.py test
-  - coverage xml -i
+  - coverage run --omit="*/virtualenv*" manage.py test
 after_success:
   - coveralls
