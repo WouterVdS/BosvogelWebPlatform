@@ -5,6 +5,8 @@ python:
 env:
   global:
     - BUILD_ON_TRAVIS=true
+notifications:
+  email: false
 install:
   - pip install -r requirements.txt
   - pip install python-coveralls
