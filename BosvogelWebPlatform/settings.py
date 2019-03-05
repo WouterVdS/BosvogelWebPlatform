@@ -32,7 +32,7 @@ MEDIA_URL = '/media/'
 if DEBUG:
     MEDIA_ROOT = os.path.join(BASE_DIR, 'dev-media-root')
 
-if os.getenv('BUILD_ON_TRAVIS', None):
+if os.getenv('BUILD_ON_TRAVIS', None):  # pragma: no cover
     SECRET_KEY = "SecretKeyForUseOnTravis"
 
 # Application definition

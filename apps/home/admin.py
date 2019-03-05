@@ -5,7 +5,7 @@ from apps.home.models import Werkjaar
 
 
 @admin.register(Werkjaar)
-class WerkjaarAdmin(admin.ModelAdmin):
+class WerkjaarAdmin(admin.ModelAdmin):  # pragma: no cover
     list_display = ['__str__', 'yearTheme', 'year_theme_logo_image', 'year_theme_song_url']
 
     @staticmethod
