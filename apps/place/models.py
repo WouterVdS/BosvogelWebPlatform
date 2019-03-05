@@ -13,18 +13,20 @@ class Place(models.Model):
     longitude = models.DecimalField(blank=True, null=True, max_digits=9, decimal_places=6)
 
     def __str__(self):
-        name = ''
+        fields = []
         if self.name:
-            name += self.name + ', '
+            fields.append(self.name)
         if self.street_and_number:
-            name += self.street_and_number + ', '
+            fields.append(self.street_and_number)
         if self.zipcode:
-            name += self.zipcode + ' '
+            fields.append(self.zipcode)
         if self.city:
-            name += self.city
+            fields.append(self.city)
         if self.latitude and self.longitude:
-            name += ' lat: ' + str(self.latitude) + ', long: ' + str(self.longitude)
-        return name
+            fields.append(' lat: ' + str(self.latitude) + ', long: ' + str(self.longitude))
+        if self.country:
+            fields.append(self.country)
+        return ', '.join(fields)
 
     def link_to_maps(self):
         search_string = ''

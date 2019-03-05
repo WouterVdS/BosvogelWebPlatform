@@ -22,7 +22,7 @@ class PlaceTestCase(TestCase):
     def test_str_method(self):
         # Check
         self.assertEqual(str(Place.objects.get(name='De Rimboe')),
-                         'De Rimboe, Kremersgat 2, 2280 Grobbendonk',
+                         'De Rimboe, Kremersgat 2, 2280, Grobbendonk, Belgium',
                          'String method should be something sensible')
         self.assertEqual(str(Place.objects.get(name='Camping ground')),
                          'Camping ground,  lat: 50.442460, long: 5.040350',
