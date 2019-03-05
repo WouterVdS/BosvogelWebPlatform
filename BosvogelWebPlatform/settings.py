@@ -39,6 +39,7 @@ if os.getenv('BUILD_ON_TRAVIS', None):  # pragma: no cover
 INSTALLED_APPS = [
     'apps.home',
     'apps.place',
+    'apps.agenda',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

@@ -7,6 +7,7 @@ from utils.model_utils import OverwriteOnSameNameStorage
 
 logger = logging.getLogger(__name__)
 
+
 def get_yeartheme_logo_path(instance, filename):
     filename_extension = filename.split('.')[-1]
     return f'img/jaarthema/logo_jaarthema_{instance.year}-{instance.year-1}.{filename_extension}'
