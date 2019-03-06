@@ -5,12 +5,14 @@ python:
 env:
   global:
     - BUILD_ON_TRAVIS=true
+notifications:
+  email: false
 install:
   - pip install -r requirements.txt
   - pip install python-coveralls
   - cp templateSecrets.yml secrets.yml
   - python manage.py makemigrations
 script:
-  - coverage run --omit="*/virtualenv*" --branch manage.py test
+  - coverage run --omit="*/virtualenv*" manage.py test
 after_success:
   - coveralls
