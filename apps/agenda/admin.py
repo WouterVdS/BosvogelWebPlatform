@@ -1,4 +1,3 @@
-# todo register models
 from django.contrib import admin
 
 from apps.agenda.models import Event
