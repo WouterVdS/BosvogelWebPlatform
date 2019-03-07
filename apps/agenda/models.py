@@ -5,7 +5,7 @@ from apps.place.models import Place
 
 
 class Event(models.Model):
-    name = models.CharField(max_length=64)
+    name = models.CharField(max_length=64, null=True, blank=True)
     place = models.ForeignKey(to=Place, null=True, blank=True, on_delete=models.SET_NULL)
     startDate = models.DateField()
     endDate = models.DateField(null=True, blank=True)
