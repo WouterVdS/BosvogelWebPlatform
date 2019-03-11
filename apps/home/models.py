@@ -37,20 +37,20 @@ class Werkjaar(models.Model):
         return str(self.year) + " - " + str(self.year + 1)
 
     class Meta:
-        verbose_name_plural = "Werkjaren"
+        verbose_name_plural = 'Werkjaren'
         ordering = ['-year']
 
     def next_year(self):
         if self == Werkjaar.objects.current_year():
-            logger.warning("werkjaar.next_year() is called on the current year and thus returned null")
+            logger.warning('werkjaar.next_year() is called on the current year and thus returned null')
             return None
         werkjaar, created = Werkjaar.objects.get_or_create(year=self.year + 1)
         if created:
-            logger.warning("A new werkjaar object was created due to calling werkjaar.next_year()")
+            logger.warning('A new werkjaar object was created due to calling werkjaar.next_year()')
         return werkjaar
 
     def previous_year(self):
         werkjaar, created = Werkjaar.objects.get_or_create(year=self.year - 1)
         if created:
-            logger.warning("A new werkjaar object was created due to calling werkjaar.previous_year()")
+            logger.warning('A new werkjaar object was created due to calling werkjaar.previous_year()')
         return werkjaar

@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'apps.home',
     'apps.place',
     'apps.agenda',
+    'apps.rent',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
