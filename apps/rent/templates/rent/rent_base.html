@@ -4,6 +4,8 @@
     <h2>Verhuur links:</h2>
     <ul>
         <li><a href="{% url 'rent' %}">Algmeen</a></li>
+        {# todo restrict visibility #}
+        <li><a href="{% url 'manage_rentals' %}">Beheer</a></li>
         <li><a href="{% url 'photos' %}">Foto's</a></li>
         <li><a href="{% url 'pricing' %}">Tarieven</a></li>
         <li><a href="{% url 'contracts' %}">Contracten</a></li>

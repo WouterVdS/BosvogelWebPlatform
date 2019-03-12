@@ -5,6 +5,10 @@ def rent_home(request):
     return render(request, 'rent/rent_home.html', {'title_suffix': ' - Verhuur'})
 
 
+def manage_rentals(request):  # todo restrict access with rules
+    return render(request, 'rent/manage_rentals.html', {'title_suffix': ' - Beheer\'s'})
+
+
 def photos(request):
     return render(request, 'rent/photos.html', {'title_suffix': ' - Verhuur Foto\'s'})
 

@@ -5,6 +5,7 @@ from apps.place.models import Place
 
 NEW_REQUEST = 'NR'
 COMMUNICATING = 'CO'
+AWAITING_CONTRACT = 'AC'
 AWAITING_DEPOSIT = 'AD'
 APPROVED = 'AP'
 HAPPENING_NOW = 'HN'  # todo check on period and current date + auto set this field
@@ -15,6 +16,7 @@ DONE = 'DO'
 RESERVATION_STATUSES = (
     (NEW_REQUEST, 'Nieuwe aanvraag'),
     (COMMUNICATING, 'Communicatie gestart'),
+    (AWAITING_CONTRACT, 'Wachten op contract'),
     (AWAITING_DEPOSIT, 'Wachten op storting voorschot'),
     (APPROVED, 'Goedgekeurd'),
     (HAPPENING_NOW, 'Verhuurperiode nu bezig'),
@@ -44,6 +46,8 @@ class RentReservation(models.Model):
     status = models.CharField(max_length=3, choices=RESERVATION_STATUSES, default=NEW_REQUEST)
     depositStatus = models.CharField(max_length=1, choices=DEPOSIT_STATUSES, default=AWAITING)
     depositAmount = models.IntegerField(null=True, blank=True)
+    numberOfPeople = models.IntegerField()
+    checklist = models.TextField(null=True, blank=True)  # todo convert to json?
     finalBill = models.DecimalField(null=True, blank=True, max_digits=5, decimal_places=2)
 
     def __str__(self):
