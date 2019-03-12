@@ -29,7 +29,7 @@ with open(os.path.join(BASE_DIR, 'secrets.yml'), 'r') as yamlfile:
     ALLOWED_HOSTS = yamlconfig['allowedHosts']
 
 MEDIA_URL = '/media/'
-if DEBUG:
+if DEBUG:  # pragma: no cover
     MEDIA_ROOT = os.path.join(BASE_DIR, 'dev-media-root')
 
 if os.getenv('BUILD_ON_TRAVIS', None):  # pragma: no cover
@@ -39,6 +39,7 @@ if os.getenv('BUILD_ON_TRAVIS', None):  # pragma: no cover
 INSTALLED_APPS = [
     'apps.home',
     'apps.place',
+    'apps.agenda',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
