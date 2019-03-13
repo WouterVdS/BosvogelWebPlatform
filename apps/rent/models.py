@@ -50,6 +50,7 @@ class RentReservation(models.Model):
     numberOfPeople = models.IntegerField()
     checklist = models.TextField(null=True, blank=True)  # todo convert to json?
     finalBill = models.DecimalField(null=True, blank=True, max_digits=5, decimal_places=2)
+    comments = models.TextField(null=True, blank=True)
 
     class Meta:
         verbose_name = 'Reservatie'

@@ -1,7 +1,7 @@
 from django.shortcuts import render
 
 
-def rent_home(request):
+def index(request):
     return render(request, 'rent/rent_home.html', {'title_suffix': ' - Verhuur'})
 
 

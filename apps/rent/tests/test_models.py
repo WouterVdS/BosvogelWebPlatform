@@ -46,7 +46,7 @@ class RentReservationTestCase(TestCase):
             reservation.full_clean()
 
         # Check
-        self.assertTrue('should start with 0032' in str(context.exception),
+        self.assertTrue('beginnen met 0032' in str(context.exception),
                         'But it is: ' + str(context.exception))
 
     def test_validation_of_bankAccountNumber(self):
@@ -59,7 +59,7 @@ class RentReservationTestCase(TestCase):
             reservation.full_clean()
 
         # Check
-        self.assertTrue('should be a valid bank' in str(context.exception),
+        self.assertTrue('Rekeningnummer moet in het volgende formaat' in str(context.exception),
                         'But it is: ' + str(context.exception))
 
     def test_event_deleted_when_reservation_deleted(self):
