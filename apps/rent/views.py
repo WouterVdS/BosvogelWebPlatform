@@ -13,6 +13,10 @@ def photos(request):
     return render(request, 'rent/photos.html', {'title_suffix': ' - Verhuur Foto\'s'})
 
 
+def building_and_terrain(request):
+    return render(request, 'rent/building_and_terrain.html', {'title_suffix': ' - Gebouw & Terrein'})
+
+
 def pricing(request):
     return render(request, 'rent/pricing.html', {'title_suffix': ' - Verhuur Tarieven'})
 

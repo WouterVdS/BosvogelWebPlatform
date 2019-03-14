@@ -7,8 +7,10 @@ urlpatterns = [
     path('', views.index, name='index'),
     path('beheer/', views.manage_rentals, name='manage_rentals'),
     path('fotos/', views.photos, name='photos'),
+    path('gebouw_en_terrein/', views.building_and_terrain, name='building_and_terrain'),
     path('tarieven/', views.pricing, name='pricing'),
     path('contracten/', views.contracts, name='contracts'),
+    # todo make choice: contracts publicly available, or trough mail when reserved? Or via 'huishoudelijk regelement'?
     path('reserveren/', views.reserve, name='reserve'),
     path('reservering_bekijken/', views.check_reservation, name='check_reservation'),
 ]
