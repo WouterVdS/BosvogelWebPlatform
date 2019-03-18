@@ -55,3 +55,30 @@ class AgendaTestCase(TestCase):
         # Check
         self.assertEqual(Event.objects.count(), 0, 'The event should be deleted')
         self.assertEqual(Place.objects.count(), 1, 'The place should persist when the event is deleted')
+
+    def test_default_objects_manager_should_exist(self):
+        # Build
+        place = Place.objects.create()
+        Event.objects.create(place=place, startDate=datetime.now())
+
+        # Operate
+        events = Event.objects.all()
+
+        # Check
+        self.assertIsNotNone(events)
+
+    def test_rent_manager_only_returns_rental_types(self):
+        # Build
+        place = Place.objects.create()
+        Event.objects.create(place=place, startDate=datetime.now(), type=Events.RENTAL)
+        Event.objects.create(place=place, startDate=datetime.now(), type=Events.JINCAFE)
+        Event.objects.create(place=place, startDate=datetime.now(), type=Events.PUBLIC_ACTIVITY)
+        Event.objects.create(place=place, startDate=datetime.now(), type=Events.WORKDAY)
+        Event.objects.create(place=place, startDate=datetime.now(), type=Events.RENTAL)
+        Event.objects.create(place=place, startDate=datetime.now(), type=Events.LEADER_ACTIVITY)
+        Event.objects.create(place=place, startDate=datetime.now(), type=Events.RENTAL)
+
+        # Check
+        for event in Event.rentals.all():
+            self.assertEqual(event.type, Events.RENTAL, 'All events should of rentals should be type RENTAL')
+        self.assertEqual(Event.rentals.count(), 3, 'All rental events should be returned')
