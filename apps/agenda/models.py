@@ -4,6 +4,11 @@ from apps.home.constants import Takken, Events
 from apps.place.models import Place
 
 
+class RentManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().filter(type=Events.RENTAL)
+
+
 class Event(models.Model):
     name = models.CharField(max_length=64, null=True, blank=True)
     place = models.ForeignKey(to=Place, null=True, blank=True, on_delete=models.SET_NULL)
@@ -14,6 +19,9 @@ class Event(models.Model):
     description = models.TextField(null=True, blank=True)
     type = models.CharField(max_length=4, choices=Events.EVENT_TYPES)
     tak = models.CharField(max_length=3, null=True, blank=True, choices=Takken.TAKKEN)
+
+    objects = models.Manager()
+    rentals = RentManager()
 
     def __str__(self):
         fields = []
