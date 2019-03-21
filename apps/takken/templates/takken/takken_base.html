@@ -1,0 +1,16 @@
+{% extends 'home/base.html' %}
+
+{% block links %}
+    <h2>Takken links:</h2>
+    <ul>
+        <li><a href="{% url 'takken:tak' 'kapoenen' %}">kapoenen</a></li>
+        <li><a href="{% url 'takken:tak' 'kabouters' %}">kabouters</a></li>
+        <li><a href="{% url 'takken:tak' 'welpen' %}">welpen</a></li>
+        <li><a href="{% url 'takken:tak' 'jonggidsen' %}">jonggidsen</a></li>
+        <li><a href="{% url 'takken:tak' 'jongverkenners' %}">jongverkenners</a></li>
+        <li><a href="{% url 'takken:tak' 'gidsen' %}">gidsen</a></li>
+        <li><a href="{% url 'takken:tak' 'verkenners' %}">verkenners</a></li>
+        <li><a href="{% url 'takken:tak' 'jins' %}">jins</a></li>
+        <li><a href="{% url 'takken:afterleader' %}">wat na leiding?</a></li>
+    </ul>
+{% endblock links %}
