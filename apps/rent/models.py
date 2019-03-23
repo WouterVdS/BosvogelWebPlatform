@@ -1,9 +1,14 @@
+import logging
+
+from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django.dispatch import receiver
+from django.urls import reverse
 
 from apps.agenda.models import Event
 from apps.place.models import Place
-from apps.rent.validators import validate_international_phone_number, validate_iban_format
+
+logger = logging.getLogger(__name__)
 
 NEW_REQUEST = 'NR'
 COMMUNICATING = 'CO'
@@ -36,19 +41,37 @@ DEPOSIT_STATUSES = (
 )
 
 
-class RentReservation(models.Model):
+class Pricing(models.Model):
+    perPersonPerDay = models.DecimalField(max_digits=5, decimal_places=2)
+    dailyMinimum = models.DecimalField(max_digits=5, decimal_places=2)
+    electricitykWh = models.DecimalField(max_digits=5, decimal_places=2)
+    waterSqM = models.DecimalField(max_digits=5, decimal_places=2)
+    gasPerDay = models.DecimalField(max_digits=5, decimal_places=2)
+    deposit = models.DecimalField(max_digits=5, decimal_places=2)
+    pricesSetOn = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = 'Tarieven'
+        verbose_name_plural = 'Tarieven'
+
+    def __str__(self):
+        return 'Pricing (' + str(self.pricesSetOn) + ')'
+
+
+class Reservation(models.Model):
     groupName = models.CharField(max_length=64)
     town = models.CharField(max_length=32)
     email = models.EmailField()
-    phoneNr = models.CharField(max_length=13, validators=[validate_international_phone_number])
+    phoneNr = models.CharField(max_length=13, )
     period = models.ForeignKey(null=True, to=Event, on_delete=models.SET_NULL)
-    bankAccountNumber = models.CharField(max_length=19, validators=[validate_iban_format])
+    pricing = models.ForeignKey(null=True, to=Pricing, on_delete=models.SET_NULL)
+    bankAccountNumber = models.CharField(max_length=19)
     contract = models.FileField(null=True, blank=True)  # todo pick destination
     status = models.CharField(max_length=3, choices=RESERVATION_STATUSES, default=NEW_REQUEST)
     depositStatus = models.CharField(max_length=1, choices=DEPOSIT_STATUSES, default=AWAITING)
     depositAmount = models.IntegerField(null=True, blank=True)
     numberOfPeople = models.IntegerField()
-    checklist = models.TextField(null=True, blank=True)  # todo convert to json?
+    checklist = models.TextField(null=True, blank=True)  # todo convert to jsonb?
     finalBill = models.DecimalField(null=True, blank=True, max_digits=5, decimal_places=2)
     comments = models.TextField(null=True, blank=True)
 
@@ -57,10 +80,24 @@ class RentReservation(models.Model):
         verbose_name_plural = 'Reservaties'
 
     def __str__(self):
-        return self.groupName + ' (' + self.town + '), ' + str(self.period.startDate) + ' - ' + str(self.period.endDate)
+        if self.period:
+            return self.groupName + ' (' + self.town + '), ' + str(self.period.startDate) + ' - ' + str(
+                self.period.endDate)
+        return self.groupName + ' (' + self.town + ')'
 
 
-@receiver(models.signals.post_delete, sender=RentReservation)
+# noinspection PyUnusedLocal
+@receiver(models.signals.post_delete, sender=Reservation)
 def handle_deleted_profile(sender, instance, **kwargs):
     if instance.period:
         instance.period.delete()
+
+
+def get_prices():
+    try:
+        prices = Pricing.objects.latest('pricesSetOn')
+    except ObjectDoesNotExist:
+        prices = Pricing(perPersonPerDay=0, dailyMinimum=0, electricitykWh=0, waterSqM=0, gasPerDay=0, deposit=0)
+        logger.error('No rent prices set! Go to ' + reverse('rent:manage_rentals') + ' and set pricing for rent!')
+        # todo also mail this to verhuur responsible and grl
+    return prices
