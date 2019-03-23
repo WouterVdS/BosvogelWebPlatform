@@ -2,6 +2,8 @@ language: python
 dist: xenial
 python:
   - "3.6"
+  - "3.7"
+cache: pip
 env:
   global:
     - BUILD_ON_TRAVIS=true
