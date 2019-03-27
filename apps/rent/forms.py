@@ -5,11 +5,14 @@ from django import forms
 from apps.rent.models import Reservation, Pricing, get_prices
 
 
-class ReservationForm(forms.ModelForm):  # todo test form!
+# noinspection PyPep8Naming
+class ReservationForm(forms.ModelForm):
 
     startDate = forms.DateField(widget=forms.SelectDateWidget,
+                                required=True,
                                 label='Huren van')
     endDate = forms.DateField(widget=forms.SelectDateWidget,
+                              required=True,
                               label='Huren tot')
 
     class Meta:
@@ -38,13 +41,25 @@ class ReservationForm(forms.ModelForm):  # todo test form!
             'email': 'Gebruik een zo algemeen mogelijk email adres, vb: info@organisatie.be',
         }
 
-    def clean_period(self):  # todo dit fatsoenlijk uitwerken
-        data = self.cleaned_data['period']
+    def clean(self):
+        data = super().clean()
 
-        if data.startDate < datetime.date.today():
-            raise forms.ValidationError('Das int verleden!')
+        startDate = data['startDate']
+        endDate = data['endDate']
 
-        return data
+        if startDate < datetime.date.today():
+            raise forms.ValidationError('Gelieve een datum in de toekomst aan te duiden')
+        if startDate.month not in [6, 7, 8, 9]:  # june, july, august, and september
+            raise forms.ValidationError('Het is enkel mogelijk om tijdens de zomervakantie te huren')
+        if endDate < datetime.date.today():
+            raise forms.ValidationError('Gelieve een datum in de toekomst aan te duiden')
+        if endDate.month not in [6, 7, 8, 9]:  # june, july, august, and september
+            raise forms.ValidationError('Het is enkel mogelijk om tijdens de zomervakantie te huren')
+
+        if startDate > endDate:
+            raise forms.ValidationError('De einddatum moet na de startdatum komen')
+
+        # todo check available periods
 
 
 class PricingForm(forms.ModelForm):
@@ -70,11 +85,11 @@ class PricingForm(forms.ModelForm):
             'dailyMinimum': 'Minimale dagprijs berekend op enkel het aantal personen.',
         }
 
-    def clean(self):  # todo test
-        new_prices = super().clean()
+    def clean(self):
+        data = super().clean()
         current_prices = get_prices()
-        if current_prices.perPersonPerDay == new_prices['perPersonPerDay'] and current_prices.dailyMinimum == \
-                new_prices['dailyMinimum'] and current_prices.electricitykWh == new_prices[
-            'electricitykWh'] and current_prices.waterSqM == new_prices['waterSqM'] and current_prices.gasPerDay == \
-                new_prices['gasPerDay'] and current_prices.deposit == new_prices['deposit']:
+        if current_prices.perPersonPerDay == data.get('perPersonPerDay') and current_prices.dailyMinimum == \
+                data.get('dailyMinimum') and current_prices.electricitykWh == data.get('electricitykWh') and \
+                current_prices.waterSqM == data.get('waterSqM') and current_prices.gasPerDay == \
+                data.get('gasPerDay') and current_prices.deposit == data.get('deposit'):
             raise forms.ValidationError('Geen verschil met de vorige tarieven.')
