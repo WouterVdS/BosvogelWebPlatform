@@ -105,8 +105,9 @@ class PricingTestCase(TestCase):
         self.assertEqual(pricing.deposit, 0,
                          'With if the database is empty, get_prices() should have all prices set to zero')
 
-    def test__TODO_MAILS_USERS_get_prices_method_send_mail_when_calling_and_database_is_empty(self):
-        self.assertTrue(False, 'Todo when mails and users are developed')
+    # todo when mails and users are developed
+    # def test_get_prices_method_send_mail_when_calling_and_database_is_empty(self):
+    # self.assertTrue(False, 'Todo when mails and users are developed')
         # also check that the recipients are correct in other test
         # Build
 

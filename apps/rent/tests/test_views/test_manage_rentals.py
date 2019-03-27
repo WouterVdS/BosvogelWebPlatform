@@ -25,5 +25,6 @@ class ManageRentalsTestCase(TestCase):
         self.assertTrue('<title>De Bosvogels - Beheer</title>' in content,
                         'The correct head title should be displayed')
 
-    def test__TODO_USERS_access_restricted_to_leaders_and_rental_managers(self):
-        self.assertTrue(False, 'todo')
+    # todo when userapp is completed
+    # def test_access_restricted_to_leaders_and_rental_managers(self):
+    #    self.assertTrue(False, 'todo')

@@ -25,7 +25,9 @@ class ChangePicingTestCase(TestCase):
         self.assertTrue('<title>De Bosvogels - Verhuur</title>' in content,
                         'The correct head title should be displayed')
 
-    def test_TODO_USER_page_inaccessible_when_not_logged_in(self):
+    # todo when userapp is completed
+    """
+    def test_page_inaccessible_when_not_logged_in(self):
         # Operate
         response = self.client.get(reverse('rent:change_pricing'))
 
@@ -35,8 +37,7 @@ class ChangePicingTestCase(TestCase):
     def test_TODO_USERS_access_restricted_to_grl_and_rental_managers(self):
         self.assertTrue(False, 'todo')
 
-    # Todo
-    """
+    
      test: alles op nul met db leeg, 
      niet redirect als exact gelijk
      foutmelding als exact gelijk

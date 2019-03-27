@@ -25,5 +25,4 @@ class ReserveTestCase(TestCase):
         self.assertTrue('<title>De Bosvogels - Reserveren</title>' in content,
                         'The correct head title should be displayed')
 
-    def test_TODO_MORE_TESTS(self):
-        self.assertTrue(False)
+    # todo add more tests
