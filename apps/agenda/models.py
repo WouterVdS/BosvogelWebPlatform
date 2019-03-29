@@ -9,15 +9,15 @@ class RentManager(models.Manager):
         return super().get_queryset().filter(type=Events.RENTAL)
 
     def is_available_for_rent(self, start_date, end_date):
-        if self.get_queryset().filter(startDate__lte=start_date, endDate__gt=end_date).exists():
+        if self.get_queryset().filter(startDate__exact=start_date, endDate__exact=end_date):
+            return False
+        elif self.get_queryset().filter(startDate__lte=start_date, endDate__gt=end_date).exists():
             return False
         elif self.get_queryset().filter(startDate__gt=start_date, endDate__lt=end_date).exists():
             return False
         elif self.get_queryset().filter(startDate__gt=start_date, startDate__lt=end_date).exists():
             return False
         elif self.get_queryset().filter(endDate__gt=start_date, endDate__lte=end_date).exists():
-            return False
-        elif self.get_queryset().filter(startDate__exact=start_date, endDate__exact=end_date):
             return False
         else:
             return True
