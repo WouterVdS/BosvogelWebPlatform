@@ -1,4 +1,4 @@
-# Tak a.k.a Age category
+from datetime import time
 
 
 class Takken:
@@ -45,3 +45,6 @@ class Events:
         (WORKDAY, 'Werkdag'),
         (GROUPMEETING, 'Groepsraad')
     )
+
+    DEFAULT_RENT_START_TIME = time(13, 0, 0)
+    DEFAULT_RENT_ENDING_TIME = time(12, 0, 0)

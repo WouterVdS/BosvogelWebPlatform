@@ -2,6 +2,7 @@ import datetime
 
 from django import forms
 
+from apps.agenda.models import Event
 from apps.rent.models import Reservation, Pricing, get_prices
 
 
@@ -59,7 +60,8 @@ class ReservationForm(forms.ModelForm):
         if startDate > endDate:
             raise forms.ValidationError('De einddatum moet na de startdatum komen')
 
-        # todo check available periods
+        if not Event.rentals.is_available_for_rent(startDate, endDate):
+            raise forms.ValidationError('Deze periode is niet volledig vrij om te huren')
 
 
 class PricingForm(forms.ModelForm):

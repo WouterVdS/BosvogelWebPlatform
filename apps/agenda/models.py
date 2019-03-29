@@ -8,6 +8,20 @@ class RentManager(models.Manager):
     def get_queryset(self):
         return super().get_queryset().filter(type=Events.RENTAL)
 
+    def is_available_for_rent(self, start_date, end_date):
+        if self.get_queryset().filter(startDate__lte=start_date, endDate__gt=end_date).exists():
+            return False
+        elif self.get_queryset().filter(startDate__gt=start_date, endDate__lt=end_date).exists():
+            return False
+        elif self.get_queryset().filter(startDate__gt=start_date, startDate__lt=end_date).exists():
+            return False
+        elif self.get_queryset().filter(endDate__gt=start_date, endDate__lte=end_date).exists():
+            return False
+        elif self.get_queryset().filter(startDate__exact=start_date, endDate__exact=end_date):
+            return False
+        else:
+            return True
+
 
 class Event(models.Model):
     name = models.CharField(max_length=64, null=True, blank=True)
@@ -22,6 +36,12 @@ class Event(models.Model):
 
     objects = models.Manager()
     rentals = RentManager()
+
+    def save(self, *args, **kwargs):
+        if self.type is Events.RENTAL:
+            self.startTime = Events.DEFAULT_RENT_START_TIME
+            self.endTime = Events.DEFAULT_RENT_ENDING_TIME
+        super(Event, self).save(*args, **kwargs)
 
     def __str__(self):
         fields = []
