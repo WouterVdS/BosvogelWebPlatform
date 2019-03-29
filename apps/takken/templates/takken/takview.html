@@ -1,5 +1,13 @@
 {% extends 'takken/takken_base.html' %}
+{% load static %}
 
 {% block content %}
     <h1>Pagina van de {{ tak|lower }}!</h1>
+
+    <h2>Leeftijd ({{ age }} jaar)</h2>
+    <h2>Tekstje</h2>
+    <p>{{ description }}</p>
+    <h2>Leiding</h2>
+    <h2>Vergaderingen</h2>
+    <img src="{% static taklogo %}" alt="Takteken {{ tak }}">
 {% endblock content %}

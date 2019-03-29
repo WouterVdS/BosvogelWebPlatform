@@ -11,7 +11,7 @@ class IndexViewTestCase(TestCase):
         self.assertEqual(response.status_code, 200, 'Index should have a HTTP OK response')
 
     def test_tak_views_for_all_takken_response_code(self):
-        for (abreviation, tak) in Takken.TAKKEN:
+        for (abbreviation, tak) in Takken.TAKKEN:
             response = Client().get(reverse('takken:tak', args=[tak.lower()]))
             self.assertEqual(response.status_code, 200,
                              'Takview for ' + tak.lower() + ' should have a HTTP OK response')

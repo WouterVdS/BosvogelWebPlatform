@@ -10,19 +10,24 @@ def index(request):
 
 def takview(request, tak):
     # todo refactor this part
+
     found = False
-    for (s, t) in Takken.TAKKEN:
-        if t.lower() == tak.lower():
-            tak = s
+    takinfos = [Takken.TAKINFO_KAP, Takken.TAKINFO_WEL, Takken.TAKINFO_KAB, Takken.TAKINFO_JV, Takken.TAKINFO_JG,
+                Takken.TAKINFO_V, Takken.TAKINFO_G, Takken.TAKINFO_JIN, Takken.TAKINFO_L, Takken.TAKINFO_GRL]
+    for takinfo in takinfos:
+        if takinfo['fullName'].lower() == tak.lower():
             found = True
             break
+
     if not found:
         return redirect(reverse('takken:index'))
-    return render(request, 'takken/takview.html', {'title_suffix': ' -  ' + t,
-                                                   'tak': t})
-
+    return render(request, 'takken/takview.html', {'title_suffix': ' -  ' + takinfo['fullName'],
+                                                   'tak': takinfo['fullName'],
+                                                   'takabbreviation': takinfo['abbrev'],
+                                                   'taklogo': takinfo['takteken'],
+                                                   'age': takinfo['age'],
+                                                   'description': takinfo['description']})
 
 def afterleaderview(request):
-    print("smiljmilj")
     return render(request, 'takken/takview.html', {'title_suffix': ' -  Wat na leiding?',
                                                    'tak': 'Wat na leiding?'})
