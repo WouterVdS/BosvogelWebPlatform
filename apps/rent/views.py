@@ -1,9 +1,9 @@
-from django.conf import settings
 from django.shortcuts import render, redirect
 from rules.contrib.views import permission_required
 
+from apps.agenda.models import Event
 from apps.rent.forms import ReservationForm, PricingForm
-from apps.rent.models import get_prices
+from apps.rent.models import get_prices, Reservation
 
 
 def index(request):
@@ -11,8 +11,9 @@ def index(request):
 
 
 @permission_required('rent.access_rent_management')  # todo test access
-def manage_rentals(request):
-    return render(request, 'rent/manage_rentals.html', {'title_suffix': ' - Beheer'})
+def manage_rentals(request):  # todo test  perofrmance objects.select_related()
+    return render(request, 'rent/manage_rentals.html', {'title_suffix': ' - Beheer',
+                                                        'rentals': Reservation.objects.all()})
 
 
 def photos(request):
@@ -28,11 +29,11 @@ def pricing(request):
                                                  'price': get_prices()})
 
 
-@permission_required('rent.change_pricing')  # todo test access
+@permission_required('rent.change_pricing')
 def change_pricing(request):
     if request.method == 'POST':
         form = PricingForm(request.POST)
-        if form.is_valid():  # todo niet opslaan als er niks aangepast is, wel melding van geven
+        if form.is_valid():
             form.save()
             return redirect('rent:pricing')
         # todo mail groepsleiding and verhuurresponsible when prices changed (and who changed them)
@@ -45,29 +46,36 @@ def contracts(request):
     return render(request, 'rent/contracts.html', {'title_suffix': ' - Verhuurcontract'})
 
 
-def reserve(request):  # todo test redirection to check_reservation
+# todo verhuur
+"""
+    transacties apart bijhouden
+    op basis van de transacties (onsave) de status aanpassen
+    nakijken van bedrag betaald etc.
+    Dit volledig uischrijven en op issue zetten
+    event sourced maken van de te betalen/betalen bedragen
+    workflow uittekenen (en bij admins laten zien?)
+"""
+
+
+def reserve(request):
     if request.method == 'POST':
         form = ReservationForm(request.POST)
-        if form.is_valid():  # todo eigen checks toevoegen op oa data
+        if form.is_valid():
+            formData = form.cleaned_data
+
+            rentEvent = Event.rentals.new_rental(
+                formData['startDate'],
+                formData['endDate'],
+                'Verhuur - ' + formData['groupName'])
+
             reservation = form.save(commit=False)
             reservation.pricing = get_prices()
+            reservation.period = rentEvent
             reservation.save()
-            form.save_m2m()
-            return render(request, 'rent/rent_home.html',
-                          {'title_suffix': ' - Verhuur'})  # todo redirect to check reservation or something similar
+
+            return redirect('rent:index')  # todo redirect to check reservation or something similar
     else:
-        if settings.DEBUG:  # todo remove after finishing development
-            form = ReservationForm(initial={
-                'groupName': 'Testgroup',
-                'town': 'TestTown',
-                'email': 'test@test.text',
-                'phoneNr': '0471589589',
-                'bankAccountNumber': 'BE24 2222 2222 2222',
-                'numberOfPeople': '50',
-                'comments': 'Hey how hey! test test test test',
-            })
-        else:
-            form = ReservationForm()
+        form = ReservationForm()
     return render(request, 'rent/reserve.html', {'title_suffix': ' - Reserveren', 'form': form})
 
 

@@ -170,7 +170,7 @@ class ReservationTestCase(TestCase):
         # Check
         self.minimal_valid_reservation.full_clean()
 
-    def test_event_deleted_when_reservation_deleted(self):
+    def test_event_deleted_when_reservation_deleted(self):  # Todo nakijken, werk niet vanuit de admin?!?!
         # Operate
         Reservation.objects.first().delete()
 

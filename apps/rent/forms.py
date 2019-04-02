@@ -45,8 +45,11 @@ class ReservationForm(forms.ModelForm):
     def clean(self):
         data = super().clean()
 
-        startDate = data['startDate']
-        endDate = data['endDate']
+        startDate = data.get('startDate')
+        endDate = data.get('endDate')
+
+        if startDate is None or endDate is None:  # todo test in forms!
+            raise forms.ValidationError('Gelieve een start- en einddatum aan te duiden')
 
         if startDate < datetime.date.today():
             raise forms.ValidationError('Gelieve een datum in de toekomst aan te duiden')

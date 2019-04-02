@@ -15,6 +15,6 @@ install:
   - cp templateSecrets.yml secrets.yml
   - python manage.py makemigrations
 script:
-  - coverage run --omit="*/virtualenv*" manage.py test
+  - coverage run --omit="*/virtualenv*,BosvogelWebPlatform/wsgi.py" manage.py test
 after_success:
   - coveralls
