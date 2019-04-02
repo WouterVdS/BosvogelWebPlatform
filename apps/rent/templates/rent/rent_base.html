@@ -3,13 +3,13 @@
 {% block links %}
     <h2>Verhuur links:</h2>
     <ul>
-        <li><a href="{% url 'rent' %}">Algmeen</a></li>
+        <li><a href="{% url 'rent:index' %}">Algmeen</a></li>
         {# todo restrict visibility #}
-        <li><a href="{% url 'manage_rentals' %}">Beheer</a></li>
-        <li><a href="{% url 'photos' %}">Foto's</a></li>
-        <li><a href="{% url 'pricing' %}">Tarieven</a></li>
-        <li><a href="{% url 'contracts' %}">Contracten</a></li>
-        <li><a href="{% url 'reserve' %}">Reserveren</a></li>
-        <li><a href="{% url 'check_reservation' %}">Bekijk reservatie</a></li>
+        <li><a href="{% url 'rent:manage_rentals' %}">Beheer</a></li>
+        <li><a href="{% url 'rent:photos' %}">Foto's</a></li>
+        <li><a href="{% url 'rent:pricing' %}">Tarieven</a></li>
+        <li><a href="{% url 'rent:contracts' %}">Contracten</a></li>
+        <li><a href="{% url 'rent:reserve' %}">Reserveren</a></li>
+        <li><a href="{% url 'rent:check_reservation' %}">Bekijk reservatie</a></li>
     </ul>
 {% endblock links %}

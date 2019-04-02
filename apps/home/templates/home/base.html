@@ -11,9 +11,9 @@
 {# Navbar style navigation trough the website #}
 {% block navbar %}
     <ul>
-        <li><a href="{% url 'index' %}">Home/Landing</a></li>
-        <li><a href="{% url 'agenda' %}">Agenda</a></li>
-        <li><a href="{% url 'rent' %}">Verhuur</a></li>
+        <li><a href="{% url 'home:index' %}">Home/Landing</a></li>
+        <li><a href="{% url 'agenda:index' %}">Agenda</a></li>
+        <li><a href="{% url 'rent:index' %}">Verhuur</a></li>
     </ul>
 {% endblock navbar %}
 
