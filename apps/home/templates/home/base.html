@@ -21,6 +21,15 @@
 {# Block for links to the sub pages#}
 {% block links %}{% endblock links %}
 
+{# Messages #}
+{% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+            <li class="{{ message.tags }}"><b>{{ message }}</b></li>
+        {% endfor %}
+    </ul>
+{% endif %}
+
 {#  Main content for the page #}
 {% block content %}{% endblock content %}
 

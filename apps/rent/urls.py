@@ -13,5 +13,4 @@ urlpatterns = [
     path('contracten/', views.contracts, name='contracts'),
     # todo make choice: contracts publicly available, or trough mail when reserved? Or via 'huishoudelijk regelement'?
     path('reserveren/', views.reserve, name='reserve'),
-    path('reservering_bekijken/', views.check_reservation, name='check_reservation'),
 ]

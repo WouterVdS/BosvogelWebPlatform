@@ -115,8 +115,6 @@ class ChangePricingTestCase(TestCase):
                          12,
                          'A successful change of price should change the pricing in the database')
 
-    # todo when messages figured out
-    """
     def test_post_valid_form_redirect_show_success_message(self):
         # Build
         client = Client()
@@ -133,11 +131,9 @@ class ChangePricingTestCase(TestCase):
 
         content = str(response.content)
 
-        print(content)
         # Check
         self.assertTrue('Verhuurtarieven aangepast' in content,
-                         'A success message should be displayed on the redirected page')
-    """
+                        'A success message should be displayed on the redirected page')
 
     def test_post_valid_form_redirect_show_correct_pricing(self):
         # Build

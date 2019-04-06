@@ -143,7 +143,7 @@ class ReserveTestCase(TestCase):
                          testGroupName,
                          'The correct reservation should be saved')
 
-    def test_post_valid_form_redirect(self):
+    def test_post_valid_form_display_success_message(self):
         # Build
         client = Client()
         nextYear = datetime.now().year + 1
@@ -161,11 +161,26 @@ class ReserveTestCase(TestCase):
             'comments': 'TestComment'
         }, follow=True)
 
-        # Check
-        self.assertEqual(response.redirect_chain,
-                         [('/verhuur/', 302)],
-                         'When the form is invalid, no redirect should occur')
+        content = str(response.content)
 
+        # Check
+        self.assertTrue('Reservatie gelukt! Check je mailbox voor meer informatie.' in content,
+                        'A success message should be displayed when reservation is successful.')
+
+    # todo when email ready
+    """
+    def test_valid_form_email_send_with_correct_data(self):
+        # Build
+        # Operate
+        # Check
+        self.assertTrue(False, 'Todo, all details')
+
+    def test_valid_form_email_send_with_correct_data_access_link_should_work(self):
+        # Build
+        # Operate
+        # Check
+        self.assertTrue(False, 'Todo, test reservation check reservation link')
+"""
     def test_post_valid_form_event_saved(self):
         # Build
         client = Client()
@@ -335,4 +350,60 @@ class ReserveTestCase(TestCase):
                          f'Verhuur - {testGroupName}',
                          'The correct eventname should be set')
 
-    # todo add more tests
+    def test_reserve_with_no_pricing_set(self):
+        # Build
+        client = Client()
+        nextYear = datetime.now().year + 1
+        startDate = str(date(nextYear, 7, 1))
+        endDate = str(date(nextYear, 7, 10))
+
+        # Operate
+        Pricing.objects.all().delete()
+        response = client.post(reverse('rent:reserve'), {
+            'groupName': 'Testgroup',
+            'town': 'Testtown',
+            'email': 'test@test.com',
+            'phoneNr': '0411111111',
+            'bankAccountNumber': 'BE11 1111 1111 1111',
+            'startDate': startDate,
+            'endDate': endDate,
+            'numberOfPeople': '50',
+            'comments': 'TestComment'
+        }, follow=True)
+
+        content = str(response.content)
+
+        # Check
+        self.assertTrue('Reserveren tijdelijk niet mogelijk' in content,
+                        'When no pricing is set, users must not be able to make a reservation')
+
+    # todo when email ready
+    """
+    def test_reserve_with_no_pricing_set_should_send_email_to_admin(self):
+        # Build
+        client = Client()
+        nextYear = datetime.now().year + 1
+        startDate = str(date(nextYear, 7, 1))
+        endDate = str(date(nextYear, 7, 10))
+
+        # Operate
+        Pricing.objects.all().delete()
+        response = client.post(reverse('rent:reserve'), {
+            'groupName': 'Testgroup',
+            'town': 'Testtown',
+            'email': 'test@test.com',
+            'phoneNr': '0411111111',
+            'bankAccountNumber': 'BE11 1111 1111 1111',
+            'startDate': startDate,
+            'endDate': endDate,
+            'numberOfPeople': '50',
+            'comments': 'TestComment'
+        }, follow=True)
+
+        content = str(response.content)
+        print(content)
+
+        # Check
+        self.assertTrue('Reserveren tijdelijk niet mogelijk' in content,
+                        'When no pricing is set, users must not be able to make a reservation')
+                        """

@@ -108,12 +108,12 @@ class PricingTestCase(TestCase):
     # todo when mails and users are developed
     # def test_get_prices_method_send_mail_when_calling_and_database_is_empty(self):
     # self.assertTrue(False, 'Todo when mails and users are developed')
-        # also check that the recipients are correct in other test
-        # Build
+    # also check that the recipients are correct in other test
+    # Build
 
-        # Operate
+    # Operate
 
-        # Check
+    # Check
 
     def test_get_prices_method_not_creating_pricing_when_database_empty(self):
         # Operate

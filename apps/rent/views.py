@@ -1,9 +1,11 @@
+from django.contrib import messages
 from django.shortcuts import render, redirect
 from rules.contrib.views import permission_required
 
+from BosvogelWebPlatform import settings
 from apps.agenda.models import Event
 from apps.rent.forms import ReservationForm, PricingForm
-from apps.rent.models import get_prices, Reservation
+from apps.rent.models import get_prices, Reservation, Pricing
 
 
 def index(request):
@@ -35,6 +37,7 @@ def change_pricing(request):
         form = PricingForm(request.POST)
         if form.is_valid():
             form.save()
+            messages.success(request, 'Verhuurtarieven aangepast')
             return redirect('rent:pricing')
         # todo mail groepsleiding and verhuurresponsible when prices changed (and who changed them)
     else:
@@ -59,6 +62,9 @@ def contracts(request):
 
 def reserve(request):
     if request.method == 'POST':
+        if not Pricing.objects.all().exists():
+            messages.warning(request, 'Reserveren tijdelijk niet mogelijk.')
+            return redirect('rent:index')
         form = ReservationForm(request.POST)
         if form.is_valid():
             formData = form.cleaned_data
@@ -73,11 +79,35 @@ def reserve(request):
             reservation.period = rentEvent
             reservation.save()
 
-            return redirect('rent:index')  # todo redirect to check reservation or something similar
+            messages.success(request, 'Reservatie gelukt! Check je mailbox voor meer informatie.')
+
+            return redirect('rent:reserve')
     else:
-        form = ReservationForm()
+        if settings.DEBUG:  # todo remove after finishing development
+            if Event.rentals.all().exists():
+                end = Event.rentals.latest('endDate').endDate
+                form = ReservationForm(initial={
+                    'groupName': 'Testgroup',
+                    'town': 'TestTown',
+                    'email': 'test@test.text',
+                    'phoneNr': '0471589589',
+                    'bankAccountNumber': 'BE24 2222 2222 2222',
+                    'numberOfPeople': '50',
+                    'comments': 'Hey how hey! test test test test',
+                    'startDate': f'{end.day}-{end.month}-{end.year}',
+                    'endDate': f'{end.day + 1}-{end.month}-{end.year}'
+                })
+            else:
+                form = ReservationForm(initial={
+                    'groupName': 'Testgroup',
+                    'town': 'TestTown',
+                    'email': 'test@test.text',
+                    'phoneNr': '0471589589',
+                    'bankAccountNumber': 'BE24 2222 2222 2222',
+                    'numberOfPeople': '50',
+                    'comments': 'Hey how hey! test test test test',
+                })
+        else:
+            form = ReservationForm()
     return render(request, 'rent/reserve.html', {'title_suffix': ' - Reserveren', 'form': form})
 
-
-def check_reservation(request):
-    return render(request, 'rent/check_reservation.html', {'title_suffix': ' - Reservatie'})
