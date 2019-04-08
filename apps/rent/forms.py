@@ -48,7 +48,7 @@ class ReservationForm(forms.ModelForm):
         startDate = data.get('startDate')
         endDate = data.get('endDate')
 
-        if startDate is None or endDate is None:  # todo test in forms!
+        if startDate is None or endDate is None:
             raise forms.ValidationError('Gelieve een start- en einddatum aan te duiden')
 
         if startDate < datetime.date.today():

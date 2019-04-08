@@ -9,8 +9,6 @@ from apps.home.constants import Events
 from apps.rent.models import Reservation, Pricing, get_prices
 
 
-# TODO misschien in forms testen, maar als er nieuwe prijs is, dat de oude contracten nog aan hun prijs hangen
-
 class PricingTestCase(TestCase):
 
     @staticmethod
@@ -105,16 +103,6 @@ class PricingTestCase(TestCase):
         self.assertEqual(pricing.deposit, 0,
                          'With if the database is empty, get_prices() should have all prices set to zero')
 
-    # todo when mails and users are developed
-    # def test_get_prices_method_send_mail_when_calling_and_database_is_empty(self):
-    # self.assertTrue(False, 'Todo when mails and users are developed')
-    # also check that the recipients are correct in other test
-    # Build
-
-    # Operate
-
-    # Check
-
     def test_get_prices_method_not_creating_pricing_when_database_empty(self):
         # Operate
         get_prices()
@@ -170,7 +158,7 @@ class ReservationTestCase(TestCase):
         # Check
         self.minimal_valid_reservation.full_clean()
 
-    def test_event_deleted_when_reservation_deleted(self):  # Todo nakijken, werk niet vanuit de admin?!?!
+    def test_event_deleted_when_reservation_deleted(self):
         # Operate
         Reservation.objects.first().delete()
 
@@ -189,3 +177,19 @@ class ReservationTestCase(TestCase):
                          'When an event is somehow deleted, the corresponding reservation should persist')
         self.assertIsNone(Reservation.objects.first().period,
                           'The period should be set to null in the database')
+
+    def test_pricing_on_an_old_reservation_stays_the_same_when_a_new_pricing_gets_created(self):
+        # Operate
+        old_pricing_id = Reservation.objects.first().pricing_id
+        Pricing.objects.create(
+            perPersonPerDay=14,
+            dailyMinimum=16,
+            electricitykWh=10,
+            gasPerDay=10,
+            waterSqM=10,
+            deposit=10, )
+
+        # Check
+        self.assertEqual(Reservation.objects.first().pricing_id,
+                         old_pricing_id,
+                         'When a new pricing is set, the thus-far made reservations should persist the old prices')

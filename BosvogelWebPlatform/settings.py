@@ -27,6 +27,12 @@ with open(os.path.join(BASE_DIR, 'secrets.yml'), 'r') as yamlfile:
     SECRET_KEY = yamlconfig['secretKey']
     MEDIA_ROOT = yamlconfig['mediaRoot']
     ALLOWED_HOSTS = yamlconfig['allowedHosts']
+    EMAIL_BACKEND = yamlconfig['emailBackend']
+    EMAIL_HOST = yamlconfig['emailHost']
+    EMAIL_USE_TLS = yamlconfig['emailUseTls']
+    EMAIL_PORT = yamlconfig['emailPort']
+    EMAIL_HOST_USER = yamlconfig['emailHostUser']
+    EMAIL_HOST_PASSWORD = yamlconfig['emailHostPassword']
 
 MEDIA_URL = '/media/'
 if DEBUG:  # pragma: no cover

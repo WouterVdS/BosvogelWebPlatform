@@ -1,3 +1,4 @@
+from django.core import mail
 from django.test import TestCase
 from django.urls import reverse
 
@@ -133,7 +134,10 @@ class PricingTestCase(TestCase):
         self.assertTrue(r'\xe2\x82\xac ' + str(pricing.deposit) + ',00' + ' waarborg' in content,
                         'Pricing for deposit should be displayed correctly')
 
-    # todo when mail finished
-    """
     def test_email_send_when_view_called_and_pricing_empty(self):
-    """
+        # Operate
+        self.client.get(reverse('rent:pricing'))
+
+        # Check
+        self.assertEqual(len(mail.outbox), 1)
+        self.assertEqual(mail.outbox[0].subject, 'ERROR - Verhuur prijzen zijn nog niet gezet!')

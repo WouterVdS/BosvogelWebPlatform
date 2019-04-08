@@ -136,6 +136,30 @@ class ReservationFormTestCase(TestCase):
                          {'__all__': ['De einddatum moet na de startdatum komen']},
                          'The correct error message should be displayed')
 
+    def test_validation_startdate_none(self):
+        # Build
+        # noinspection PyTypeChecker
+        self.formData['startDate'] = None
+        form = ReservationForm(self.formData)
+
+        # Operate
+        valid = form.is_valid()
+
+        # Check
+        self.assertFalse(valid, 'Form with startDate None should not validate')
+
+    def test_validation_enddate_none(self):
+        # Build
+        # noinspection PyTypeChecker
+        self.formData['endDate'] = None
+        form = ReservationForm(self.formData)
+
+        # Operate
+        valid = form.is_valid()
+
+        # Check
+        self.assertFalse(valid, 'Form with endDate None should not validate')
+
     def test_period_valid(self):
         # Build
         nextYear = datetime.now().year + 1

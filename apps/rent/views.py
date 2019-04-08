@@ -1,5 +1,7 @@
 from django.contrib import messages
+from django.core import mail
 from django.shortcuts import render, redirect
+from django.urls import reverse
 from rules.contrib.views import permission_required
 
 from BosvogelWebPlatform import settings
@@ -27,8 +29,17 @@ def building_and_terrain(request):
 
 
 def pricing(request):
+    current_prices = get_prices()
+    if current_prices.perPersonPerDay is 0:
+        # todo when user app finished send to grl and rental responsible
+        mail.send_mail('ERROR - Verhuur prijzen zijn nog niet gezet!',
+                       'Zolang er geen verhuurpijzen ingesteld zijn is het onmogelijk om reservaties te maken.\n'
+                       + 'Surf zo snel mogelijk naar onderstaande link om de verhuurtarieven in te stellen:\n'
+                       + request.build_absolute_uri(reverse('rent:change_pricing')),
+                       from_email=settings.EMAIL_HOST_USER,
+                       recipient_list=['test@gmail.com'])
     return render(request, 'rent/pricing.html', {'title_suffix': ' - Tarieven',
-                                                 'price': get_prices()})
+                                                 'price': current_prices})
 
 
 @permission_required('rent.change_pricing')
@@ -38,8 +49,32 @@ def change_pricing(request):
         if form.is_valid():
             form.save()
             messages.success(request, 'Verhuurtarieven aangepast')
+            new_prices = Pricing.objects.order_by('-pricesSetOn')[0]
+            if Pricing.objects.count() > 1:
+                prev = Pricing.objects.order_by('-pricesSetOn')[1]
+            else:
+                prev = Pricing(
+                    perPersonPerDay=0,
+                    dailyMinimum=0,
+                    electricitykWh=0,
+                    waterSqM=0,
+                    gasPerDay=0,
+                    deposit=0)
+            mail.send_mail('Opgelet, de verhuurpijzen zijn aangepast.',
+                           f'De verhuurtarieven zijn aangepast door {request.user}. De nieuwe prijzen zijn :\n'
+                           + f'Per persoon per dag: \t€ {prev.perPersonPerDay} --> € {new_prices.perPersonPerDay}\n'
+                           + f'Dagelijks minimum \t\t€ {prev.dailyMinimum} --> € {new_prices.dailyMinimum}\n'
+                           + f'Electriciteit per kWh: \t€ {prev.electricitykWh} --> € {new_prices.electricitykWh}\n'
+                           + f'Water per m³: \t\t\t€ {prev.waterSqM} --> € {new_prices.waterSqM}\n'
+                           + f'Gas per dag: \t\t\t€ {prev.gasPerDay} --> € {new_prices.gasPerDay}\n'
+                           + f'Waarborg: \t\t\t\t€ {prev.deposit} --> € {new_prices.deposit}\n'
+                           + 'Surf naar '
+                           + request.build_absolute_uri(reverse('rent:change_pricing'))
+                           + ' om ze aan te passen als dit een fout was.',
+                           from_email=settings.EMAIL_HOST_USER,
+                           recipient_list=[
+                               'test@gmail.com'])  # todo when user app finished send to grl and rental responsible
             return redirect('rent:pricing')
-        # todo mail groepsleiding and verhuurresponsible when prices changed (and who changed them)
     else:
         form = PricingForm(instance=get_prices())
     return render(request, 'rent/change_pricing.html', {'title_suffix': ' - Verhuur', 'form': form})

@@ -1,3 +1,4 @@
+from django.core import mail
 from django.test import TestCase, Client
 from django.urls import reverse
 
@@ -38,9 +39,7 @@ class ChangePricingTestCase(TestCase):
 
     def test_TODO_USERS_access_restricted_to_grl_and_rental_managers(self):
         self.assertTrue(False, 'todo')
-        
-    def test_post_email_send_when_values_changed(self):
-        self.assertTrue(False)
+
     """
 
     def test_get_all_null_values_in_form_when_database_empty(self):
@@ -239,3 +238,74 @@ class ChangePricingTestCase(TestCase):
                          'When no prices are changed, no redirect should occur')
         self.assertTrue('Geen verschil met de vorige tarieven' in content,
                         'When no prices are changed, the correct error message should be displayed')
+
+    def test_email_send_when_prices_changed(self):
+        # Build
+        client = Client()
+        Pricing.objects.create(
+            perPersonPerDay=1,
+            dailyMinimum=2,
+            electricitykWh=3,
+            waterSqM=4,
+            gasPerDay=5,
+            deposit=6
+        )
+        # Operate
+        client.post(reverse('rent:change_pricing'), {
+            'perPersonPerDay': '12',
+            'dailyMinimum': '12',
+            'electricitykWh': '12',
+            'waterSqM': '12',
+            'gasPerDay': '12',
+            'deposit': '12',
+        })
+
+        # Check
+        self.assertEqual(len(mail.outbox), 1)
+        self.assertEqual(mail.outbox[0].subject,
+                         'Opgelet, de verhuurpijzen zijn aangepast.',
+                         'An email should be send when the rent prices are changed.')
+
+    def test_email_has_correct_data_when_prices_changed(self):
+        # Build
+        client = Client()
+        Pricing.objects.create(
+            perPersonPerDay=10,
+            dailyMinimum=20,
+            electricitykWh=30,
+            waterSqM=40,
+            gasPerDay=50,
+            deposit=60
+        )
+        Pricing.objects.create(
+            perPersonPerDay=1,
+            dailyMinimum=2,
+            electricitykWh=3,
+            waterSqM=4,
+            gasPerDay=5,
+            deposit=6
+        )
+        # Operate
+        client.post(reverse('rent:change_pricing'), {
+            'perPersonPerDay': '12',
+            'dailyMinimum': '12',
+            'electricitykWh': '12',
+            'waterSqM': '12',
+            'gasPerDay': '12',
+            'deposit': '12',
+        })
+        mail_body = mail.outbox[0].body
+
+        # Check
+        self.assertTrue('€ 1.00 --> € 12.00' in mail_body,
+                        'The email should reflect the correct changes to the pricing')
+        self.assertTrue('€ 2.00 --> € 12.00' in mail_body,
+                        'The email should reflect the correct changes to the pricing')
+        self.assertTrue('€ 3.00 --> € 12.00' in mail_body,
+                        'The email should reflect the correct changes to the pricing')
+        self.assertTrue('€ 4.00 --> € 12.00' in mail_body,
+                        'The email should reflect the correct changes to the pricing')
+        self.assertTrue('€ 5.00 --> € 12.00' in mail_body,
+                        'The email should reflect the correct changes to the pricing')
+        self.assertTrue('€ 6.00 --> € 12.00' in mail_body,
+                        'The email should reflect the correct changes to the pricing')

@@ -28,7 +28,7 @@ class AgendaTestCase(TestCase):
         # Check
         self.assertEqual(string,
                          'Testevent, ' + str(Place.objects.first()) +
-                         ', 2018-03-05, 2018-03-06, 18:00:00, 12:00:00, Long description of the event, jncf, JIN',
+                         ', 2018-03-05, 2018-03-06, 18:00:00, 12:00:00, Long description of the event, Jincafé, JIN',
                          'String method should return something readable')
 
     def test_event_persistence_when_deleting_place(self):

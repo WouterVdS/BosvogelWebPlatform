@@ -65,7 +65,7 @@ class Event(models.Model):
         if self.description:
             fields.append(self.description)
         if self.type:
-            fields.append(str(self.type))
+            fields.append(str(self.get_type_display()))
         if self.tak:
             fields.append(str(self.tak))
         return ', '.join(fields)
