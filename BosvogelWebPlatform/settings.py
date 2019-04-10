@@ -22,9 +22,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
 
-# Environment Variables, these are set up so it defaults to a development environment. Don't ever run this in production
+# Environment Variables, these need to be changed in the production environment!
 env = environ.Env()
-DEBUG = env('DEBUG', default=True)
+DEBUG = env('DEBUG')
 ALLOWED_HOSTS = env('ALLOWED_HOSTS', default=['localhost', '127.0.0.1'])
 SECRET_KEY = env('SECRET_KEY', default='*1ev7j$pn*he&0tn8o^12)tbi!e(h4w4^cxu8v(5*48z1syo-!')
 MEDIA_ROOT = env('MEDIA_ROOT', default=os.path.join(BASE_DIR, 'dev-media-root'))
