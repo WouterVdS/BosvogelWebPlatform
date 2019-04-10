@@ -14,8 +14,10 @@ import os
 
 import environ
 import yaml
+from django.core.exceptions import ImproperlyConfigured
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
@@ -24,9 +26,11 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Environment Variables, these need to be changed in the production environment!
 env = environ.Env()
-DEBUG = env('DEBUG')
-ALLOWED_HOSTS = env('ALLOWED_HOSTS', default=['localhost', '127.0.0.1'])
+DEBUG = env('DEBUG', default=False)
 SECRET_KEY = env('SECRET_KEY', default='*1ev7j$pn*he&0tn8o^12)tbi!e(h4w4^cxu8v(5*48z1syo-!')
+if not DEBUG and SECRET_KEY == '*1ev7j$pn*he&0tn8o^12)tbi!e(h4w4^cxu8v(5*48z1syo-!':
+    raise ImproperlyConfigured('Add the SECRET_KEY environment variable to overwrite the default one in production!')
+ALLOWED_HOSTS = env('ALLOWED_HOSTS', default=['localhost', '127.0.0.1'])
 MEDIA_ROOT = env('MEDIA_ROOT', default=os.path.join(BASE_DIR, 'dev-media-root'))
 
 MEDIA_URL = '/media/'
