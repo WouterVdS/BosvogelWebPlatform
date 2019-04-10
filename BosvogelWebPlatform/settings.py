@@ -12,34 +12,28 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 
 import os
 
+import environ
 import yaml
+from django.core.exceptions import ImproperlyConfigured
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
 
-with open(os.path.join(BASE_DIR, 'secrets.yml'), 'r') as yamlfile:
-    yamlconfig = yaml.safe_load(yamlfile)
-    DEBUG = yamlconfig['debug']
-    SECRET_KEY = yamlconfig['secretKey']
-    MEDIA_ROOT = yamlconfig['mediaRoot']
-    ALLOWED_HOSTS = yamlconfig['allowedHosts']
-    EMAIL_BACKEND = yamlconfig['emailBackend']
-    EMAIL_HOST = yamlconfig['emailHost']
-    EMAIL_USE_TLS = yamlconfig['emailUseTls']
-    EMAIL_PORT = yamlconfig['emailPort']
-    EMAIL_HOST_USER = yamlconfig['emailHostUser']
-    EMAIL_HOST_PASSWORD = yamlconfig['emailHostPassword']
+# Environment Variables, these need to be changed in the production environment!
+env = environ.Env()
+DEBUG = env('DEBUG', default=False)
+SECRET_KEY = env('SECRET_KEY', default='*1ev7j$pn*he&0tn8o^12)tbi!e(h4w4^cxu8v(5*48z1syo-!')
+if not DEBUG and SECRET_KEY == '*1ev7j$pn*he&0tn8o^12)tbi!e(h4w4^cxu8v(5*48z1syo-!':
+    raise ImproperlyConfigured('Add the SECRET_KEY environment variable to overwrite the default one in production!')
+ALLOWED_HOSTS = env('ALLOWED_HOSTS', default=['localhost', '127.0.0.1'])
+MEDIA_ROOT = env('MEDIA_ROOT', default=os.path.join(BASE_DIR, 'dev-media-root'))
 
 MEDIA_URL = '/media/'
-if DEBUG:  # pragma: no cover
-    MEDIA_ROOT = os.path.join(BASE_DIR, 'dev-media-root')
-
-if os.getenv('BUILD_ON_TRAVIS', None):  # pragma: no cover
-    SECRET_KEY = "SecretKeyForUseOnTravis"
 
 # Application definition
 INSTALLED_APPS = [

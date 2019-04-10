@@ -6,13 +6,12 @@ python:
 cache: pip
 env:
   global:
-    - BUILD_ON_TRAVIS=true
+    - DEBUG=False
 notifications:
   email: false
 install:
   - pip install -r requirements.txt
   - pip install python-coveralls
-  - cp templateSecrets.yml secrets.yml
   - python manage.py makemigrations
 script:
   - coverage run --omit="*/virtualenv*,BosvogelWebPlatform/wsgi.py" manage.py test
