@@ -27,6 +27,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # Environment Variables, these need to be changed in the production environment!
 env = environ.Env()
 DEBUG = env('DEBUG', default=False)
+PRODUCTION_ENVIRONMENT = env('PRODUCTION_ENVIRONMENT', default=False)
 SECRET_KEY = env('SECRET_KEY', default='*1ev7j$pn*he&0tn8o^12)tbi!e(h4w4^cxu8v(5*48z1syo-!')
 
 ALLOWED_HOSTS = env('ALLOWED_HOSTS', default=['localhost', '127.0.0.1'])
@@ -41,7 +42,7 @@ EMAIL_ADDRESS_RENT = env('RENTAL_MAIL_ADDRESS', default='verhuur@bosvogels.be')
 EMAIL_ADDRESS_NOREPLY = env('RENTAL_MAIL_ADDRESS', default='noreply@bosvogels.be')
 
 # Production Checks
-if not DEBUG:  # pragma: no cover
+if PRODUCTION_ENVIRONMENT:  # pragma: no cover
     if SECRET_KEY == '*1ev7j$pn*he&0tn8o^12)tbi!e(h4w4^cxu8v(5*48z1syo-!':
         raise ImproperlyConfigured('Add the SECRET_KEY environment variable to overwrite the default in production!')
     if EMAIL_CONFIG['EMAIL_BACKEND'] == 'django.core.mail.backends.console.EmailBackend':
