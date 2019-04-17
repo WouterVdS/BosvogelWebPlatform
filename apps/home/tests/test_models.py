@@ -1,3 +1,4 @@
+import logging
 from datetime import date
 
 from django.test import TestCase
@@ -12,8 +13,12 @@ class WerkjaarTestCase(TestCase):
     last_year = 2020
 
     def setUp(self):
+        logging.disable(logging.CRITICAL)
         for x in range(self.first_year, self.last_year + 1):
             Werkjaar.objects.create(year=x)
+
+    def tearDown(self):
+        logging.disable(logging.NOTSET)
 
     def test_str_method(self):
         self.assertEqual(str(Werkjaar.objects.get(year=self.some_year)), '2010 - 2011',

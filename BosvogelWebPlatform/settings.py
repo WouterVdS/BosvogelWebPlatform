@@ -28,10 +28,29 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 env = environ.Env()
 DEBUG = env('DEBUG', default=False)
 SECRET_KEY = env('SECRET_KEY', default='*1ev7j$pn*he&0tn8o^12)tbi!e(h4w4^cxu8v(5*48z1syo-!')
-if not DEBUG and SECRET_KEY == '*1ev7j$pn*he&0tn8o^12)tbi!e(h4w4^cxu8v(5*48z1syo-!':
-    raise ImproperlyConfigured('Add the SECRET_KEY environment variable to overwrite the default one in production!')
+
 ALLOWED_HOSTS = env('ALLOWED_HOSTS', default=['localhost', '127.0.0.1'])
 MEDIA_ROOT = env('MEDIA_ROOT', default=os.path.join(BASE_DIR, 'dev-media-root'))
+
+# Email
+EMAIL_CONFIG = env.email_url(
+    'EMAIL_URL', default='consolemail://')
+vars().update(EMAIL_CONFIG)
+
+EMAIL_ADDRESS_RENT = env('RENTAL_MAIL_ADDRESS', default='verhuur@bosvogels.be')
+EMAIL_ADDRESS_NOREPLY = env('RENTAL_MAIL_ADDRESS', default='noreply@bosvogels.be')
+
+# Production Checks
+if not DEBUG:  # pragma: no cover
+    if SECRET_KEY == '*1ev7j$pn*he&0tn8o^12)tbi!e(h4w4^cxu8v(5*48z1syo-!':
+        raise ImproperlyConfigured('Add the SECRET_KEY environment variable to overwrite the default in production!')
+    if EMAIL_CONFIG['EMAIL_BACKEND'] == 'django.core.mail.backends.console.EmailBackend':
+        raise ImproperlyConfigured('Email still configured as console mail, add configuration to environment!')
+    if ALLOWED_HOSTS == ['localhost', '127.0.0.1']:
+        raise ImproperlyConfigured('Add the correct hostname to the ALLOWED_HOSTS environment variable!')
+    if MEDIA_ROOT == os.path.join(BASE_DIR, 'dev-media-root'):
+        raise ImproperlyConfigured('Set the MEDIA_ROOT environment variable to the correct value!')
+
 
 MEDIA_URL = '/media/'
 

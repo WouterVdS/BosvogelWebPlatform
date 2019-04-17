@@ -1,3 +1,5 @@
+import logging
+
 from django.core import mail
 from django.test import TestCase, Client
 from django.urls import reverse
@@ -6,6 +8,12 @@ from apps.rent.models import Pricing, get_prices
 
 
 class ChangePricingTestCase(TestCase):
+
+    def setUp(self):
+        logging.disable(logging.CRITICAL)
+
+    def tearDown(self):
+        logging.disable(logging.NOTSET)
 
     def test_status_code(self):
         # Build
@@ -28,7 +36,7 @@ class ChangePricingTestCase(TestCase):
         self.assertTrue('<title>De Bosvogels - Verhuur</title>' in content,
                         'The correct head title should be displayed')
 
-    # todo when userapp and email completed
+    # todo when userapp completed
     """
     def test_page_inaccessible_when_not_logged_in(self):
         # Operate

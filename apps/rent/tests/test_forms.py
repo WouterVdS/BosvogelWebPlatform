@@ -1,3 +1,4 @@
+import logging
 from datetime import datetime, date
 
 from django.test import TestCase
@@ -359,6 +360,7 @@ class ReservationFormTestCase(TestCase):
 class PricingFormTestCase(TestCase):
 
     def setUp(self):
+        logging.disable(logging.CRITICAL)
         self.formData = {
             'perPersonPerDay': '10',
             'dailyMinimum': '10',
@@ -367,6 +369,9 @@ class PricingFormTestCase(TestCase):
             'gasPerDay': '10',
             'deposit': '10',
         }
+
+    def tearDown(self):
+        logging.disable(logging.NOTSET)
 
     def test_valid_form(self):
         # Build

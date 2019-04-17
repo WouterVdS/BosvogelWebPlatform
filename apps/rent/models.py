@@ -59,6 +59,7 @@ class Pricing(models.Model):
 
 
 class Reservation(models.Model):
+    # todo add depositDeadline, add this in email, overviews, admin, crontab to send mails, ....
     groupName = models.CharField(max_length=64)
     town = models.CharField(max_length=32)
     email = models.EmailField()

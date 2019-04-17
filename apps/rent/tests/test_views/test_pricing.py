@@ -1,3 +1,5 @@
+import logging
+
 from django.core import mail
 from django.test import TestCase
 from django.urls import reverse
@@ -6,6 +8,12 @@ from apps.rent.models import Pricing
 
 
 class PricingTestCase(TestCase):
+
+    def setUp(self):
+        logging.disable(logging.CRITICAL)
+
+    def tearDown(self):
+        logging.disable(logging.NOTSET)
 
     def test_status_code(self):
         # Build
@@ -139,5 +147,9 @@ class PricingTestCase(TestCase):
         self.client.get(reverse('rent:pricing'))
 
         # Check
-        self.assertEqual(len(mail.outbox), 1)
-        self.assertEqual(mail.outbox[0].subject, 'ERROR - Verhuur prijzen zijn nog niet gezet!')
+        self.assertEqual(len(mail.outbox),
+                         1,
+                         'An email should be send when pricing is empty and the pricing page is called')
+        self.assertEqual(mail.outbox[0].subject,
+                         'ERROR - Verhuur prijzen zijn nog niet gezet!',
+                         'The email send when no prices are set should contain the correct message')

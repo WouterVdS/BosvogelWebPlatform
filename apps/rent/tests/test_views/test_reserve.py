@@ -1,8 +1,10 @@
 from datetime import datetime, date
 
+from django.core import mail
 from django.test import TestCase, Client
 from django.urls import reverse
 
+from BosvogelWebPlatform.settings import EMAIL_ADDRESS_RENT, EMAIL_ADDRESS_NOREPLY
 from apps.agenda.models import Event
 from apps.home.constants import Events
 from apps.rent.models import Reservation, Pricing
@@ -167,20 +169,100 @@ class ReserveTestCase(TestCase):
         self.assertTrue('Reservatie gelukt! Check je mailbox voor meer informatie.' in content,
                         'A success message should be displayed when reservation is successful.')
 
-    # todo when email ready
-    """
-    def test_valid_form_email_send_with_correct_data(self):
+    def test_valid_form_email_send_to_tenant(self):
         # Build
-        # Operate
-        # Check
-        self.assertTrue(False, 'Todo, all details')
+        client = Client()
 
-    def test_valid_form_email_send_with_correct_data_access_link_should_work(self):
-        # Build
         # Operate
+        client.post(reverse('rent:reserve'), {
+            'groupName': 'TestgroupName',
+            'town': 'Testtown',
+            'email': 'testgroup@test.com',
+            'phoneNr': '0411111111',
+            'bankAccountNumber': 'BE11 1111 1111 1111',
+            'startDate': str(date(2019, 7, 1)),
+            'endDate': str(date(2019, 7, 10)),
+            'numberOfPeople': '50',
+            'comments': 'TestComment'
+        })
+        outbox = mail.outbox
+        reservation = Reservation.objects.first()
+
         # Check
-        self.assertTrue(False, 'Todo, test reservation check reservation link')
-"""
+        self.assertEqual(len(outbox),
+                         2,
+                         'Making a reservation should result in two emails')
+        self.assertEqual(outbox[0].subject,
+                         'Scouts Bosvogels - Verhuur TestgroupName, 2019-07-01 - 2019-07-10',
+                         'The subject should be descriptive')
+        self.assertEqual(['testgroup@test.com'],
+                         outbox[0].to,
+                         'The email should be send to the email filled in by person who rented')
+        self.assertEqual(EMAIL_ADDRESS_RENT,
+                         outbox[0].from_email,
+                         'Rental emails should be send from the rental email address.')
+        # todo add rich email body
+        """
+        self.assertTrue(reservation.groupName in outbox[0].body)
+        self.assertTrue(reservation.town in outbox[0].body)
+        self.assertTrue(reservation.phoneNr in outbox[0].body)
+        self.assertTrue(reservation.period.startDate in outbox[0].body)
+        self.assertTrue(reservation.period.startTime in outbox[0].body)
+        self.assertTrue(reservation.period.endDate in outbox[0].body)
+        self.assertTrue(reservation.period.endTime in outbox[0].body)
+        self.assertTrue(reservation.bankAccountNumber in outbox[0].body)
+        self.assertTrue(reservation.depositAmount in outbox[0].body)
+        self.assertTrue(reservation.comments in outbox[0].body)
+        """
+
+    def test_valid_form_email_send_to_rental_address(self):
+        # Build
+        client = Client()
+
+        # Operate
+        client.post(reverse('rent:reserve'), {
+            'groupName': 'TestgroupName',
+            'town': 'Testtown',
+            'email': 'testgroup@test.com',
+            'phoneNr': '0411111111',
+            'bankAccountNumber': 'BE11 1111 1111 1111',
+            'startDate': str(date(2019, 7, 1)),
+            'endDate': str(date(2019, 7, 10)),
+            'numberOfPeople': '50',
+            'comments': 'TestComment'
+        })
+        outbox = mail.outbox
+        reservation = Reservation.objects.first()
+
+        # Check
+        self.assertEqual(len(outbox),
+                         2,
+                         'Making a reservation should result in two emails')
+        self.assertEqual(outbox[1].subject,  # todo date format should be 01/07/2019 (everywhere)
+                         'Nieuwe verhuuraanvraag - TestgroupName, 2019-07-01 - 2019-07-10',
+                         'The subject should be descriptive')
+        self.assertEqual([EMAIL_ADDRESS_RENT],
+                         outbox[1].to,
+                         'The email should be send to the rental email address')
+        self.assertEqual(EMAIL_ADDRESS_NOREPLY,
+                         outbox[1].from_email,
+                         'Rental emails should be send from the noreply address')
+        # todo add rich email body
+        """
+        self.assertTrue(reservation.groupName in outbox[1].body)
+        self.assertTrue(reservation.town in outbox[1].body)
+        self.assertTrue(reservation.phoneNr in outbox[1].body)
+        self.assertTrue(reservation.period.startDate in outbox[1].body)
+        self.assertTrue(reservation.period.startTime in outbox[1].body)
+        self.assertTrue(reservation.period.endDate in outbox[1].body)
+        self.assertTrue(reservation.period.endTime in outbox[1].body)
+        self.assertTrue(reservation.bankAccountNumber in outbox[1].body)
+        self.assertTrue(reservation.depositAmount in outbox[1].body)
+        self.assertTrue(reservation.comments in outbox[1].body)
+        self.assertTrue('fout' in outbox[1].body)
+        self.assertTrue(False, 'Todo, all details')
+        """
+
     def test_post_valid_form_event_saved(self):
         # Build
         client = Client()
@@ -377,9 +459,7 @@ class ReserveTestCase(TestCase):
         self.assertTrue('Reserveren tijdelijk niet mogelijk' in content,
                         'When no pricing is set, users must not be able to make a reservation')
 
-    # todo when email ready
-    """
-    def test_reserve_with_no_pricing_set_should_send_email_to_admin(self):
+    def test_reserve_with_no_pricing_set_should_send_email_to_rental_responsible_and_group_leader(self):
         # Build
         client = Client()
         nextYear = datetime.now().year + 1
@@ -388,7 +468,7 @@ class ReserveTestCase(TestCase):
 
         # Operate
         Pricing.objects.all().delete()
-        response = client.post(reverse('rent:reserve'), {
+        client.post(reverse('rent:reserve'), {
             'groupName': 'Testgroup',
             'town': 'Testtown',
             'email': 'test@test.com',
@@ -399,11 +479,19 @@ class ReserveTestCase(TestCase):
             'numberOfPeople': '50',
             'comments': 'TestComment'
         }, follow=True)
-
-        content = str(response.content)
-        print(content)
+        outbox = mail.outbox
 
         # Check
-        self.assertTrue('Reserveren tijdelijk niet mogelijk' in content,
-                        'When no pricing is set, users must not be able to make a reservation')
-                        """
+        self.assertEqual(len(outbox),
+                         1,
+                         'Making a reservation without prices set should result in an email')
+        self.assertEqual(outbox[0].subject,  # todo date format should be 01/07/2019 (everywhere)
+                         'ERROR - Verhuur prijzen zijn nog niet gezet!',
+                         'The subject should be descriptive')
+        self.assertEqual([EMAIL_ADDRESS_RENT],  # todo add grl
+                         outbox[0].to,
+                         'The email should be send to the rental email address')
+        self.assertEqual(EMAIL_ADDRESS_NOREPLY,
+                         outbox[0].from_email,
+                         'Rental emails should be send from the noreply address')
+        # todo check body when templates are used

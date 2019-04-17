@@ -5,6 +5,7 @@ from django.urls import reverse
 from rules.contrib.views import permission_required
 
 from BosvogelWebPlatform import settings
+from BosvogelWebPlatform.settings import EMAIL_ADDRESS_RENT, EMAIL_ADDRESS_NOREPLY
 from apps.agenda.models import Event
 from apps.rent.forms import ReservationForm, PricingForm
 from apps.rent.models import get_prices, Reservation, Pricing
@@ -31,13 +32,13 @@ def building_and_terrain(request):
 def pricing(request):
     current_prices = get_prices()
     if current_prices.perPersonPerDay is 0:
-        # todo when user app finished send to grl and rental responsible
-        mail.send_mail('ERROR - Verhuur prijzen zijn nog niet gezet!',
-                       'Zolang er geen verhuurpijzen ingesteld zijn is het onmogelijk om reservaties te maken.\n'
+        mail.send_mail('ERROR - Verhuur prijzen zijn nog niet gezet!',  # todo better test this mail
+                       'Iemand probeerde het lokaal te huren, \n'
+                       + 'maar zolang er geen verhuurpijzen ingesteld zijn is het onmogelijk om reservaties te maken.\n'
                        + 'Surf zo snel mogelijk naar onderstaande link om de verhuurtarieven in te stellen:\n'
                        + request.build_absolute_uri(reverse('rent:change_pricing')),
-                       from_email=settings.EMAIL_HOST_USER,
-                       recipient_list=['test@gmail.com'])
+                       from_email=EMAIL_ADDRESS_NOREPLY,
+                       recipient_list=[EMAIL_ADDRESS_RENT])  # todo add group leaders
     return render(request, 'rent/pricing.html', {'title_suffix': ' - Tarieven',
                                                  'price': current_prices})
 
@@ -71,9 +72,8 @@ def change_pricing(request):
                            + 'Surf naar '
                            + request.build_absolute_uri(reverse('rent:change_pricing'))
                            + ' om ze aan te passen als dit een fout was.',
-                           from_email=settings.EMAIL_HOST_USER,
-                           recipient_list=[
-                               'test@gmail.com'])  # todo when user app finished send to grl and rental responsible
+                           from_email=EMAIL_ADDRESS_NOREPLY,  # todo better test this mail
+                           recipient_list=[EMAIL_ADDRESS_RENT])  # todo when user app finished send to grl
             return redirect('rent:pricing')
     else:
         form = PricingForm(instance=get_prices())
@@ -99,6 +99,14 @@ def reserve(request):
     if request.method == 'POST':
         if not Pricing.objects.all().exists():
             messages.warning(request, 'Reserveren tijdelijk niet mogelijk.')
+            # todo use the same template as in the pricing view
+            mail.send_mail(f'ERROR - Verhuur prijzen zijn nog niet gezet!',
+                           'Iemand probeerde het lokaal te huren, \n'
+                           + 'maar zolang er geen verhuurpijzen ingesteld zijn is het onmogelijk om reservaties te maken.\n'
+                           + 'Surf zo snel mogelijk naar onderstaande link om de verhuurtarieven in te stellen:\n'
+                           + request.build_absolute_uri(reverse('rent:change_pricing')),
+                           EMAIL_ADDRESS_NOREPLY,
+                           [EMAIL_ADDRESS_RENT])  # todo add grl
             return redirect('rent:index')
         form = ReservationForm(request.POST)
         if form.is_valid():
@@ -115,6 +123,19 @@ def reserve(request):
             reservation.save()
 
             messages.success(request, 'Reservatie gelukt! Check je mailbox voor meer informatie.')
+            # todo richer email body through template
+            # todo add contract as attachment
+            mail.send_mail(f'Scouts Bosvogels - Verhuur {reservation.groupName}, '
+                           f'{reservation.period.startDate} - {reservation.period.endDate}',
+                           'Nieuwe reservatie',
+                           EMAIL_ADDRESS_RENT,
+                           [reservation.email])
+            # todo richer email body through template
+            mail.send_mail(f'Nieuwe verhuuraanvraag - {reservation.groupName}, '
+                           f'{reservation.period.startDate} - {reservation.period.endDate}',
+                           'Nieuwe verhuuraanvraag',
+                           EMAIL_ADDRESS_NOREPLY,
+                           [EMAIL_ADDRESS_RENT])
 
             return redirect('rent:reserve')
     else:
@@ -145,4 +166,3 @@ def reserve(request):
         else:
             form = ReservationForm()
     return render(request, 'rent/reserve.html', {'title_suffix': ' - Reserveren', 'form': form})
-

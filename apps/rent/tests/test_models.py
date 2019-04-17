@@ -1,4 +1,5 @@
 import decimal
+import logging
 import random
 from datetime import date, datetime
 
@@ -10,6 +11,12 @@ from apps.rent.models import Reservation, Pricing, get_prices
 
 
 class PricingTestCase(TestCase):
+
+    def setUp(self):
+        logging.disable(logging.CRITICAL)
+
+    def tearDown(self):
+        logging.disable(logging.NOTSET)
 
     @staticmethod
     def random_price():
