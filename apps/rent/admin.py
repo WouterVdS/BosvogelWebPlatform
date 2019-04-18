@@ -19,7 +19,7 @@ class RentReservationAdmin(admin.ModelAdmin):  # pragma: no cover
         link = f'<a href="{url}">{reservation.period}</a>'
         return mark_safe(link)
 
-    list_display = ['__str__', 'groupName', 'period_link', 'contract',
+    list_display = ['__str__', 'groupName', 'numberOfPeople', 'period_link', 'contract',
                     'pricing_link', 'status', 'depositStatus', 'depositAmount']
     list_filter = ['status']
 
