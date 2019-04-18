@@ -32,8 +32,9 @@ if not DEBUG and SECRET_KEY == '*1ev7j$pn*he&0tn8o^12)tbi!e(h4w4^cxu8v(5*48z1syo
     raise ImproperlyConfigured('Add the SECRET_KEY environment variable to overwrite the default one in production!')
 ALLOWED_HOSTS = env('ALLOWED_HOSTS', default=['localhost', '127.0.0.1'])
 MEDIA_ROOT = env('MEDIA_ROOT', default=os.path.join(BASE_DIR, 'dev-media-root'))
-
-MEDIA_URL = '/media/'
+MEDIA_URL = env('MEDIA_URL', default='/media/')
+STATIC_ROOT = env('STATIC_ROOT', default='dev-static-root')
+STATIC_URL = env('STATIC_URL', default='/static/')
 
 # Application definition
 INSTALLED_APPS = [

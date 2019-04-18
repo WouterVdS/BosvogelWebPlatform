@@ -2,6 +2,7 @@
 
 # development
 dev-media-root
+dev-static-root
 
 # secrets
 secrets.yml
@@ -36,6 +37,7 @@ coverage.xml
 
 # Environments
 venv/
+.env
 
 # Rope project settings
 .ropeproject
