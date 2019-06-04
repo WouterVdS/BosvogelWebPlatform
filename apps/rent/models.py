@@ -2,8 +2,8 @@ from django.db import models
 from django.dispatch import receiver
 
 from apps.agenda.models import Event
+from apps.home.validators import validate_international_phone_number, validate_iban_format
 from apps.place.models import Place
-from apps.rent.validators import validate_international_phone_number, validate_iban_format
 
 NEW_REQUEST = 'NR'
 COMMUNICATING = 'CO'

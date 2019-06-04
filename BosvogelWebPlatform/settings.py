@@ -39,6 +39,7 @@ STATIC_URL = env('STATIC_URL', default='/static/')
 # Application definition
 INSTALLED_APPS = [
     'apps.home',
+    'apps.user',
     'apps.place',
     'apps.agenda',
     'apps.rent',
