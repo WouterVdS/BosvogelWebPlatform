@@ -1,15 +1,9 @@
-from django.contrib.auth.models import AbstractUser
 from django.db import models
+from django.dispatch import receiver
 
-from apps.home.models import Werkjaar
+from apps.home.constants import Sex
 from apps.home.validators import validate_iban_format, validate_international_phone_number
-
-MALE = 'M'
-FEMALE = 'V'
-SEXES = (
-    (MALE, 'Man'),
-    (FEMALE, 'Vrouw'),
-)
+from apps.profile.models.totem import Totem
 
 
 class ProfileManager(models.Manager):
@@ -22,14 +16,15 @@ class Profile(models.Model):
     nickname = models.CharField(blank=True, null=True, max_length=30)
     email = models.EmailField(unique=True)
     birthday = models.DateField()
-    sex = models.CharField(max_length=2, choices=SEXES)
-    phoneNr = models.CharField(max_length=13, validators=[validate_international_phone_number])
+    sex = models.CharField(max_length=2, choices=Sex.SEXES)
+    totem = models.ForeignKey(Totem, blank=True, null=True, on_delete=models.SET_NULL)
+    phone_number = models.CharField(max_length=13, validators=[validate_international_phone_number])
     bank_account_number = models.CharField(max_length=19, validators=[validate_iban_format])
-    active = models.BooleanField()
+    active = models.BooleanField()  # todo misschien niet hier?
 
     # totem = models.TextField() todo
     # picture = models. todo
-    # link to user todo
+    # link to profile todo
 
     def __str__(self):
         fields = []
@@ -41,14 +36,10 @@ class Profile(models.Model):
             fields.append(self.last_name)
         return ' '.join(fields)
 
-
-class MembershipManager(models.Manager):
-    pass
-
-
-class Membership(models.Manager):
-    profile = models.ForeignKey(Profile, on_delete=models.CASCADE)  # todo test
-    werkjaar = models.ForeignKey(Werkjaar, on_delete=models.CASCADE)  # todo test
-
-    class Meta:
-        unique_together = ['profile', 'werkjaar']  # todo test
+# todo managment functie maken die checkt of er totems zijn waar geen profiel meer aanhangt
+# dit zou niet mogen, maar signals worden soms overgeslagen (bij bulk operaties)
+# test schrijven die bulk delete doet
+@receiver(models.signals.post_delete, sender=Profile)
+def handle_deleted_profile(sender, instance, **kwargs):
+    if instance.totem:
+        instance.totem.delete()

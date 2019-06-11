@@ -1,5 +1,12 @@
-# Tak a.k.a Age category
+class Sex:
+    MALE = 'm'
+    FEMALE = 'f'
 
+    SEXES = (
+        (MALE, 'Mannelijk'),
+        (FEMALE, 'Vrouwelijk')
+    )
+    
 
 class Takken:
     KAPOENEN = 'KAP'
