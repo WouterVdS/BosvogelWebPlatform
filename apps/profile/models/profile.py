@@ -18,8 +18,10 @@ class Profile(models.Model):
     birthday = models.DateField()
     sex = models.CharField(max_length=2, choices=Sex.SEXES)
     totem = models.ForeignKey(Totem, blank=True, null=True, on_delete=models.SET_NULL)
-    phone_number = models.CharField(max_length=13, validators=[validate_international_phone_number])
-    bank_account_number = models.CharField(max_length=19, validators=[validate_iban_format])
+    phone_number = models.CharField(max_length=13,
+                                    validators=[validate_international_phone_number])  # todo niet verplicht maken
+    bank_account_number = models.CharField(max_length=19,
+                                           validators=[validate_iban_format])  # todo niet verplicht maken
     active = models.BooleanField()  # todo misschien niet hier?
 
     # totem = models.TextField() todo
@@ -35,6 +37,7 @@ class Profile(models.Model):
         if self.last_name:
             fields.append(self.last_name)
         return ' '.join(fields)
+
 
 # todo managment functie maken die checkt of er totems zijn waar geen profiel meer aanhangt
 # dit zou niet mogen, maar signals worden soms overgeslagen (bij bulk operaties)

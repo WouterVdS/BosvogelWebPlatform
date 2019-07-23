@@ -47,7 +47,7 @@ class ProfileTestCase(TestCase):
 
     def test_email_should_be_unique(self):
         # Build
-        profile_one = self.generate_profile().save()
+        self.generate_profile().save()
         profile_two = self.generate_profile()
 
         # Check
@@ -87,12 +87,12 @@ class ProfileTestCase(TestCase):
         profile.phone_number = '0477556655'
 
         # Operate
-        with self.assertRaises(ValidationError) as context:
+        with self.assertRaises(ValidationError) as raised:
             profile.full_clean()
 
         # Check
-        self.assertTrue('beginnen met 0032' in str(context.exception),
-                        'But it is: ' + str(context.exception))
+        self.assertTrue('beginnen met 0032' in str(raised.exception),
+                        'But it is: ' + str(raised.exception))
 
     def test_validation_of_bankAccountNumber(self):
         # Build

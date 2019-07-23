@@ -59,6 +59,7 @@ class RentReservation(models.Model):
     def __str__(self):
         return self.groupName + ' (' + self.town + '), ' + str(self.period.startDate) + ' - ' + str(self.period.endDate)
 
+
 # todo managment functie maken die checkt of er periods zijn waar geen reservation meer aanhangt
 # dit zou niet mogen, maar signals worden soms overgeslagen (bij bulk operaties)
 # let op dat type van period wel rent moet zijn
