@@ -6,6 +6,7 @@ from django.dispatch import receiver
 from django.urls import reverse
 
 from apps.agenda.models import Event
+from apps.home.validators import validate_international_phone_number, validate_iban_format
 from apps.place.models import Place
 
 logger = logging.getLogger(__name__)
@@ -87,9 +88,12 @@ class Reservation(models.Model):
         return self.groupName + ' (' + self.town + ')'
 
 
-# noinspection PyUnusedLocal
-@receiver(models.signals.post_delete, sender=Reservation)
-def handle_deleted_profile(sender, instance, **kwargs):
+# todo managment functie maken die checkt of er periods zijn waar geen reservation meer aanhangt
+# dit zou niet mogen, maar signals worden soms overgeslagen (bij bulk operaties)
+# let op dat type van period wel rent moet zijn
+# test schrijven die bulk delete doet
+@receiver(models.signals.post_delete, sender=RentReservation)
+def handle_deleted_reservation(sender, instance, **kwargs):
     if instance.period:
         instance.period.delete()
 

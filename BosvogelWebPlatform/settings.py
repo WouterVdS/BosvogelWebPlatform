@@ -25,13 +25,19 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
 
 # Environment Variables, these need to be changed in the production environment!
+DEFAULT_DEBUG = False
+
 env = environ.Env()
-DEBUG = env('DEBUG', default=False)
+DEBUG = env('DEBUG', default=DEFAULT_DEBUG)
 PRODUCTION_ENVIRONMENT = env('PRODUCTION_ENVIRONMENT', default=False)
 SECRET_KEY = env('SECRET_KEY', default='*1ev7j$pn*he&0tn8o^12)tbi!e(h4w4^cxu8v(5*48z1syo-!')
-
+if not DEBUG and SECRET_KEY == '*1ev7j$pn*he&0tn8o^12)tbi!e(h4w4^cxu8v(5*48z1syo-!':  # pragma: no cover
+    raise ImproperlyConfigured('Add the SECRET_KEY environment variable to overwrite the default one in production!')
 ALLOWED_HOSTS = env('ALLOWED_HOSTS', default=['localhost', '127.0.0.1'])
 MEDIA_ROOT = env('MEDIA_ROOT', default=os.path.join(BASE_DIR, 'dev-media-root'))
+MEDIA_URL = env('MEDIA_URL', default='/media/')
+STATIC_ROOT = env('STATIC_ROOT', default='dev-static-root')
+STATIC_URL = env('STATIC_URL', default='/static/')
 
 # Email
 EMAIL_CONFIG = env.email_url(
@@ -58,6 +64,7 @@ MEDIA_URL = '/media/'
 # Application definition
 INSTALLED_APPS = [
     'apps.home',
+    'apps.profile',
     'apps.place',
     'apps.agenda',
     'apps.rent',

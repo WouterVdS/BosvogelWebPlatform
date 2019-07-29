@@ -1,4 +1,12 @@
 from datetime import time
+class Sex:
+    MALE = 'm'
+    FEMALE = 'f'
+
+    SEXES = (
+        (MALE, 'Mannelijk'),
+        (FEMALE, 'Vrouwelijk')
+    )
 
 
 class Takken:
