@@ -26,7 +26,6 @@ class ProfileTestCase(TestCase):
             totem=totem,
             phone_number='0032477777777',
             bank_account_number='BE242424242424',
-            active=True,
         )
 
     def test_str_method(self):

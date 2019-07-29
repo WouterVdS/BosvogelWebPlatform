@@ -18,15 +18,12 @@ class Profile(models.Model):
     birthday = models.DateField()
     sex = models.CharField(max_length=2, choices=Sex.SEXES)
     totem = models.ForeignKey(Totem, blank=True, null=True, on_delete=models.SET_NULL)
-    phone_number = models.CharField(max_length=13,
-                                    validators=[validate_international_phone_number])  # todo niet verplicht maken
-    bank_account_number = models.CharField(max_length=19,
-                                           validators=[validate_iban_format])  # todo niet verplicht maken
-    active = models.BooleanField()  # todo misschien niet hier?
+    phone_number = models.CharField(max_length=13, blank=True, null=True,
+                                    validators=[validate_international_phone_number])
+    bank_account_number = models.CharField(max_length=19, blank=True, null=True,
+                                           validators=[validate_iban_format])
 
-    # totem = models.TextField() todo
     # picture = models. todo
-    # link to profile todo
 
     def __str__(self):
         fields = []
@@ -39,7 +36,7 @@ class Profile(models.Model):
         return ' '.join(fields)
 
 
-# todo managment functie maken die checkt of er totems zijn waar geen profiel meer aanhangt
+# todo managment functie maken die checkt of er totems zijn waar geen profiel meer aanhangt en als task laten lopen
 # dit zou niet mogen, maar signals worden soms overgeslagen (bij bulk operaties)
 # test schrijven die bulk delete doet
 @receiver(models.signals.post_delete, sender=Profile)

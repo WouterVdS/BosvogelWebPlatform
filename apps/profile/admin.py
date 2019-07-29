@@ -8,12 +8,12 @@ from apps.profile.models.totem import Totem
 @admin.register(Profile)
 class ProfileAdmin(admin.ModelAdmin):
     list_display = ['first_name', 'nickname', 'last_name', 'email', 'birthday', 'sex', 'phone_number',
-                    'bank_account_number', 'totem', 'active']
+                    'bank_account_number', 'totem']
 
 
 @admin.register(Membership)
 class MembershipAdmin(admin.ModelAdmin):
-    list_display = ['profile', 'werkjaar', 'is_leader', 'tak', 'is_groupleader']
+    list_display = ['profile', 'werkjaar', 'is_leader', 'tak']
     list_filter = ['werkjaar', 'tak', 'is_leader']
 
 

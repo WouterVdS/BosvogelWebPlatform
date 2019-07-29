@@ -26,7 +26,6 @@ class MembershipTestCase(TestCase):
             totem=totem,
             phone_number='0032477777777',
             bank_account_number='BE242424242424',
-            active=True,
         )
 
     @staticmethod
@@ -126,7 +125,7 @@ class MembershipTestCase(TestCase):
             'UNIQUE constraint failed: profile_membership.profile_id, profile_membership.werkjaar_id'
             in str(raised.exception))
 
-    def test_defailt_is_leader_must_be_false(self):
+    def test_default_is_leader_must_be_false(self):
         # Build
         self.create_profile()
         self.create_werkjaar()
