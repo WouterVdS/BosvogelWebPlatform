@@ -64,10 +64,10 @@ class Reservation(models.Model):
     groupName = models.CharField(max_length=64)
     town = models.CharField(max_length=32)
     email = models.EmailField()
-    phoneNr = models.CharField(max_length=13, )
+    phoneNr = models.CharField(max_length=13, validators=[validate_international_phone_number])
     period = models.ForeignKey(null=True, to=Event, on_delete=models.SET_NULL)
     pricing = models.ForeignKey(null=True, to=Pricing, on_delete=models.SET_NULL)
-    bankAccountNumber = models.CharField(max_length=19)
+    bankAccountNumber = models.CharField(max_length=19, validators=[validate_iban_format])
     contract = models.FileField(null=True, blank=True)  # todo pick destination
     status = models.CharField(max_length=3, choices=RESERVATION_STATUSES, default=NEW_REQUEST)
     depositStatus = models.CharField(max_length=1, choices=DEPOSIT_STATUSES, default=AWAITING)
@@ -92,7 +92,7 @@ class Reservation(models.Model):
 # dit zou niet mogen, maar signals worden soms overgeslagen (bij bulk operaties)
 # let op dat type van period wel rent moet zijn
 # test schrijven die bulk delete doet
-@receiver(models.signals.post_delete, sender=RentReservation)
+@receiver(models.signals.post_delete, sender=Reservation)
 def handle_deleted_reservation(sender, instance, **kwargs):
     if instance.period:
         instance.period.delete()
