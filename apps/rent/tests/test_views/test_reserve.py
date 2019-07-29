@@ -172,6 +172,7 @@ class ReserveTestCase(TestCase):
     def test_valid_form_email_send_to_tenant(self):
         # Build
         client = Client()
+        nextYear = datetime.now().year + 1
 
         # Operate
         client.post(reverse('rent:reserve'), {
@@ -180,8 +181,8 @@ class ReserveTestCase(TestCase):
             'email': 'testgroup@test.com',
             'phoneNr': '0411111111',
             'bankAccountNumber': 'BE11 1111 1111 1111',
-            'startDate': str(date(2019, 7, 1)),
-            'endDate': str(date(2019, 7, 10)),
+            'startDate': str(date(nextYear, 7, 1)),
+            'endDate': str(date(nextYear, 7, 10)),
             'numberOfPeople': '50',
             'comments': 'TestComment'
         })
@@ -193,7 +194,7 @@ class ReserveTestCase(TestCase):
                          2,
                          'Making a reservation should result in two emails')
         self.assertEqual(outbox[0].subject,
-                         'Scouts Bosvogels - Verhuur TestgroupName, 2019-07-01 - 2019-07-10',
+                         f'Scouts Bosvogels - Verhuur TestgroupName, {nextYear}-07-01 - {nextYear}-07-10',
                          'The subject should be descriptive')
         self.assertEqual(['testgroup@test.com'],
                          outbox[0].to,
@@ -218,6 +219,7 @@ class ReserveTestCase(TestCase):
     def test_valid_form_email_send_to_rental_address(self):
         # Build
         client = Client()
+        nextYear = datetime.now().year + 1
 
         # Operate
         client.post(reverse('rent:reserve'), {
@@ -226,8 +228,8 @@ class ReserveTestCase(TestCase):
             'email': 'testgroup@test.com',
             'phoneNr': '0411111111',
             'bankAccountNumber': 'BE11 1111 1111 1111',
-            'startDate': str(date(2019, 7, 1)),
-            'endDate': str(date(2019, 7, 10)),
+            'startDate': str(date(nextYear, 7, 1)),
+            'endDate': str(date(nextYear, 7, 10)),
             'numberOfPeople': '50',
             'comments': 'TestComment'
         })
@@ -239,7 +241,7 @@ class ReserveTestCase(TestCase):
                          2,
                          'Making a reservation should result in two emails')
         self.assertEqual(outbox[1].subject,  # todo date format should be 01/07/2019 (everywhere)
-                         'Nieuwe verhuuraanvraag - TestgroupName, 2019-07-01 - 2019-07-10',
+                         f'Nieuwe verhuuraanvraag - TestgroupName, {nextYear}-07-01 - {nextYear}-07-10',
                          'The subject should be descriptive')
         self.assertEqual([EMAIL_ADDRESS_RENT],
                          outbox[1].to,
@@ -306,7 +308,7 @@ class ReserveTestCase(TestCase):
             gasPerDay=55,
             deposit=65
         )
-        client.post(reverse('rent:reserve'), {
+        result = client.post(reverse('rent:reserve'), {
             'groupName': testGroupName,
             'town': 'Testtown',
             'email': 'test@test.com',

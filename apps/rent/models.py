@@ -6,7 +6,7 @@ from django.dispatch import receiver
 from django.urls import reverse
 
 from apps.agenda.models import Event
-from apps.home.validators import validate_international_phone_number, validate_iban_format
+from apps.home.validators import validate_phone_number, validate_iban_format
 from apps.place.models import Place
 
 logger = logging.getLogger(__name__)
@@ -64,7 +64,7 @@ class Reservation(models.Model):
     groupName = models.CharField(max_length=64)
     town = models.CharField(max_length=32)
     email = models.EmailField()
-    phoneNr = models.CharField(max_length=13, validators=[validate_international_phone_number])
+    phoneNr = models.CharField(max_length=13, validators=[validate_phone_number])
     period = models.ForeignKey(null=True, to=Event, on_delete=models.SET_NULL)
     pricing = models.ForeignKey(null=True, to=Pricing, on_delete=models.SET_NULL)
     bankAccountNumber = models.CharField(max_length=19, validators=[validate_iban_format])
