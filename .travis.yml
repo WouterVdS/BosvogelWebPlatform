@@ -4,13 +4,12 @@ python:
   - "3.6"
 env:
   global:
-    - BUILD_ON_TRAVIS=true
+    - DEBUG=False
 notifications:
   email: false
 install:
   - pip install -r requirements.txt
   - pip install python-coveralls
-  - cp templateSecrets.yml secrets.yml
   - python manage.py makemigrations
 script:
   - coverage run --omit="*/virtualenv*" manage.py test
