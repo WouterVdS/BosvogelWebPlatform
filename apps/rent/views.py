@@ -33,8 +33,8 @@ def pricing(request):
     current_prices = get_prices()
     if current_prices.perPersonPerDay is 0:
         mail.send_mail('ERROR - Verhuur prijzen zijn nog niet gezet!',  # todo better test this mail
-                       'Iemand probeerde het lokaal te huren, \n'
-                       + 'maar zolang er geen verhuurpijzen ingesteld zijn is het onmogelijk om reservaties te maken.\n'
+                       'Iemand bekeek de huurprijzen (die nog niet zijn ingesteld), \n'
+                       + 'zolang er geen verhuurpijzen ingesteld zijn is het onmogelijk om reservaties te maken.\n'
                        + 'Surf zo snel mogelijk naar onderstaande link om de verhuurtarieven in te stellen:\n'
                        + request.build_absolute_uri(reverse('rent:change_pricing')),
                        from_email=EMAIL_ADDRESS_NOREPLY,
@@ -137,7 +137,8 @@ def reserve(request):
                            EMAIL_ADDRESS_NOREPLY,
                            [EMAIL_ADDRESS_RENT])
 
-            return redirect('rent:reserve')
+            return redirect(
+                'rent:reserve')  # todo na geslaagde reservatie niet terug uitkomen op de form, is verwarrend
     else:
         if settings.DEBUG:  # todo remove after finishing development
             if Event.rentals.all().exists():
