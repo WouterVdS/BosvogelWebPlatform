@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'apps.place',
     'apps.agenda',
     'apps.rent',
+    'apps.takken',
     'rules.apps.AutodiscoverRulesConfig',
     'django.contrib.admin',
     'django.contrib.auth',

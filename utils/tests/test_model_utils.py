@@ -38,7 +38,7 @@ class ModelUtilsTestCase(TestCase):
         storage.save(name=file.name, content=file)
 
         # Check
-        self.assertEqual(os.listdir(self.test_dir), ['test_image.png'], 'The test img should have been created')
+        self.assertEqual(os.listdir(self.test_dir), ['test_image.png'], 'The tests img should have been created')
 
     def test_overwriting_file_with_same_name(self):
         self.assertEqual(os.listdir(self.test_dir), [], 'No file should exist yet')

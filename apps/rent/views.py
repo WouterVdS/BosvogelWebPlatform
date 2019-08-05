@@ -2,7 +2,7 @@ from django.shortcuts import render
 
 
 def index(request):
-    return render(request, 'rent/rent_home.html', {'title_suffix': ' - Verhuur'})
+    return render(request, 'rent/index.html', {'title_suffix': ' - Verhuur'})
 
 
 def manage_rentals(request):  # todo restrict access with rules

@@ -23,6 +23,14 @@ class Event(models.Model):
     objects = models.Manager()
     rentals = RentManager()
 
+    class Meta:
+        ordering = ['startDate', 'startTime']
+
+    def save(self, *args, **kwargs):
+        if not self.endDate:
+            self.endDate = self.startDate
+        super(Event, self).save(*args, **kwargs)
+
     def __str__(self):
         fields = []
         if self.name:
@@ -40,7 +48,7 @@ class Event(models.Model):
         if self.description:
             fields.append(self.description)
         if self.type:
-            fields.append(str(self.type))
+            fields.append(str(self.get_type_display()))
         if self.tak:
-            fields.append(str(self.tak))
+            fields.append(str(self.get_tak_display()))
         return ', '.join(fields)
