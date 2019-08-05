@@ -23,6 +23,8 @@ class Profile(models.Model):
     bank_account_number = models.CharField(max_length=19, blank=True, null=True,
                                            validators=[validate_iban_format])
 
+    # todo add public email (...@bosvogels.be)
+
     # picture = models. todo
 
     def __str__(self):

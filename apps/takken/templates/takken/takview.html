@@ -8,6 +8,25 @@
     <h2>Tekstje</h2>
     <p>{{ description }}</p>
     <h2>Leiding</h2>
+    {# todo leiding #}
+    {# todo test wat gedisplayed wordt (vergeet takleader name niet (bvb akela)#}
+    {% for leader in leaders %}
+        <p>{{ leader }} - {{ leader.email }}</p>
+    {% endfor %}
     <h2>Vergaderingen</h2>
+    {# todo vergaderingen #}
+    {# todo test wat gedisplayed wordt, check ook weekends enzo #}
+    {# todo test op de juiste volgorde #}
+    {# todo nen empty inbox voorzien voor als er geen vergaderingen zijn #}
+    {# todo link voorzien om afgelopen vergaderingen voor dat jaar (!) op te halen #}
+    {% for vergadering in vergaderingen %}
+        <p>
+            <b>{{ vergadering.name }}</b> <br>
+            {{ vergadering.place }} <br>
+            {{ vergadering.startDate }} - {{ vergadering.endDate }} <br>
+            {{ vergadering.startTime }} - {{ vergadering.endTime }} <br>
+            {{ vergadering.description }} <br>
+        </p>
+    {% endfor %}
     <img src="{% static taklogo %}" alt="Takteken {{ tak }}">
 {% endblock content %}

@@ -1,7 +1,9 @@
 from django.shortcuts import render, redirect
 from django.urls import reverse
 
+from apps.agenda.queries import get_vergaderingen
 from apps.home.constants import Takken
+from apps.profile.queries import get_active_leaders
 
 
 def index(request):
@@ -18,15 +20,21 @@ def takview(request, tak):
         if takinfo['fullName'].lower() == tak.lower():
             found = True
             break
-
     if not found:
         return redirect(reverse('takken:index'))
+
+    leaders = get_active_leaders(takinfo['abbrev'])
+    vergaderingen = get_vergaderingen(takinfo['abbrev'])
+
     return render(request, 'takken/takview.html', {'title_suffix': ' -  ' + takinfo['fullName'],
                                                    'tak': takinfo['fullName'],
                                                    'takabbreviation': takinfo['abbrev'],
                                                    'taklogo': takinfo['takteken'],
                                                    'age': takinfo['age'],
-                                                   'description': takinfo['description']})
+                                                   'description': takinfo['description'],
+                                                   'leaders': leaders,
+                                                   'vergaderingen': vergaderingen})
+
 
 def afterleaderview(request):
     return render(request, 'takken/takview.html', {'title_suffix': ' -  Wat na leiding?',

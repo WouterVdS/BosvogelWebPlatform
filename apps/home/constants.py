@@ -8,28 +8,6 @@ class Sex:
     )
 
 
-class Takken:
-    KAPOENEN = 'KAP'
-    WELPEN = 'WEL'
-    KABOUTERS = 'KAB'
-    JONGVERKENNERS = 'JV'
-    JONGGIDSEN = 'JG'
-    VERKENNERS = 'V'
-    GIDSEN = 'G'
-    JINS = 'JIN'
-
-    TAKKEN = (
-        (KAPOENEN, 'Kapoenen'),
-        (WELPEN, 'Welpen'),
-        (KABOUTERS, 'Kabouters'),
-        (JONGVERKENNERS, 'Jongverkenners'),
-        (JONGGIDSEN, 'Jonggidsen'),
-        (VERKENNERS, 'Verkenners'),
-        (GIDSEN, 'Gidsen'),
-        (JINS, 'Jins'),
-    )
-
-
 class Events:
     PUBLIC_ACTIVITY = 'pbla'
     WEEKLY_ACTIVITY = 'vrgd'
