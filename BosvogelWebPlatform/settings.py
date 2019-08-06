@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 
 import os
 
+import django_heroku
 import environ
 from django.core.exceptions import ImproperlyConfigured
 
@@ -134,3 +135,6 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
 STATIC_URL = '/static/'
+
+# Heroku auto configuration
+django_heroku.settings(locals())
