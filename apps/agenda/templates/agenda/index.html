@@ -1,0 +1,30 @@
+{% extends 'home/base.html' %}
+
+{% block content %}
+    <h1>Agenda</h1>
+    <h2>Algemeen</h2>
+    {# todo met annotations op model in query werken voor dates! if bij strings mogen weg #}
+    {# todo de datum mooier maken, als het maar 1 dag is, geen twee keer weergeven #}
+    {% for event in events %}
+        <p>
+            <b>{% if event.name %}{{ event.name }}</b> <br>{% endif %}
+            {% if event.place %}{{ event.place }} <br>{% endif %}
+            {% if event.startDate %}{{ event.startDate }}{% endif %}{% if event.endDate %} - {{ event.endDate }} <br>{% endif %}
+            {% if event.startTime %}{{ event.startTime }}{% endif %}
+            {% if event.endTime %}- {{ event.endTime }} <br>{% endif %}
+            {% if event.description %}{{ event.description }} <br>{% endif %}
+        </p>
+    {% endfor %}
+    <h2>Vergaderingen</h2>
+    {% for vergadering in vergaderingen %}
+        <p>
+            <b>{% if vergadering.tak %}{{ vergadering.get_tak_display }} - {% endif %}
+                {% if vergadering.name %}{{ vergadering.name }}</b> <br>{% endif %}
+            {% if vergadering.place %}{{ vergadering.place }} <br> {% endif %}
+            {{ vergadering.startDate }}{% if vergadering.endDate %} - {{ vergadering.endDate }} <br> {% endif %}
+            {% if vergadering.startTime %}{{ vergadering.startTime }}{% endif %}
+            {% if vergadering.endTime %} - {{ vergadering.endTime }} <br>{% endif %}
+            {% if vergadering.description %}{{ vergadering.description }} <br>{% endif %}
+        </p>
+    {% endfor %}
+{% endblock content %}
