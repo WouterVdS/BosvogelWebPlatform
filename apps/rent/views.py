@@ -164,6 +164,6 @@ def reserve(request):
                     'numberOfPeople': '50',
                     'comments': 'Hey how hey! test test test test',
                 })
-        else:
+        else:  # pragma: no cover
             form = ReservationForm()
     return render(request, 'rent/reserve.html', {'title_suffix': ' - Reserveren', 'form': form})

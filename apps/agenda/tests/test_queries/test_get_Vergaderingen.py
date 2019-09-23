@@ -35,10 +35,6 @@ class GetVergaderingenTestCase(TestCase):
         self.assertIsNotNone(events)
         for event in events:
             new_date = datetime(event.startDate.year, event.startDate.month, event.startDate.day)
-            if event.startTime:
-                new_date = new_date.replace(hour=event.startTime.hour,
-                                            minute=event.startTime.minute,
-                                            second=event.startTime.second)
             self.assertTrue(previous_date <= new_date, 'Earlier events should be first')
             previous_date = new_date
 
