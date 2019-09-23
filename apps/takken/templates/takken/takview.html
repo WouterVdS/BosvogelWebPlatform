@@ -1,0 +1,39 @@
+{% extends 'takken/takken_base.html' %}
+{% load static %}
+
+{% block content %}
+    <h1>Pagina van de {{ tak|lower }}!</h1>
+
+    <h2>Leeftijd ({{ age }} jaar)</h2>
+    <h2>Tekstje</h2>
+    <p>{{ description }}</p>
+    <h2>Leiding</h2>
+    {% if takmail %}<a href="mailto:{{ takmail }}">Mail naar {{ takmail }}</a>{% endif %}
+    {% for membership in memberships %}
+        <p>
+            {% if membership.tak_leader_name %}{{ membership.tak_leader_name }}{% else %}
+                {{ membership.profile }}{% endif %}
+            {% if membership.profile.public_email %}<a href="mailto:{{ membership.profile.public_email }}">Mail
+                naar {{ membership.profile.public_email }}</a>{% endif %}
+        </p>
+    {% endfor %}
+    <h2>Vergaderingen</h2>
+    {# todo vergaderingen #}
+    {# todo test wat gedisplayed wordt, check ook weekends enzo #}
+    {# todo test op de juiste volgorde #}
+    {# todo nen empty inbox voorzien voor als er geen vergaderingen zijn #}
+    {# todo link voorzien om afgelopen vergaderingen voor dat jaar (!) op te halen #}
+    {% for vergadering in vergaderingen %}
+        <p>
+            <b>{{ vergadering.name }}</b> <br>
+            {{ vergadering.place }} <br>
+            {{ vergadering.startDate }} - {{ vergadering.endDate }} <br>
+            {{ vergadering.startTime }} - {{ vergadering.endTime }} <br>
+            {{ vergadering.description }} <br>
+        </p>
+    {% endfor %}
+    {% if vergaderingen.count == 0 %}
+        <p>Momenteel nog geen vergaderingen gepland!</p>
+    {% endif %}
+    <img src="{% static taklogo %}" alt="Takteken {{ tak }}"> {# todo test #}
+{% endblock content %}

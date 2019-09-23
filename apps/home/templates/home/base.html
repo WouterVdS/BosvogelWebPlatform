@@ -5,8 +5,7 @@
     <meta charset="UTF-8">
     <title>De Bosvogels{{ title_suffix }}</title>
     <link rel="shortcut icon" href="{%  static 'home/img/favicon.png' %}">
-    <link rel='stylesheet' href='https://cdn.jsdelivr.net/gh/kognise/water.css@latest/dist/light.css'>
-    {# todo remove #}
+    <link rel='stylesheet' href='https://cdn.jsdelivr.net/gh/kognise/water.css@latest/dist/light.css'>{# todo remove #}
 </head>
 <body>
 
@@ -15,8 +14,9 @@
     <ul>
         <li><a href="{% url 'home:index' %}">Home/Landing</a></li>
         <li><a href="{% url 'agenda:index' %}">Agenda</a></li>
+        <li><a href="{% url 'takken:index' %}">Takken</a></li>
         <li><a href="{% url 'rent:index' %}">Verhuur</a></li>
-        <li><a href="{% url 'admin:index' %}">Admin</a></li>
+        <li><a href="{% url 'admin:index' %}">Admin</a></li> {# todo remove #}
     </ul>
 {% endblock navbar %}
 

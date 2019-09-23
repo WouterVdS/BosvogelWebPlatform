@@ -12,7 +12,7 @@ from apps.rent.models import get_prices, Reservation, Pricing
 
 
 def index(request):
-    return render(request, 'rent/rent_home.html', {'title_suffix': ' - Verhuur'})
+    return render(request, 'rent/index.html', {'title_suffix': ' - Verhuur'})
 
 
 @permission_required('rent.access_rent_management')  # todo test access

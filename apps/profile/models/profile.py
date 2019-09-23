@@ -11,12 +11,13 @@ class ProfileManager(models.Manager):
 
 
 class Profile(models.Model):
-    first_name = models.CharField(max_length=30)
-    last_name = models.CharField(max_length=150)
+    first_name = models.CharField(blank=True, null=True, max_length=30)
+    last_name = models.CharField(blank=True, null=True, max_length=150)
     nickname = models.CharField(blank=True, null=True, max_length=30)
-    email = models.EmailField(unique=True)
-    birthday = models.DateField()
-    sex = models.CharField(max_length=2, choices=Sex.SEXES)
+    email = models.EmailField(blank=True, null=True, unique=True)
+    public_email = models.EmailField(blank=True, null=True, unique=True)
+    birthday = models.DateField(blank=True, null=True)
+    sex = models.CharField(blank=True, null=True, max_length=2, choices=Sex.SEXES)
     totem = models.ForeignKey(Totem, blank=True, null=True, on_delete=models.SET_NULL)
     phone_number = models.CharField(max_length=13, blank=True, null=True,
                                     validators=[validate_phone_number])

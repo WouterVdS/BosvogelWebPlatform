@@ -13,7 +13,6 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 import os
 
 import environ
-import yaml
 from django.core.exceptions import ImproperlyConfigured
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -68,6 +67,7 @@ INSTALLED_APPS = [
     'apps.place',
     'apps.agenda',
     'apps.rent',
+    'apps.takken',
     'rules.apps.AutodiscoverRulesConfig',
     'django.contrib.admin',
     'django.contrib.auth',
