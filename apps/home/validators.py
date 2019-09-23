@@ -3,9 +3,9 @@ import re
 from django.core.exceptions import ValidationError
 
 
-def validate_international_phone_number(value):
-    if not value.startswith('0032'):
-        raise ValidationError(f'Gsmnummer moet beginnen met 0032')
+def validate_phone_number(value):
+    if not (value.startswith('0032') or value.startswith('04')):
+        raise ValidationError(f'Gsmnummer moet beginnen met 0032 of 04')
 
 
 def validate_iban_format(value):

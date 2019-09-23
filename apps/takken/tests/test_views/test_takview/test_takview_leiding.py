@@ -69,13 +69,12 @@ class TakviewLeidingTestCase(TestCase):
 
     def test_leaders_should_be_displayed_on_the_takpage(self):
         # Build
-        """
-            Creating:
-                * two leaders for kapoenen this year
-                * a leader for welpen this year
-                * a member for kapoenen this year
-                * a leader for kapoenen last year
-        """
+        #   Creating:
+        #       * two leaders for kapoenen this year
+        #       * a leader for welpen this year
+        #       * a member for kapoenen this year
+        #       * a leader for kapoenen last year
+
         this_year = Werkjaar.objects.current_year()
         last_year = this_year.previous_year()
 

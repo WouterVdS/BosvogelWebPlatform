@@ -26,7 +26,7 @@ class ProfileTestCase(TestCase):
             sex=Sex.MALE,
             totem=totem,
             phone_number='0032477777777',
-            bank_account_number='BE242424242424',
+            bank_account_number='BE24 2424 2424 2424',
         )
 
     def test_str_method(self):
@@ -97,7 +97,7 @@ class ProfileTestCase(TestCase):
         # Build
         profile = self.generate_profile()
 
-        profile.phone_number = '0477556655'
+        profile.phone_number = '1277556655'
 
         # Operate
         with self.assertRaises(ValidationError) as raised:
