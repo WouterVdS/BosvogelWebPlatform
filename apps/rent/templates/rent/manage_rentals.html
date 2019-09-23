@@ -2,4 +2,9 @@
 
 {% block content %}
     <h1>Verhuur management pagina!</h1>
+
+    <a href="{% url 'rent:change_pricing' %}">
+        <button>Pas verhuurpijzen aan</button>
+    </a>
+
 {% endblock content %}

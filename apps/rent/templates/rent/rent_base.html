@@ -1,15 +1,18 @@
 {% extends 'home/base.html' %}
+{% load rules %}
+
 
 {% block links %}
+    {% has_perm 'rent.access_rent_management' user as can_access_rent_management %}
     <h2>Verhuur links:</h2>
     <ul>
         <li><a href="{% url 'rent:index' %}">Algmeen</a></li>
-        {# todo restrict visibility #}
-        <li><a href="{% url 'rent:manage_rentals' %}">Beheer</a></li>
+        {% if can_access_rent_management %}
+            <li><a href="{% url 'rent:manage_rentals' %}">Beheer</a></li>{% endif %}
+        <li><a href="{% url 'rent:building_and_terrain' %}">Gebouw en terrein</a></li>
         <li><a href="{% url 'rent:photos' %}">Foto's</a></li>
         <li><a href="{% url 'rent:pricing' %}">Tarieven</a></li>
         <li><a href="{% url 'rent:contracts' %}">Contracten</a></li>
         <li><a href="{% url 'rent:reserve' %}">Reserveren</a></li>
-        <li><a href="{% url 'rent:check_reservation' %}">Bekijk reservatie</a></li>
     </ul>
 {% endblock links %}

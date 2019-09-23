@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/2.1/ref/settings/
 """
 
+import logging.config
 import os
 
 import environ
@@ -28,6 +29,7 @@ DEFAULT_DEBUG = False
 
 env = environ.Env()
 DEBUG = env('DEBUG', default=DEFAULT_DEBUG)
+PRODUCTION_ENVIRONMENT = env('PRODUCTION_ENVIRONMENT', default=False)
 SECRET_KEY = env('SECRET_KEY', default='*1ev7j$pn*he&0tn8o^12)tbi!e(h4w4^cxu8v(5*48z1syo-!')
 if not DEBUG and SECRET_KEY == '*1ev7j$pn*he&0tn8o^12)tbi!e(h4w4^cxu8v(5*48z1syo-!':  # pragma: no cover
     raise ImproperlyConfigured('Add the SECRET_KEY environment variable to overwrite the default one in production!')
@@ -36,6 +38,28 @@ MEDIA_ROOT = env('MEDIA_ROOT', default=os.path.join(BASE_DIR, 'dev-media-root'))
 MEDIA_URL = env('MEDIA_URL', default='/media/')
 STATIC_ROOT = env('STATIC_ROOT', default='dev-static-root')
 STATIC_URL = env('STATIC_URL', default='/static/')
+
+# Email
+EMAIL_CONFIG = env.email_url(
+    'EMAIL_URL', default='consolemail://')
+vars().update(EMAIL_CONFIG)
+
+EMAIL_ADDRESS_RENT = env('RENTAL_MAIL_ADDRESS', default='verhuur@bosvogels.be')
+EMAIL_ADDRESS_NOREPLY = env('RENTAL_MAIL_ADDRESS', default='noreply@bosvogels.be')
+
+# Production Checks
+if PRODUCTION_ENVIRONMENT:  # pragma: no cover
+    if SECRET_KEY == '*1ev7j$pn*he&0tn8o^12)tbi!e(h4w4^cxu8v(5*48z1syo-!':
+        raise ImproperlyConfigured('Add the SECRET_KEY environment variable to overwrite the default in production!')
+    if EMAIL_CONFIG['EMAIL_BACKEND'] == 'django.core.mail.backends.console.EmailBackend':
+        raise ImproperlyConfigured('Email still configured as console mail, add configuration to environment!')
+    if ALLOWED_HOSTS == ['localhost', '127.0.0.1']:
+        raise ImproperlyConfigured('Add the correct hostname to the ALLOWED_HOSTS environment variable!')
+    if MEDIA_ROOT == os.path.join(BASE_DIR, 'dev-media-root'):
+        raise ImproperlyConfigured('Set the MEDIA_ROOT environment variable to the correct value!')
+
+
+MEDIA_URL = '/media/'
 
 # Application definition
 INSTALLED_APPS = [
@@ -64,6 +88,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+# Required for Django-Rules
 AUTHENTICATION_BACKENDS = (
     'rules.permissions.ObjectPermissionBackend',
     'django.contrib.auth.backends.ModelBackend',

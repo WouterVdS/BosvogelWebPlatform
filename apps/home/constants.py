@@ -1,3 +1,6 @@
+from datetime import time
+
+
 class Sex:
     MALE = 'm'
     FEMALE = 'f'
@@ -31,6 +34,8 @@ class Events:
         (GROUPMEETING, 'Groepsraad')
     )
 
+    DEFAULT_RENT_START_TIME = time(13, 0, 0)
+    DEFAULT_RENT_ENDING_TIME = time(12, 0, 0)
 
 class Takken:
     KAPOENEN = 'KAP'

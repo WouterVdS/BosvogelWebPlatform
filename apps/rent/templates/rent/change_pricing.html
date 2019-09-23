@@ -1,12 +1,12 @@
 {% extends 'rent/rent_base.html' %}
 
 {% block content %}
-    <h1>Reserveren</h1>
-    <form action="{% url 'rent:reserve' %}" method="post">
+    <h1>Tarieven aanpassen</h1>
+    <form action="{% url 'rent:change_pricing' %}" method="post">
         {% csrf_token %}
         <table>
             {{ form.as_table }}
         </table>
-        <input type="submit" value="Reserveren">
+        <input type="submit" value="Wijzig tarieven">
     </form>
 {% endblock content %}

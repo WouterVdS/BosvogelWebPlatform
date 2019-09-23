@@ -42,10 +42,10 @@ class TakviewVergaderingenTestCase(TestCase):
         yesterday = today - timedelta(days=1)
         tomorrow = today + timedelta(days=1)
 
-        now = datetime.now().time()
-        two_hours_ago = (datetime.now() - timedelta(hours=2)).time()
-        one_hour_ago = (datetime.now() - timedelta(hours=1)).time()
-        one_hour_from_now = (datetime.now() + timedelta(hours=1)).time()
+        now = datetime(2019, 1, 1, 12, 0, 0)
+        two_hours_ago = (now - timedelta(hours=2)).time()
+        one_hour_ago = (now - timedelta(hours=1)).time()
+        one_hour_from_now = (now + timedelta(hours=1)).time()
 
         Event.objects.create(
             name='Event number 0',

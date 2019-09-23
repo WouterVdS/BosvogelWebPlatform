@@ -2,7 +2,7 @@ from django.db import models
 from django.dispatch import receiver
 
 from apps.home.constants import Sex
-from apps.home.validators import validate_iban_format, validate_international_phone_number
+from apps.home.validators import validate_iban_format, validate_phone_number
 from apps.profile.models.totem import Totem
 
 
@@ -20,7 +20,7 @@ class Profile(models.Model):
     sex = models.CharField(blank=True, null=True, max_length=2, choices=Sex.SEXES)
     totem = models.ForeignKey(Totem, blank=True, null=True, on_delete=models.SET_NULL)
     phone_number = models.CharField(max_length=13, blank=True, null=True,
-                                    validators=[validate_international_phone_number])
+                                    validators=[validate_phone_number])
     bank_account_number = models.CharField(max_length=19, blank=True, null=True,
                                            validators=[validate_iban_format])
 

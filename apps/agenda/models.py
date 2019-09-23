@@ -8,6 +8,30 @@ class RentManager(models.Manager):
     def get_queryset(self):
         return super().get_queryset().filter(type=Events.RENTAL)
 
+    def new_rental(self, start_date, end_date, event_name):
+        return self.create(
+            name=event_name,
+            # place=De Rimboe # todo add something to get the building address
+            startDate=start_date,
+            endDate=end_date,
+            startTime=Events.DEFAULT_RENT_START_TIME,
+            endTime=Events.DEFAULT_RENT_ENDING_TIME,
+            type=Events.RENTAL
+        )
+
+    def is_available_for_rent(self, start_date, end_date):
+        if self.get_queryset().filter(startDate__exact=start_date, endDate__exact=end_date):
+            return False
+        elif self.get_queryset().filter(startDate__lte=start_date, endDate__gt=end_date).exists():
+            return False
+        elif self.get_queryset().filter(startDate__gt=start_date, endDate__lt=end_date).exists():
+            return False
+        elif self.get_queryset().filter(startDate__gt=start_date, startDate__lt=end_date).exists():
+            return False
+        elif self.get_queryset().filter(endDate__gt=start_date, endDate__lte=end_date).exists():
+            return False
+        return True
+
 
 class Event(models.Model):
     name = models.CharField(max_length=64, null=True, blank=True)
