@@ -14,9 +14,7 @@ class GetActiveLeaderMembershipsTestCase(TestCase):
         current_year = Werkjaar.objects.current_year()
         last_year = current_year.previous_year()
 
-        """
-            Creates members and leaders for each tak for the current year and last year
-        """
+        # Create members and leaders for each tak for the current year and last year
 
         for tak in Takken.TAKKEN:
             for year in [current_year, last_year]:
