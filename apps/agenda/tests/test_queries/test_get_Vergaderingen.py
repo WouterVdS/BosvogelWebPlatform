@@ -13,14 +13,16 @@ class GetVergaderingenTestCase(TestCase):
     def setUpTestData(cls):
         create_test_data()
 
-    def test_it_should_only_return_event_type_of_weekly_activity_or_weekend(self):
+    def test_it_should_only_return_event_type_of_weekly_activity_or_weekend_or_public_events(self):
         # Operate
         events = get_vergaderingen()
 
         # Check
         self.assertIsNotNone(events)
         for event in events:
-            self.assertTrue((event.type == Events.WEEKLY_ACTIVITY) or (event.type == Events.WEEKEND),
+            self.assertTrue((event.type == Events.WEEKLY_ACTIVITY)
+                            or (event.type == Events.WEEKEND)
+                            or event.type == Events.PUBLIC_ACTIVITY,
                             f'It should only return weekly activities and weekends, '
                             f'type of this event: {event.get_type_display()}')
 

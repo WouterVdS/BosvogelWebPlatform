@@ -15,6 +15,7 @@ class Profile(models.Model):
     last_name = models.CharField(blank=True, null=True, max_length=150)
     nickname = models.CharField(blank=True, null=True, max_length=30)
     email = models.EmailField(blank=True, null=True, unique=True)
+    public_email = models.EmailField(blank=True, null=True, unique=True)
     birthday = models.DateField(blank=True, null=True)
     sex = models.CharField(blank=True, null=True, max_length=2, choices=Sex.SEXES)
     totem = models.ForeignKey(Totem, blank=True, null=True, on_delete=models.SET_NULL)
@@ -22,8 +23,6 @@ class Profile(models.Model):
                                     validators=[validate_international_phone_number])
     bank_account_number = models.CharField(max_length=19, blank=True, null=True,
                                            validators=[validate_iban_format])
-
-    # todo add public email (...@bosvogels.be)
 
     # picture = models. todo
 

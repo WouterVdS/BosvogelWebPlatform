@@ -1,10 +1,10 @@
 from apps.home.models import Werkjaar
-from apps.profile.models.profile import Profile
+from apps.profile.models.membership import Membership
 
 
-def get_active_leaders(tak=None):  # todo test thoroughly and optimize
+def get_active_leader_memberships(tak=None):
     current_year = Werkjaar.objects.current_year()
-    result = Profile.objects.filter(membership__is_leader=True, membership__werkjaar=current_year)
+    result = Membership.objects.filter(werkjaar=current_year, is_leader=True)
     if tak is not None:
-        result = result.filter(membership__tak=tak)
-    return result
+        result = result.filter(tak=tak)
+    return result.prefetch_related()

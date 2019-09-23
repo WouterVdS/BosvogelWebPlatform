@@ -5,6 +5,6 @@ from . import views
 app_name = 'takken'
 urlpatterns = [
     path('', views.index, name='index'),
-    path('wat-na-leiding/', views.afterleaderview, name='afterleader'),
-    path('<slug:tak>/', views.takview, name='tak'),
+    path('wat-na-leiding/', views.afterleader, name='afterleader'),
+    path('<slug:tak>/', views.tak, name='tak'),
 ]
