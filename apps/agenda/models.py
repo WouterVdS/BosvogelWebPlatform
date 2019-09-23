@@ -30,8 +30,7 @@ class RentManager(models.Manager):
             return False
         elif self.get_queryset().filter(endDate__gt=start_date, endDate__lte=end_date).exists():
             return False
-        else:
-            return True
+        return True
 
 
 class Event(models.Model):

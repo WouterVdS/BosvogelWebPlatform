@@ -37,18 +37,18 @@ class ChangePricingTestCase(TestCase):
                         'The correct head title should be displayed')
 
     # todo when userapp completed
-    """
-    def test_page_inaccessible_when_not_logged_in(self):
-        # Operate
-        response = self.client.get(reverse('rent:change_pricing'))
 
-        # Assert
-        self.assertEqual(response.status_code, 404)
+    #    def test_page_inaccessible_when_not_logged_in(self):
+    #        # Operate
+    #        response = self.client.get(reverse('rent:change_pricing'))
+    #
+    #        # Assert
+    #        self.assertEqual(response.status_code, 404)
+    #
+    #    def test_TODO_USERS_access_restricted_to_grl_and_rental_managers(self):
+    #        self.assertTrue(False, 'todo')
+    #
 
-    def test_TODO_USERS_access_restricted_to_grl_and_rental_managers(self):
-        self.assertTrue(False, 'todo')
-
-    """
 
     def test_get_all_null_values_in_form_when_database_empty(self):
         # Build

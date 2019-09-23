@@ -203,18 +203,16 @@ class ReserveTestCase(TestCase):
                          outbox[0].from_email,
                          'Rental emails should be send from the rental email address.')
         # todo add rich email body
-        """
-        self.assertTrue(reservation.groupName in outbox[0].body)
-        self.assertTrue(reservation.town in outbox[0].body)
-        self.assertTrue(reservation.phoneNr in outbox[0].body)
-        self.assertTrue(reservation.period.startDate in outbox[0].body)
-        self.assertTrue(reservation.period.startTime in outbox[0].body)
-        self.assertTrue(reservation.period.endDate in outbox[0].body)
-        self.assertTrue(reservation.period.endTime in outbox[0].body)
-        self.assertTrue(reservation.bankAccountNumber in outbox[0].body)
-        self.assertTrue(reservation.depositAmount in outbox[0].body)
-        self.assertTrue(reservation.comments in outbox[0].body)
-        """
+        # self.assertTrue(reservation.groupName in outbox[0].body)
+        # self.assertTrue(reservation.town in outbox[0].body)
+        # self.assertTrue(reservation.phoneNr in outbox[0].body)
+        # self.assertTrue(reservation.period.startDate in outbox[0].body)
+        # self.assertTrue(reservation.period.startTime in outbox[0].body)
+        # self.assertTrue(reservation.period.endDate in outbox[0].body)
+        # self.assertTrue(reservation.period.endTime in outbox[0].body)
+        # self.assertTrue(reservation.bankAccountNumber in outbox[0].body)
+        # self.assertTrue(reservation.depositAmount in outbox[0].body)
+        # self.assertTrue(reservation.comments in outbox[0].body)
 
     def test_valid_form_email_send_to_rental_address(self):
         # Build
@@ -250,20 +248,19 @@ class ReserveTestCase(TestCase):
                          outbox[1].from_email,
                          'Rental emails should be send from the noreply address')
         # todo add rich email body
-        """
-        self.assertTrue(reservation.groupName in outbox[1].body)
-        self.assertTrue(reservation.town in outbox[1].body)
-        self.assertTrue(reservation.phoneNr in outbox[1].body)
-        self.assertTrue(reservation.period.startDate in outbox[1].body)
-        self.assertTrue(reservation.period.startTime in outbox[1].body)
-        self.assertTrue(reservation.period.endDate in outbox[1].body)
-        self.assertTrue(reservation.period.endTime in outbox[1].body)
-        self.assertTrue(reservation.bankAccountNumber in outbox[1].body)
-        self.assertTrue(reservation.depositAmount in outbox[1].body)
-        self.assertTrue(reservation.comments in outbox[1].body)
-        self.assertTrue('fout' in outbox[1].body)
-        self.assertTrue(False, 'Todo, all details')
-        """
+        # self.assertTrue(reservation.groupName in outbox[1].body)
+        # self.assertTrue(reservation.town in outbox[1].body)
+        # self.assertTrue(reservation.phoneNr in outbox[1].body)
+        # self.assertTrue(reservation.period.startDate in outbox[1].body)
+        # self.assertTrue(reservation.period.startTime in outbox[1].body)
+        # self.assertTrue(reservation.period.endDate in outbox[1].body)
+        # self.assertTrue(reservation.period.endTime in outbox[1].body)
+        # self.assertTrue(reservation.bankAccountNumber in outbox[1].body)
+        # self.assertTrue(reservation.depositAmount in outbox[1].body)
+        # self.assertTrue(reservation.comments in outbox[1].body)
+        # self.assertTrue('fout' in outbox[1].body)
+        # self.assertTrue(False, 'Todo, all details')
+
 
     def test_post_valid_form_event_saved(self):
         # Build

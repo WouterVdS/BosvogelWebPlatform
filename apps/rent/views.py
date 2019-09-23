@@ -31,7 +31,7 @@ def building_and_terrain(request):
 
 def pricing(request):
     current_prices = get_prices()
-    if current_prices.perPersonPerDay is 0:
+    if current_prices.perPersonPerDay == 0:
         mail.send_mail('ERROR - Verhuur prijzen zijn nog niet gezet!',  # todo better test this mail
                        'Iemand bekeek de huurprijzen (die nog niet zijn ingesteld), \n'
                        + 'zolang er geen verhuurpijzen ingesteld zijn is het onmogelijk om reservaties te maken.\n'
@@ -85,14 +85,13 @@ def contracts(request):
 
 
 # todo verhuur
-"""
-    transacties apart bijhouden
-    op basis van de transacties (onsave) de status aanpassen
-    nakijken van bedrag betaald etc.
-    Dit volledig uischrijven en op issue zetten
-    event sourced maken van de te betalen/betalen bedragen
-    workflow uittekenen (en bij admins laten zien?)
-"""
+
+# transacties apart bijhouden
+# op basis van de transacties (onsave) de status aanpassen
+# nakijken van bedrag betaald etc.
+# Dit volledig uischrijven en op issue zetten
+# event sourced maken van de te betalen/betalen bedragen
+# workflow uittekenen (en bij admins laten zien?)
 
 
 def reserve(request):
@@ -139,8 +138,8 @@ def reserve(request):
 
             return redirect(
                 'rent:reserve')  # todo na geslaagde reservatie niet terug uitkomen op de form, is verwarrend
-    else:
-        if settings.DEBUG:  # todo remove after finishing development
+    else:  # todo remove after finishing development
+        if settings.DEBUG:  # pragma: no cover
             if Event.rentals.all().exists():
                 end = Event.rentals.latest('endDate').endDate
                 form = ReservationForm(initial={
