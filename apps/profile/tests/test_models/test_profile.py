@@ -21,6 +21,7 @@ class ProfileTestCase(TestCase):
             last_name='Testermans',
             nickname='Jakke',
             email='jos@testermans.com',
+            public_email='jos@bosvogels.be',
             birthday=date.today(),
             sex=Sex.MALE,
             totem=totem,
@@ -47,7 +48,20 @@ class ProfileTestCase(TestCase):
     def test_email_should_be_unique(self):
         # Build
         self.generate_profile().save()
-        profile_two = self.generate_profile()
+        profile_two = Profile(
+            email=self.generate_profile().email
+        )
+
+        # Check
+        with self.assertRaises(IntegrityError):
+            profile_two.save()
+
+    def test_public_email_should_be_unique(self):
+        # Build
+        self.generate_profile().save()
+        profile_two = Profile(
+            public_email=self.generate_profile().public_email
+        )
 
         # Check
         with self.assertRaises(IntegrityError):

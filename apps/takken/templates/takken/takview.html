@@ -8,10 +8,14 @@
     <h2>Tekstje</h2>
     <p>{{ description }}</p>
     <h2>Leiding</h2>
-    {# todo leiding #}
-    {# todo test wat gedisplayed wordt (vergeet takleader name niet (bvb akela)#}
-    {% for leader in leaders %}
-        <p>{{ leader }} - {{ leader.email }}</p>
+    {% if takmail %}<a href="mailto:{{ takmail }}">Mail naar {{ takmail }}</a>{% endif %}
+    {% for membership in memberships %}
+        <p>
+            {% if membership.tak_leader_name %}{{ membership.tak_leader_name }}{% else %}
+                {{ membership.profile }}{% endif %}
+            {% if membership.profile.public_email %}<a href="mailto:{{ membership.profile.public_email }}">Mail
+                naar {{ membership.profile.public_email }}</a>{% endif %}
+        </p>
     {% endfor %}
     <h2>Vergaderingen</h2>
     {# todo vergaderingen #}
@@ -28,5 +32,8 @@
             {{ vergadering.description }} <br>
         </p>
     {% endfor %}
-    <img src="{% static taklogo %}" alt="Takteken {{ tak }}">
+    {% if vergaderingen.count == 0 %}
+        <p>Momenteel nog geen vergaderingen gepland!</p>
+    {% endif %}
+    <img src="{% static taklogo %}" alt="Takteken {{ tak }}"> {# todo test #}
 {% endblock content %}

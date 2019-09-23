@@ -5,7 +5,11 @@ from apps.home.constants import Events
 
 
 def get_vergaderingen(tak=None):
-    result = Event.objects.filter(type__in=[Events.WEEKLY_ACTIVITY, Events.WEEKEND])
+    result = Event.objects.filter(type__in=[
+        Events.WEEKLY_ACTIVITY,
+        Events.WEEKEND,
+        Events.PUBLIC_ACTIVITY])
+
     result = result.filter(endDate__gte=datetime.now())
     if tak is not None:
         result = result.filter(tak=tak)

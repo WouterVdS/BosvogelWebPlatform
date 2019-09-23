@@ -61,6 +61,7 @@ class Takken:
         'fullName': 'Kapoenen',
         'abbrev': 'KAP',
         'age': '6 tot 7',
+        'takmail': 'kapoenen@bosvogels.be',
         'takteken': 'takken/img/taktekens/takteken_kap.png',
         'description': 'Wij zijn in één woord: kapoenen! Iedere week opnieuw ravotten, spelen en springen samen met '
                        'zo\'n 30 andere leeftijdsgenootjes. Samen ontdekken wat het betekent in groep te spelen, samen '
@@ -73,6 +74,7 @@ class Takken:
         'fullName': 'Welpen',
         'abbrev': 'WEL',
         'age': '8 tot 10',
+        'takmail': 'welpen@bosvogels.be',
         'takteken': 'takken/img/taktekens/takteken_wel_kab.png',
         'description': 'Vanaf de leeftijd van 8 jaar worden meisjes en jongens gesplitst: de meisjes komen terecht '
                        'bij de \'kabouters\' en de jongens bij de \'welpen\'. '
@@ -90,6 +92,7 @@ class Takken:
         'fullName': 'Kabouters',
         'abbrev': 'KAB',
         'age': '8 tot 10',
+        'takmail': 'kabouters@bosvogels.be',
         'takteken': 'takken/img/taktekens/takteken_wel_kab.png',
         'description': 'Vanaf de leeftijd van 8 jaar worden meisjes en jongens gesplitst: de meisjes komen terecht '
                        'bij de \'kabouters\' en de jongens bij de \'welpen\'. '
@@ -107,6 +110,7 @@ class Takken:
         'fullName': 'Jongverkenners',
         'abbrev': 'JV',
         'age': '11 tot 13',
+        'takmail': 'jongverkenners@bosvogels.be',
         'takteken': 'takken/img/taktekens/takteken_jv_jg.png',
         'description': 'De jonggivers (jong-gidsen en jong-verkenners) hebben zo hun eigen smaak als het op '
                        'spelen aankomt. Jonggivers spelen graag grote spelen waarbij ze een eigen tactiek kunnen '
@@ -119,6 +123,7 @@ class Takken:
         'fullName': 'Jonggidsen',
         'abbrev': 'JG',
         'age': '11 tot 13',
+        'takmail': 'jonggidsen@bosvogels.be',
         'takteken': 'takken/img/taktekens/takteken_jv_jg.png',
         'description': 'De jonggivers (jong-gidsen en jong-verkenners) hebben zo hun eigen smaak als het op '
                        'spelen aankomt. Jonggivers spelen graag grote spelen waarbij ze een eigen tactiek kunnen '
@@ -131,6 +136,7 @@ class Takken:
         'fullName': 'Verkenners',
         'abbrev': 'V',
         'age': '14 tot 16',
+        'takmail': 'verkenners@bosvogels.be',
         'takteken': 'takken/img/taktekens/takteken_v_g.png',
         'description': 'Givers (gidsen en verkenners) zijn eigenlijk heel erg vergelijkbaar met jonggivers, '
                        'maar dan een stukje ouder. Ook zij spelen graag grote spelen, gaan graag de avontuurlijke '
@@ -144,6 +150,7 @@ class Takken:
         'fullName': 'Gidsen',
         'abbrev': 'G',
         'age': '14 tot 16',
+        'takmail': 'gidsen@bosvogels.be',
         'takteken': 'takken/img/taktekens/takteken_v_g.png',
         'description': 'Givers (gidsen en verkenners) zijn eigenlijk heel erg vergelijkbaar met jonggivers, '
                        'maar dan een stukje ouder. Ook zij spelen graag grote spelen, gaan graag de avontuurlijke '
@@ -155,8 +162,9 @@ class Takken:
 
     TAKINFO_JIN = {
         'fullName': 'Jins',
-        'abbrev': 'J',
+        'abbrev': 'JIN',
         'age': '17 tot 18',
+        'takmail': 'jins@bosvogels.be',
         'takteken': 'takken/img/taktekens/takteken_jin.png',
         'description': 'Jin is de afkorting voor "Jij en Ik: een Noodzaak" In tegenstelling tot de andere takken, '
                        'duurt de loopbaan van de jins maar 2 jaar. De jongens en meisjes zijn ook hier terug samen. '
@@ -188,6 +196,7 @@ class Takken:
         'fullName': 'Groepsleiding',
         'abbrev': 'GRL',
         'age': '21+',
+        'takmail': 'groepsleiding@bosvogels.be',
         'takteken': 'takken/img/taktekens/takteken_grl.png',
         'description': ''
     }

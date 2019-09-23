@@ -25,7 +25,8 @@ class Place(models.Model):
         if self.latitude and self.longitude:
             fields.append(' lat: ' + str(self.latitude) + ', long: ' + str(self.longitude))
         if self.country:
-            fields.append(self.country)
+            if self.country.lower() not in ['belgië', 'belgie', 'belgium']:
+                fields.append(self.country)
         return ', '.join(fields)
 
     def link_to_maps(self):
