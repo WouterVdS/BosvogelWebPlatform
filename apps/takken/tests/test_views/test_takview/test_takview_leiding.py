@@ -38,7 +38,7 @@ class TakviewLeidingTestCase(TestCase):
     def test_every_takpage_should_show_the_takemail(self):
         errors = []
         for tak in Takken.TAKKEN:
-            if tak[1] is 'Leiding':
+            if tak[1] == 'Leiding':
                 break
             # Operate
             response = Client().get(reverse('takken:tak', args=[tak[1]]))
