@@ -96,6 +96,7 @@ def contracts(request):
 
 def reserve(request):
     if request.method == 'POST':
+        # todo dit refactorren: niet zo vragen, maar via get_prices() doen, dan moet er ook gelogd worden!
         if not Pricing.objects.all().exists():
             messages.warning(request, 'Reserveren tijdelijk niet mogelijk.')
             # todo use the same template as in the pricing view
