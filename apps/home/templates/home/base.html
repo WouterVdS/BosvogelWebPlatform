@@ -9,6 +9,10 @@
 </head>
 <body>
 
+{% if debug %}
+    <h3 style="color:orange;background-color: white">Warning: Django debug is True. This message should never be seen in Production!</h3>
+{% endif %}
+
 {# Navbar style navigation trough the website #}
 {% block navbar %}
     <ul>
