@@ -1,0 +1,4 @@
+[run]
+omit =
+    */virtualenv*
+    BosvogelWebPlatform/wsgi.py
