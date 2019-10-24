@@ -5,16 +5,22 @@ from apps.profile.models.profile import Profile
 from apps.profile.models.totem import Totem
 
 
+class MembershipInline(admin.TabularInline):
+    model = Membership
+    extra = 1
+
+
 @admin.register(Profile)
 class ProfileAdmin(admin.ModelAdmin):
     list_display = ['first_name', 'nickname', 'last_name', 'email', 'birthday', 'sex', 'phone_number',
                     'bank_account_number', 'totem']
+    inlines = [MembershipInline]
 
 
 @admin.register(Membership)
 class MembershipAdmin(admin.ModelAdmin):
     list_display = ['profile', 'werkjaar', 'is_leader', 'tak']
-    list_filter = ['werkjaar', 'tak', 'is_leader']
+    list_filter = ['is_leader', 'tak', 'werkjaar']
 
 
 @admin.register(Totem)
