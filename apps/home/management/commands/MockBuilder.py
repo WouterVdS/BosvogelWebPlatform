@@ -47,6 +47,7 @@ class MockBuilder:
         self.create_weekly_meetings_vergaderingen()
         self.add_rental_prices()
         self.create_rental_reservations()
+        self.create_public_events_and_jincafes()
         print('\nDone!')
 
     def create_werkjaren(self):
@@ -70,12 +71,15 @@ class MockBuilder:
             except IntegrityError:
                 # skip years that already exist
                 continue
+        print(f'\tFinished creating {len(self.years)} werkjaren')
 
     def create_leaders(self):
         if Membership.objects.filter(werkjaar__year=self.years[-1]).exists():
             print('Not creating extra leaders, leaders already exist for the existing workyears')
             return
         print('Creating leaders... (this may take a while, go grab a coffee)')
+        total_leaders = 0
+        total_memberships = 0
         for year in self.years:
             for tak in Takken.TAKKEN:
                 current_leader_count = Membership.objects.filter(werkjaar=year, tak=tak[0], is_leader=True).count()
@@ -84,7 +88,10 @@ class MockBuilder:
                     continue
                 max_extra_leaders = 5 - current_leader_count
                 for x in range(randint(1, max_extra_leaders)):
-                    self.create_a_leader_with_history(tak=tak[0], year=year)
+                    new_memberships = self.create_a_leader_with_history(tak=tak[0], year=year)
+                    total_memberships += new_memberships
+                    total_leaders += 1
+        print(f'\tFinished creating {total_leaders} leaders with {total_memberships} memberships')
 
     def create_a_leader_with_history(self, tak, year):
         totem = Totem.objects.create(
@@ -126,6 +133,7 @@ class MockBuilder:
         # create a history for the leader
         werkjaar = Werkjaar.objects.get(year=year)
         earliest_year = self.years[-1]
+        created_memberships = 0
         for x in range(randint(1, 5)):
             membership = Membership.objects.create(
                 profile=leader,
@@ -133,27 +141,22 @@ class MockBuilder:
                 is_leader=True,
                 tak=tak,
             )
-
+            created_memberships += 1
             if tak in ['KAP', 'WEL', 'KAB']:
                 membership.tak_leader_name = self.fake.first_name()
                 membership.save()
 
             if werkjaar.year == earliest_year:
-                return
+                break
 
             werkjaar = werkjaar.previous_year()
             tak = choice(Takken.TAKKEN)[0]
+        return created_memberships
 
     def create_weekly_meetings_vergaderingen(self):
         print('Creating vergaderingen for each tak... (this wil take a while)')
-        # todo bulk add event objects for speed
-        place = Place.objects.create(
-            name='Locatie van het lokaal',
-            country=self.fake.country(),
-            zipcode=self.fake.postcode(),
-            city=self.fake.city(),
-            street_and_number=f'{self.fake.street_name()} {self.fake.random_digit()}'
-        )
+
+        events = []
         for year in self.years:
             if Event.objects.filter(type=Events.WEEKLY_ACTIVITY,
                                     startDate__gt=date(year=year, month=9, day=1),
@@ -164,20 +167,29 @@ class MockBuilder:
                 while next_date.weekday() not in [5, 6]:  # 5 is saturday, 6 is sunday
                     next_date = next_date + timedelta(days=1)
                 while not (next_date.year > year and next_date.month > 6):
-                    Event.objects.create(
-                        name='Vergadering naam',
-                        place=place,
-                        startDate=next_date,
-                        startTime=time(14, 0, 0),
-                        endTime=time(16, 30, 0),
-                        description=self.fake.text(max_nb_chars=200),
-                        type=Events.WEEKLY_ACTIVITY,
-                        tak=tak[0]
-                    )
+                    events.append(
+                        Event(
+                            name='Vergadering naam',
+                            startDate=next_date,
+                            endDate=next_date,
+                            startTime=time(14, 0, 0),
+                            endTime=time(16, 30, 0),
+                            description=self.fake.text(max_nb_chars=200),
+                            type=Events.WEEKLY_ACTIVITY,
+                            tak=tak[0]
+                        ))
 
                     next_date = next_date + timedelta(days=7)
-
-
+        Event.objects.bulk_create(events)
+        place = Place.objects.create(
+            name='Locatie van het lokaal',
+            country=self.fake.country(),
+            zipcode=self.fake.postcode(),
+            city=self.fake.city(),
+            street_and_number=f'{self.fake.street_name()} {self.fake.random_digit()}'
+        )
+        Event.objects.filter(type=Events.WEEKLY_ACTIVITY).update(place=place)
+        print(f'\tFinished creating {len(events)} weekly meeting events')
 
     @staticmethod
     def add_rental_prices():
@@ -198,6 +210,7 @@ class MockBuilder:
 
     def create_rental_reservations(self):
         print('Creating rental reservations')
+        total = 0
         for year in self.years:
             if Reservation.objects.filter(period__startDate__gt=date(year=year, month=1, day=1),
                                           period__startDate__lt=date(year=year, month=12, day=31)).exists():
@@ -235,3 +248,49 @@ class MockBuilder:
                     numberOfPeople=50,
                     comments=self.fake.text(max_nb_chars=50)
                 )
+                total += 1
+        print(f'\tFinished creating {total} reservations')
+
+    def create_public_events_and_jincafes(self):
+        print('Creating public events and jincafes')
+        events = []
+        for year in self.years:
+            if Event.objects.filter(startDate__gt=date(year=year, month=1, day=1),
+                                    startDate__lt=date(year=year, month=12, day=31),
+                                    type__in=[Events.JINCAFE, Events.PUBLIC_ACTIVITY]).exists():
+                continue
+            for month in range(1, 13):
+                day = date(year=year, month=month, day=randint(1, 28))
+                events.append(
+                    Event(
+                        name='Jincafé',
+                        startDate=day,
+                        endDate=day,
+                        startTime=time(21, 0, 0),
+                        endTime=time(23, 0, 0),
+                        description=self.fake.text(max_nb_chars=200),
+                        type=Events.JINCAFE
+                    )
+                )
+            day = date(year=year, month=5, day=randint(1, 28))
+            events.append(
+                Event(
+                    name='Opendeurdag',
+                    startDate=day,
+                    endDate=day,
+                    startTime=time(14, 0, 0),
+                    endTime=time(18, 0, 0),
+                    description=self.fake.text(max_nb_chars=200),
+                    type=Events.PUBLIC_ACTIVITY
+                )
+            )
+        Event.objects.bulk_create(events)
+        place = Place.objects.create(
+            name='Locatie van het lokaal voor public events en jincafés',
+            country=self.fake.country(),
+            zipcode=self.fake.postcode(),
+            city=self.fake.city(),
+            street_and_number=f'{self.fake.street_name()} {self.fake.random_digit()}'
+        )
+        Event.objects.filter(type__in=[Events.JINCAFE, Events.PUBLIC_ACTIVITY]).update(place=place)
+        print(f'\tFinished creating {len(events)} jincafés/public events')
