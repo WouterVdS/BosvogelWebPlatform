@@ -8,5 +8,5 @@ def get_active_leader_memberships(tak=None):
     result = Membership.objects.filter(werkjaar=current_year, is_leader=True)
     if tak is not None:
         result = result.filter(tak=tak)
-    result = result.prefetch_related('profile')
+    result = result.select_related('profile')
     return result.prefetch_related()

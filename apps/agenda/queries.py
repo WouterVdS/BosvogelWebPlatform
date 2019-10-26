@@ -13,7 +13,7 @@ def get_vergaderingen(tak=None):
     result = result.filter(endDate__gte=datetime.now())
     if tak is not None:
         result = result.filter(tak=tak)
-    result = result.prefetch_related('place')
+    result = result.select_related('place')
     return result
 
 
