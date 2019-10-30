@@ -1,4 +1,4 @@
-from datetime import datetime, date, time
+from datetime import datetime, date, time, timedelta
 
 from django.test import Client, TestCase
 from django.urls import reverse
@@ -128,19 +128,18 @@ class IndexViewTestCase(TestCase):
 
     def test_it_should_not_display_passed_events(self):
         # Build
-        year = datetime.now().year
-        month = datetime.now().month
+        today = datetime.now()
+        hour = today.hour
         Event.objects.create(
             name='Past event',
-            startDate=date(year, month - 1, 1),
+            startDate=today - timedelta(weeks=4),
             type=Events.WEEKLY_ACTIVITY
         )
         Event.objects.create(
             name='Past event',
-            startDate=date(year, month - 1, 1),
+            startDate=today - timedelta(weeks=4),
             type=Events.PUBLIC_ACTIVITY
         )
-        hour = datetime.now().hour
         Event.objects.create(
             name='Event currently busy timewise',
             startDate=datetime.now().date(),
@@ -148,11 +147,10 @@ class IndexViewTestCase(TestCase):
             endTime=time(min(23, hour + 1), 0, 0),
             type=Events.PUBLIC_ACTIVITY
         )
-        day = datetime.now().day
         Event.objects.create(
             name='Event currently busy datewise',
-            startDate=date(year, month - 1, day),
-            endDate=date(year, month, day + 2),
+            startDate=today - timedelta(days=2),
+            endDate=today + timedelta(days=2),
             type=Events.PUBLIC_ACTIVITY
         )
 
