@@ -42,6 +42,7 @@ DEPOSIT_STATUSES = (
 )
 
 
+# todo verboden maken om te verwijderen! of verwijderen blokkeren
 class Pricing(models.Model):
     perPersonPerDay = models.DecimalField(max_digits=5, decimal_places=2)
     dailyMinimum = models.DecimalField(max_digits=5, decimal_places=2)
@@ -98,7 +99,7 @@ def handle_deleted_reservation(sender, instance, **kwargs):
         instance.period.delete()
 
 
-def get_prices():
+def get_prices():  # todo naar querries
     try:
         prices = Pricing.objects.latest('pricesSetOn')
     except ObjectDoesNotExist:

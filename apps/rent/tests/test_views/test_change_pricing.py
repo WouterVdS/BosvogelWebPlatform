@@ -49,7 +49,6 @@ class ChangePricingTestCase(TestCase):
     #        self.assertTrue(False, 'todo')
     #
 
-
     def test_get_all_null_values_in_form_when_database_empty(self):
         # Build
         response = self.client.get(reverse('rent:change_pricing'))

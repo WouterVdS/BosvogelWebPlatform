@@ -380,3 +380,34 @@ class IndexViewTestCase(TestCase):
         # Check
         self.assertFalse('Testevent' in content,
                          'Groupmeetings should not be displayed')
+
+    def test_weekdays_displayed(self):
+        # Build
+        saturday = date.today()
+        while saturday.weekday() != 5:
+            saturday = saturday + timedelta(days=1)
+        sunday = date.today()
+        while sunday.weekday() != 6:
+            sunday = sunday + timedelta(days=1)
+
+        Event.objects.create(
+            startDate=saturday,
+            type=Events.JINCAFE
+        )
+        Event.objects.create(
+            startDate=sunday,
+            type=Events.WEEKLY_ACTIVITY,
+            tak=Takken.KAPOENEN
+        )
+
+        # Operate
+        response = Client().get(reverse('agenda:index'))
+        content = str(response.content)
+
+        # Check
+        self.assertTrue('Zaterdag' in content,
+                        f'The day of the week should be displayed with meetings. Expected "Zaterdag", '
+                        f'but got: \n{content}')
+        self.assertTrue('Zondag' in content,
+                        f'The day of the week should be displayed with meetings. Expected "Zondag", '
+                        f'but got: \n{content}')

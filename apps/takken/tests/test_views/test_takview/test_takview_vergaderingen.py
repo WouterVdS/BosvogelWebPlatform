@@ -124,6 +124,22 @@ class TakviewVergaderingenTestCase(TestCase):
         self.assertTrue('Momenteel nog geen vergaderingen gepland!' in content,
                         'When no events are planned, an empty inbox message should be shown')
 
+    def test_None_is_never_displayed(self):
+        # Build
+        testevent = Event.objects.create(
+            startDate=datetime.today(),
+            type=Events.WEEKLY_ACTIVITY,
+            tak=Takken.KAPOENEN
+        )
+
+        # Operate
+        response = Client().get(reverse('takken:tak', args=[Takken.TAKKEN[0][1]]))  # kapoenen
+        content = str(response.content)
+
+        # Check
+        self.assertFalse('None' in content,
+                         f'"None" should not be displayed, but it is displayed: \n\n{content}')
+
     def test_check_if_required_data_is_displayed(self):
         # Build
         testplace = Place.objects.create(
@@ -172,9 +188,12 @@ class TakviewVergaderingenTestCase(TestCase):
     def test_the_date_should_be_formatted_correct(self):
         # Build
         next_year = (datetime.now().year + 1)
+        start_date = date(next_year, 1, 1)
+        while start_date.weekday() != 5:
+            start_date = start_date + timedelta(days=1)
         Event.objects.create(
-            startDate=date(next_year, 1, 1),
-            endDate=date(next_year, 1, 2),
+            startDate=start_date,
+            endDate=start_date + timedelta(days=1),
             type=Events.WEEKLY_ACTIVITY,
             tak=Takken.KAPOENEN
         )
@@ -182,18 +201,18 @@ class TakviewVergaderingenTestCase(TestCase):
         # Operate
         response = Client().get(reverse('takken:tak', args=[Takken.TAKKEN[0][1]]))  # kapoenen
         content = str(response.content)
-        expected = f'1 januari {next_year} - 2 januari {next_year}'
+
+        expected = f'Zaterdag {start_date.day} januari {next_year} - zondag {start_date.day + 1} januari {next_year}'
 
         # Check
         self.assertTrue(expected in content,
-                        f'The date should be displayed correctly. Expected: "{expected}". Got: {content}')
+                        f'The date should be displayed correctly. Expected: "{expected}". Got: \n\n{content}')
 
     def test_the_date_should_be_formatted_correct_if_no_enddate_is_provided(self):
         # Build
         next_year = (datetime.now().year + 1)
         Event.objects.create(
             startDate=date(next_year, 1, 1),
-            endDate=date(next_year, 1, 2),
             type=Events.WEEKLY_ACTIVITY,
             tak=Takken.KAPOENEN
         )
@@ -201,11 +220,11 @@ class TakviewVergaderingenTestCase(TestCase):
         # Operate
         response = Client().get(reverse('takken:tak', args=[Takken.TAKKEN[0][1]]))  # kapoenen
         content = str(response.content)
-        expected = f'1 januari {next_year} - 2 januari {next_year}'
+        expected = f'1 januari {next_year}'
 
         # Check
         self.assertTrue(expected in content,
-                        f'The date should be displayed correctly. Expected: "{expected}". Got: {content}')
+                        f'The date should be displayed correctly. Expected: "{expected}". Got: \n\n{content}')
 
     def test_only_furure_or_events_for_this_day_should_be_displayed(self):
         # Build
@@ -224,3 +243,45 @@ class TakviewVergaderingenTestCase(TestCase):
         # Check
         self.assertTrue('ditmagjenietzien' not in content,
                         'Past events should not be displayed')
+
+    def test_groepsleiding_should_not_have_vergaderingen_section(self):
+        # Build
+
+        # Operate
+        response = Client().get(reverse('takken:tak', args=[Takken.TAKKEN[9][1]]))  # groepsleiding
+        content = str(response.content)
+
+        # Check
+        self.assertTrue('Vergaderingen' not in content,
+                        'The section "Vergaderingen" should not be shown/exist for groepsleiding')
+
+    def test_day_of_the_week_should_be_displayed(self):
+        # Build
+        saturday = date.today()
+        while saturday.weekday() != 5:
+            saturday = saturday + timedelta(days=1)
+        sunday = date.today()
+        while sunday.weekday() != 6:
+            sunday = sunday + timedelta(days=1)
+        Event.objects.create(
+            startDate=saturday,
+            type=Events.WEEKLY_ACTIVITY,
+            tak=Takken.KAPOENEN
+        )
+        Event.objects.create(
+            startDate=sunday,
+            type=Events.WEEKLY_ACTIVITY,
+            tak=Takken.KAPOENEN
+        )
+
+        # Operate
+        response = Client().get(reverse('takken:tak', args=[Takken.TAKKEN[0][1]]))  # kapoenen
+        content = str(response.content)
+
+        # Check
+        self.assertTrue('Zaterdag' in content,
+                        f'The day of the week should be displayed with meetings. Expected "Zaterdag", '
+                        f'but got: \n{content}')
+        self.assertTrue('Zondag' in content,
+                        f'The day of the week should be displayed with meetings. Expected "Zondag", '
+                        f'but got: \n{content}')

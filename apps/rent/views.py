@@ -102,7 +102,8 @@ def reserve(request):
             # todo use the same template as in the pricing view
             mail.send_mail(f'ERROR - Verhuur prijzen zijn nog niet gezet!',
                            'Iemand probeerde het lokaal te huren, \n'
-                           + 'maar zolang er geen verhuurpijzen ingesteld zijn is het onmogelijk om reservaties te maken.\n'
+                           + 'maar zolang er geen verhuurpijzen ingesteld zijn '
+                           + 'is het onmogelijk om reservaties te maken.\n'
                            + 'Surf zo snel mogelijk naar onderstaande link om de verhuurtarieven in te stellen:\n'
                            + request.build_absolute_uri(reverse('rent:change_pricing')),
                            EMAIL_ADDRESS_NOREPLY,
@@ -110,16 +111,16 @@ def reserve(request):
             return redirect('rent:index')
         form = ReservationForm(request.POST)
         if form.is_valid():
-            formData = form.cleaned_data
+            form_data = form.cleaned_data
 
-            rentEvent = Event.rentals.new_rental(
-                formData['startDate'],
-                formData['endDate'],
-                'Verhuur - ' + formData['groupName'])
+            rent_event = Event.rentals.new_rental(
+                form_data['startDate'],
+                form_data['endDate'],
+                'Verhuur - ' + form_data['groupName'])
 
             reservation = form.save(commit=False)
             reservation.pricing = get_prices()
-            reservation.period = rentEvent
+            reservation.period = rent_event
             reservation.save()
 
             messages.success(request, 'Reservatie gelukt! Check je mailbox voor meer informatie.')

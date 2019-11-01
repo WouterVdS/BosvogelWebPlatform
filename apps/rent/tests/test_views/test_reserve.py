@@ -261,7 +261,6 @@ class ReserveTestCase(TestCase):
         # self.assertTrue('fout' in outbox[1].body)
         # self.assertTrue(False, 'Todo, all details')
 
-
     def test_post_valid_form_event_saved(self):
         # Build
         client = Client()
