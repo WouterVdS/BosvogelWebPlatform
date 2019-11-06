@@ -304,7 +304,7 @@ class ReserveTestCase(TestCase):
             gasPerDay=55,
             deposit=65
         )
-        result = client.post(reverse('rent:reserve'), {
+        client.post(reverse('rent:reserve'), {
             'groupName': testGroupName,
             'town': 'Testtown',
             'email': 'test@test.com',

@@ -7,6 +7,17 @@ from django.urls import reverse
 from apps.rent.models import Pricing, get_prices
 
 
+def create_a_pricing():
+    Pricing.objects.create(
+        perPersonPerDay=1,
+        dailyMinimum=2,
+        electricitykWh=3,
+        waterSqM=4,
+        gasPerDay=5,
+        deposit=6
+    )
+
+
 class ChangePricingTestCase(TestCase):
 
     def setUp(self):
@@ -190,14 +201,7 @@ class ChangePricingTestCase(TestCase):
 
     def test_post_invalid_form_no_redirect_when_no_prices_changed(self):
         # Build
-        Pricing.objects.create(
-            perPersonPerDay=1,
-            dailyMinimum=2,
-            electricitykWh=3,
-            waterSqM=4,
-            gasPerDay=5,
-            deposit=6
-        )
+        create_a_pricing()
         client = Client()
 
         # Operate
@@ -217,14 +221,7 @@ class ChangePricingTestCase(TestCase):
 
     def test_post_invalid_form_error_message_on_nothing_changed(self):
         # Build
-        Pricing.objects.create(
-            perPersonPerDay=1,
-            dailyMinimum=2,
-            electricitykWh=3,
-            waterSqM=4,
-            gasPerDay=5,
-            deposit=6
-        )
+        create_a_pricing()
         client = Client()
 
         # Operate
@@ -248,15 +245,9 @@ class ChangePricingTestCase(TestCase):
 
     def test_email_send_when_prices_changed(self):
         # Build
+        create_a_pricing()
         client = Client()
-        Pricing.objects.create(
-            perPersonPerDay=1,
-            dailyMinimum=2,
-            electricitykWh=3,
-            waterSqM=4,
-            gasPerDay=5,
-            deposit=6
-        )
+
         # Operate
         client.post(reverse('rent:change_pricing'), {
             'perPersonPerDay': '12',
