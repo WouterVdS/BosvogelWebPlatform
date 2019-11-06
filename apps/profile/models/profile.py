@@ -6,10 +6,6 @@ from apps.home.validators import validate_iban_format, validate_phone_number
 from apps.profile.models.totem import Totem
 
 
-class ProfileManager(models.Manager):
-    pass
-
-
 class Profile(models.Model):
     first_name = models.CharField(blank=True, null=True, max_length=30)
     last_name = models.CharField(blank=True, null=True, max_length=150)
@@ -37,9 +33,6 @@ class Profile(models.Model):
         return ' '.join(fields)
 
 
-# todo managment functie maken die checkt of er totems zijn waar geen profiel meer aanhangt en als task laten lopen
-# dit zou niet mogen, maar signals worden soms overgeslagen (bij bulk operaties)
-# test schrijven die bulk delete doet
 @receiver(models.signals.post_delete, sender=Profile)
 def handle_deleted_profile(sender, instance, **kwargs):
     if instance.totem:

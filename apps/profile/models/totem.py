@@ -1,6 +1,11 @@
 from django.db import models
 
 
+def dangling_totem_count():
+    # todo test
+    return Totem.objects.filter(profile=None).count()
+
+
 class Totem(models.Model):
     kleurentotem = models.CharField(null=True, blank=True, max_length=64)
     kleurentotem_text = models.TextField(null=True, blank=True)

@@ -89,10 +89,6 @@ class Reservation(models.Model):
         return self.groupName + ' (' + self.town + ')'
 
 
-# todo managment functie maken die checkt of er periods zijn waar geen reservation meer aanhangt
-# dit zou niet mogen, maar signals worden soms overgeslagen (bij bulk operaties)
-# let op dat type van period wel rent moet zijn
-# test schrijven die bulk delete doet
 @receiver(models.signals.post_delete, sender=Reservation)
 def handle_deleted_reservation(sender, instance, **kwargs):
     if instance.period:

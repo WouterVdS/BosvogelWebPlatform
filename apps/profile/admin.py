@@ -23,6 +23,22 @@ class MembershipAdmin(admin.ModelAdmin):
     list_filter = ['is_leader', 'tak', 'werkjaar']
 
 
+class EmptyProfileFilter(admin.SimpleListFilter):
+
+    title = 'dangling totem'
+    parameter_name = 'has_profile'
+
+    def lookups(self, request, model_admin):
+        return (
+            ('no', 'Is dangling'),
+        )
+
+    def queryset(self, request, queryset):
+        if self.value() == 'no':
+            return queryset.filter(profile=None)
+
+
 @admin.register(Totem)
 class TotemAdmin(admin.ModelAdmin):
     list_display = ['kleurentotem', 'voortotem', 'totem']
+    list_filter = [EmptyProfileFilter]

@@ -4,6 +4,11 @@ from apps.home.constants import Takken, Events
 from apps.place.models import Place
 
 
+def dangling_rental_event_count():
+    # todo test (enkel de rental events waar geen reservation meer aanhangt!)
+    return Event.rentals.filter(reservation=None).count()
+
+
 class RentManager(models.Manager):
     def get_queryset(self):
         return super().get_queryset().filter(type=Events.RENTAL)
@@ -11,7 +16,6 @@ class RentManager(models.Manager):
     def new_rental(self, start_date, end_date, event_name):
         return self.create(
             name=event_name,
-            # place=De Rimboe # todo add something to get the building address
             startDate=start_date,
             endDate=end_date,
             startTime=Events.DEFAULT_RENT_START_TIME,
