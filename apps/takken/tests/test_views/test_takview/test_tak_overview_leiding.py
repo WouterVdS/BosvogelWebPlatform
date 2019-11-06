@@ -8,7 +8,7 @@ from apps.profile.models.profile import Profile
 from apps.profile.tests.test_models.test_profile import ProfileTestCase
 
 
-class TakviewLeidingTestCase(TestCase):
+class TakOverviewLeidingTestCase(TestCase):
 
     def test_every_takpage_should_show_leaders(self):
         this_year = Werkjaar.objects.current_year()

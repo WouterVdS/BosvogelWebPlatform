@@ -10,7 +10,7 @@ def index(request):
     return render(request, 'takken/index.html', {'title_suffix': ' - Takken'})
 
 
-def tak_overview(request, tak):
+def tak_overview(request, tak, all_vergaderingen=False):
     # todo refactor this part
     found = False
     takinfos = [Takken.TAKINFO_KAP, Takken.TAKINFO_WEL, Takken.TAKINFO_KAB, Takken.TAKINFO_JV, Takken.TAKINFO_JG,
@@ -26,7 +26,7 @@ def tak_overview(request, tak):
 
     memberships = get_active_leader_memberships(found_takinfo['abbrev'])
 
-    vergaderingen = get_vergaderingen(found_takinfo['abbrev'])
+    vergaderingen = get_vergaderingen(found_takinfo['abbrev'], all_vergaderingen)
 
     context = {'title_suffix': ' -  ' + found_takinfo['fullName'],
                'tak': found_takinfo['fullName'],

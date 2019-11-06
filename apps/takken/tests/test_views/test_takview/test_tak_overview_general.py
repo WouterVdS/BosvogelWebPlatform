@@ -6,7 +6,7 @@ from django.urls import reverse
 from apps.home.constants import Takken
 
 
-class TakviewGeneralTestCase(TestCase):
+class TakOverviewGeneralTestCase(TestCase):
 
     def test_index_response_code(self):
         # Operate
@@ -114,3 +114,12 @@ class TakviewGeneralTestCase(TestCase):
 
         # Check
         self.assertEqual(response.status_code, 200, 'Afterleader view should have a HTTP OK response')
+
+    def test_it_should_contain_a_link_to_all_vergaderingen(self):
+        # Operate
+        response = Client().get(reverse('takken:tak', args=[Takken.TAKKEN[0][1]]))
+        content = str(response.content)
+
+        # Check
+        self.assertTrue('kapoenen/alle-vergaderingen' in content,
+                        'The agenda page should contain the link to view all (passed) vergaderingen')

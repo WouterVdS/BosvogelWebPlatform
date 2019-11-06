@@ -5,10 +5,11 @@ from django.urls import reverse
 
 from apps.agenda.models import Event
 from apps.home.constants import Takken, Events
+from apps.home.models import Werkjaar
 from apps.place.models import Place
 
 
-class TakviewVergaderingenTestCase(TestCase):
+class TakOverviewVergaderingenTestCase(TestCase):
 
     def test_only_the_correct_event_types_are_shown(self):
         for event_type in Events.EVENT_TYPES:
@@ -126,7 +127,7 @@ class TakviewVergaderingenTestCase(TestCase):
 
     def test_None_is_never_displayed(self):
         # Build
-        testevent = Event.objects.create(
+        Event.objects.create(
             startDate=datetime.today(),
             type=Events.WEEKLY_ACTIVITY,
             tak=Takken.KAPOENEN
@@ -285,3 +286,45 @@ class TakviewVergaderingenTestCase(TestCase):
         self.assertTrue('Zondag' in content,
                         f'The day of the week should be displayed with meetings. Expected "Zondag", '
                         f'but got: \n{content}')
+
+    def test_passed_events_displayed_when_accessing_all_vergaderingen(self):
+        # Build
+        last_week = date.today() - timedelta(weeks=1)
+        name = 'Event which was past week'
+        Event.objects.create(
+            startDate=last_week,
+            type=Events.WEEKLY_ACTIVITY,
+            tak=Takken.KAPOENEN,
+            name=name
+        )
+
+        # Operate
+        response = Client().get(reverse('takken:tak_all_vergaderingen', args=[Takken.TAKKEN[0][1]]))  # kapoenen
+        content = str(response.content)
+
+        # Check
+        self.assertTrue(name in content,
+                        'When accessing all vergaderingen, the past ones should be displayed also.'
+                        f'Expected an event with name "{name}",'
+                        f'but got: \n\n{content}')
+
+    def test_if_vergaderingen_for_the_next_year_are_displayed(self):
+        # Build
+        name = 'future event'
+
+        current_year = Werkjaar.objects.current_year().year
+
+        Event.objects.create(
+            name=name,
+            type=Events.WEEKLY_ACTIVITY,
+            tak=Takken.KAPOENEN,
+            startDate=date(year=current_year+1, month=9, day=20)
+        )
+
+        # Operate
+        response = Client().get(reverse('takken:tak_all_vergaderingen', args=[Takken.TAKKEN[0][1]]))  # kapoenen
+        content = str(response.content)
+
+        # Check
+        self.assertTrue(name in content,
+                        'Events from the next workyear should be displayed, this can be useful at the end of august')

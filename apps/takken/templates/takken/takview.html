@@ -18,12 +18,15 @@
             {% endif %}
             {% if membership.profile.public_email %}
                 <a href="mailto:{{ membership.profile.public_email }}">Mail
-                naar {{ membership.profile.public_email }}</a>
+                    naar {{ membership.profile.public_email }}</a>
             {% endif %}
         </p>
     {% endfor %}
     {% if tak != "Groepsleiding" %}
         <h2>Vergaderingen</h2>
+        <p>
+            <a href="{% url 'takken:tak_all_vergaderingen' tak|lower %}">Bekijk de afgelopen vergaderingen.</a>
+        </p>
         {% for vergadering in vergaderingen %}
             <p>
                 <b>
@@ -49,12 +52,6 @@
         {% empty %}
             <p>Momenteel nog geen vergaderingen gepland!</p>
         {% endfor %}
-
-        <p> {# todo dit maken #}
-            <a href="">Bekijk alle vergaderingen van dit jaar (ook de afgelopen).</a>
-        </p>
-
-
     {% endif %}
     <img src="{% static taklogo %}" alt="Takteken {{ tak }}">
 {% endblock content %}

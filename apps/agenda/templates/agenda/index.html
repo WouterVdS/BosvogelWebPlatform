@@ -3,7 +3,6 @@
 {% block content %}
     <h1>Agenda</h1>
     <h2>Algemeen</h2>
-    {# todo link voor de afgelopen events ook weergeven zoals bij de takviews #}
     {# todo met annotations op model in query werken voor dates! if bij strings mogen weg #}
     {# todo de datum mooier maken, als het maar 1 dag is, geen twee keer weergeven #}
     {% for event in events %}
@@ -17,6 +16,9 @@
         </p>
     {% endfor %}
     <h2>Vergaderingen</h2>
+    <p>
+        <a href="{% url 'agenda:index_all_vergaderingen' %}">Bekijk de afgelopen vergaderingen.</a>
+    </p>
     {% for vergadering in vergaderingen %}
         <p>
             <b>{% if vergadering.tak %}{{ vergadering.get_tak_display }} - {% endif %}

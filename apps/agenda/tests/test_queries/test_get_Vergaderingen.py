@@ -1,10 +1,11 @@
-from datetime import datetime
+from datetime import datetime, date
 
 from django.test import TestCase
 
 from apps.agenda.queries import get_vergaderingen
 from apps.agenda.tests.test_queries.helpers import create_test_data
 from apps.home.constants import Events, Takken
+from apps.home.models import Werkjaar
 
 
 class GetVergaderingenTestCase(TestCase):
@@ -59,3 +60,30 @@ class GetVergaderingenTestCase(TestCase):
                              f'It should not include events from the past:'
                              f'startDate = {event.startDate}'
                              f', endDate = {event.endDate}')
+
+    def test_it_should_return_passed_events_when_all_vergaderingen_is_True(self):
+        # Operate
+        events = get_vergaderingen(Takken.KAPOENEN, True)
+
+        current_workyear = Werkjaar.objects.current_year()
+
+        # Check
+        self.assertIsNotNone(events)
+        has_passed_events = False
+        has_future_events = False
+        has_events_from_last_year = False
+        for event in events:
+            if Werkjaar.objects.current_year(event.startDate).year == current_workyear.year:
+                if event.startDate >= date.today():
+                    has_future_events = True
+                if event.endDate < date.today():
+                    has_passed_events = True
+            if Werkjaar.objects.current_year(event.endDate).year < current_workyear.year:
+                has_events_from_last_year = True
+
+        self.assertTrue(has_future_events,
+                        'When parameter all_vergaderingen is True, it should also return future events')
+        self.assertTrue(has_passed_events,
+                        'When parameter all_vergaderingen is True, it should return events that are before today')
+        self.assertFalse(has_events_from_last_year,
+                         'Events from a previous workyear should never be returned')
