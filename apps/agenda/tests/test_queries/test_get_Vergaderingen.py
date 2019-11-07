@@ -78,7 +78,7 @@ class GetVergaderingenTestCase(TestCase):
                     has_future_events = True
                 if event.endDate < date.today():
                     has_passed_events = True
-            if Werkjaar.objects.current_year(event.endDate).year < current_workyear.year:
+            if get_workyear(event.endDate) < current_workyear:  # pragma:no cover
                 has_events_from_last_year = True
 
         self.assertTrue(has_future_events,

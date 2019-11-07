@@ -28,12 +28,12 @@ class EmptyProfileFilter(admin.SimpleListFilter):
     title = 'dangling totem'
     parameter_name = 'has_profile'
 
-    def lookups(self, request, model_admin):
+    def lookups(self, request, model_admin):  # pragma:no cover
         return (
             ('no', 'Is dangling'),
         )
 
-    def queryset(self, request, queryset):
+    def queryset(self, request, queryset):  # pragma:no cover
         if self.value() == 'no':
             return queryset.filter(profile=None)
 

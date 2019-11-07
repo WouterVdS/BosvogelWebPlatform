@@ -2,7 +2,6 @@ from django.db import models
 
 
 def dangling_totem_count():
-    # todo test
     return Totem.objects.filter(profile=None).count()
 
 

@@ -9,12 +9,12 @@ class EmptyReservationFilter(admin.SimpleListFilter):
     title = 'dangling event due to deleted reservation'
     parameter_name = 'has_reservation'
 
-    def lookups(self, request, model_admin):
+    def lookups(self, request, model_admin):  # pragma:no cover
         return (
             ('no', 'Is dangling'),
         )
 
-    def queryset(self, request, queryset):
+    def queryset(self, request, queryset):  # pragma:no cover
         if self.value() == 'no':
             return queryset.filter(type=Events.RENTAL, reservation=None)
 

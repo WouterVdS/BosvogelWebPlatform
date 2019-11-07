@@ -5,7 +5,6 @@ from apps.place.models import Place
 
 
 def dangling_rental_event_count():
-    # todo test (enkel de rental events waar geen reservation meer aanhangt!)
     return Event.rentals.filter(reservation=None).count()
 
 

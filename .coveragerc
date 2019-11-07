@@ -3,4 +3,5 @@ omit =
     */virtualenv*
     BosvogelWebPlatform/wsgi.py
     *generate_test_data.py
-    *mock_object_creators.py
+    *MockBuilder.py
+    *check_dangling_objects.py

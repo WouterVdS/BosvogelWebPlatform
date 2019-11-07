@@ -16,7 +16,6 @@ from apps.profile.models.profile import Profile
 from apps.profile.models.totem import Totem
 
 from apps.rent.models import Pricing, Reservation, get_prices
-# todo add public events en jincafes, they are shown on /agenda
 
 
 class MockBuilder:
