@@ -7,7 +7,7 @@ from django.test import TestCase
 
 from apps.agenda.models import Event
 from apps.home.constants import Events
-from apps.rent.models import Reservation, Pricing, get_prices
+from apps.rent.models import Reservation, Pricing
 
 
 class PricingTestCase(TestCase):
@@ -66,56 +66,6 @@ class PricingTestCase(TestCase):
 
         # Check
         self.assertEqual(createdAt, afterModification, 'Modification of Pricing should not alter pricesSetOn')
-
-    def test_get_prices_method_returning_the_latest_prices(self):
-        # Build
-        for x in range(0, 10):
-            self.create_pricing()
-
-        # Operate
-        latest_price = get_prices()
-
-        # Check
-        self.assertEqual(latest_price,
-                         Pricing.objects.order_by('-pricesSetOn').first(),
-                         'get_prices() should return the latest price')
-
-        # Extra Build
-        latest_added = self.create_pricing()
-
-        # Extra Operate
-        latest_price = get_prices()
-
-        # Extra Check
-        self.assertEqual(latest_price.id,
-                         latest_added.id,
-                         'get_prices() should return the latest added price')
-
-    def test_get_prices_method_returning_everything_zero_when_database_is_empty(self):
-        # Operate
-        pricing = get_prices()
-
-        # Check
-        self.assertIsNone(Pricing.objects.first(), 'Database should be empty for this test')
-        self.assertEqual(pricing.perPersonPerDay, 0,
-                         'With if the database is empty, get_prices() should have all prices set to zero')
-        self.assertEqual(pricing.dailyMinimum, 0,
-                         'With if the database is empty, get_prices() should have all prices set to zero')
-        self.assertEqual(pricing.electricitykWh, 0,
-                         'With if the database is empty, get_prices() should have all prices set to zero')
-        self.assertEqual(pricing.waterSqM, 0,
-                         'With if the database is empty, get_prices() should have all prices set to zero')
-        self.assertEqual(pricing.gasPerDay, 0,
-                         'With if the database is empty, get_prices() should have all prices set to zero')
-        self.assertEqual(pricing.deposit, 0,
-                         'With if the database is empty, get_prices() should have all prices set to zero')
-
-    def test_get_prices_method_not_creating_pricing_when_database_empty(self):
-        # Operate
-        get_prices()
-
-        # Check
-        self.assertIsNone(Pricing.objects.first())
 
 
 class ReservationTestCase(TestCase):

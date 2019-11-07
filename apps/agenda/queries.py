@@ -2,7 +2,7 @@ from datetime import datetime
 
 from apps.agenda.models import Event
 from apps.home.constants import Events
-from apps.home.models import Werkjaar
+from apps.home.models import get_workyear
 
 
 def get_vergaderingen(tak=None, all_vergaderingen=False):
@@ -11,7 +11,7 @@ def get_vergaderingen(tak=None, all_vergaderingen=False):
         Events.WEEKEND,
         Events.PUBLIC_ACTIVITY])
     if all_vergaderingen:
-        current_year = Werkjaar.objects.current_year().year
+        current_year = get_workyear()
         result = result.filter(endDate__gte=datetime(year=current_year, month=9, day=1))
     else:
         result = result.filter(endDate__gte=datetime.now())

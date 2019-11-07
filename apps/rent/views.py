@@ -8,7 +8,8 @@ from BosvogelWebPlatform import settings
 from BosvogelWebPlatform.settings import EMAIL_ADDRESS_RENT, EMAIL_ADDRESS_NOREPLY
 from apps.agenda.models import Event
 from apps.rent.forms import ReservationForm, PricingForm
-from apps.rent.models import get_prices, Reservation, Pricing
+from apps.rent.models import Reservation, Pricing
+from apps.rent.queries import get_prices
 
 
 def index(request):

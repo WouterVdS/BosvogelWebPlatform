@@ -25,7 +25,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
 
 # Environment Variables, these need to be changed in the production environment!
-DEFAULT_DEBUG = False
+DEFAULT_DEBUG = True
 
 env = environ.Env()
 DEBUG = env('DEBUG', default=DEFAULT_DEBUG)

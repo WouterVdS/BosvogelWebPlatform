@@ -5,7 +5,7 @@ from django.urls import reverse
 
 from apps.agenda.models import Event
 from apps.home.constants import Events, Takken
-from apps.home.models import Werkjaar
+from apps.home.models import Werkjaar, get_workyear
 from apps.place.models import Place
 
 
@@ -438,7 +438,7 @@ class IndexViewTestCase(TestCase):
         # Build
         name = 'future event'
 
-        current_year = Werkjaar.objects.current_year().year
+        current_year = get_workyear()
 
         Event.objects.create(
             name=name,

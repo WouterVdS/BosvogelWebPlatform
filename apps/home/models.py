@@ -13,14 +13,17 @@ def get_yeartheme_logo_path(instance, filename):
     return f'img/jaarthema/logo_jaarthema_{instance.year}-{instance.year-1}.{filename_extension}'
 
 
-class WerkjaarManager(models.Manager):
-    def current_year(self, now=date.today()):
-        september_first = date(now.year, 9, 1)
-        if now >= september_first:
-            werkjaar, created = self.get_or_create(year=now.year)
-        else:
-            werkjaar, created = self.get_or_create(year=now.year - 1)
+def get_workyear(now=date.today()):  # todo wouter tests naar hier laten wijzen
+    september_first = date(now.year, 9, 1)
+    year = now.year
+    if now < september_first:
+        year -= 1
+    return year
 
+
+class WerkjaarManager(models.Manager):
+    def current_year(self, now=date.today()): # todo wouter alles dat dit gebruikt en enkel het jaar nodig heeft de get_workyear laten pakken
+        werkjaar, created = self.get_or_create(year=get_workyear(now))
         if created:
             logger.warning(f'Werkjaar.objects.current_year is called for {now},'
                            f' which did not exist so a new one is created')

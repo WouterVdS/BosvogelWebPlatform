@@ -3,10 +3,13 @@ import datetime
 from django import forms
 
 from apps.agenda.models import Event
-from apps.rent.models import Reservation, Pricing, get_prices
+from apps.rent.models import Reservation, Pricing
 
 
 # noinspection PyPep8Naming
+from apps.rent.queries import get_prices
+
+
 class ReservationForm(forms.ModelForm):
 
     startDate = forms.DateField(widget=forms.SelectDateWidget,

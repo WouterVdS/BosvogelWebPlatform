@@ -5,7 +5,7 @@ from django.test import TestCase
 from apps.agenda.queries import get_vergaderingen
 from apps.agenda.tests.test_queries.helpers import create_test_data
 from apps.home.constants import Events, Takken
-from apps.home.models import Werkjaar
+from apps.home.models import Werkjaar, get_workyear
 
 
 class GetVergaderingenTestCase(TestCase):
@@ -65,7 +65,7 @@ class GetVergaderingenTestCase(TestCase):
         # Operate
         events = get_vergaderingen(Takken.KAPOENEN, True)
 
-        current_workyear = Werkjaar.objects.current_year()
+        current_workyear = get_workyear()
 
         # Check
         self.assertIsNotNone(events)
@@ -73,7 +73,7 @@ class GetVergaderingenTestCase(TestCase):
         has_future_events = False
         has_events_from_last_year = False
         for event in events:
-            if Werkjaar.objects.current_year(event.startDate).year == current_workyear.year:
+            if get_workyear(event.startDate) == current_workyear:
                 if event.startDate >= date.today():
                     has_future_events = True
                 if event.endDate < date.today():

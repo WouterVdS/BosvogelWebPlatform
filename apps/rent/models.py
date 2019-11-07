@@ -1,15 +1,10 @@
-import logging
-
-from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django.dispatch import receiver
-from django.urls import reverse
 
 from apps.agenda.models import Event
 from apps.home.validators import validate_phone_number, validate_iban_format
 from apps.place.models import Place
 
-logger = logging.getLogger(__name__)
 
 NEW_REQUEST = 'NR'
 COMMUNICATING = 'CO'
@@ -93,12 +88,3 @@ class Reservation(models.Model):
 def handle_deleted_reservation(sender, instance, **kwargs):
     if instance.period:
         instance.period.delete()
-
-
-def get_prices():  # todo naar querries
-    try:
-        prices = Pricing.objects.latest('pricesSetOn')
-    except ObjectDoesNotExist:
-        prices = Pricing(perPersonPerDay=0, dailyMinimum=0, electricitykWh=0, waterSqM=0, gasPerDay=0, deposit=0)
-        logger.error('No rent prices set! Go to ' + reverse('rent:manage_rentals') + ' and set pricing for rent!')
-    return prices

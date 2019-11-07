@@ -4,7 +4,8 @@ from django.core import mail
 from django.test import TestCase, Client
 from django.urls import reverse
 
-from apps.rent.models import Pricing, get_prices
+from apps.rent.models import Pricing
+from apps.rent.queries import get_prices
 
 
 def create_a_pricing():
