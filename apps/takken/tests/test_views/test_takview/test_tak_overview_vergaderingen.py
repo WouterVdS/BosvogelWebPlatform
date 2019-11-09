@@ -259,7 +259,7 @@ class TakOverviewVergaderingenTestCase(TestCase):
     def test_day_of_the_week_should_be_displayed(self):
         # Build
         saturday = date.today()
-        while saturday.weekday() != 5:
+        while saturday.weekday() != 5:  # pragma: no cover
             saturday = saturday + timedelta(days=1)
         sunday = date.today()
         while sunday.weekday() != 6:
