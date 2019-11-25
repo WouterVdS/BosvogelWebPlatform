@@ -1,7 +1,7 @@
 from datetime import datetime, date
 
 from django.core import mail
-from django.test import TestCase, Client
+from django.test import TestCase
 from django.urls import reverse
 
 from BosvogelWebPlatform.settings import EMAIL_ADDRESS_RENT, EMAIL_ADDRESS_NOREPLY
@@ -32,6 +32,17 @@ class ReserveTestCase(TestCase):
         # Assert
         self.assertEqual(status_code, 200)
 
+    def test_using_base_html(self):
+        # Build
+        response = self.client.get(reverse('rent:reserve'))
+
+        # Operate
+        content = str(response.content)
+
+        # Check
+        self.assertTrue('<title>De Bosvogels' in content,
+                        'The view template should extend the base template')
+
     def test_title_suffix(self):
         # Build
         response = self.client.get(reverse('rent:reserve'))
@@ -55,11 +66,8 @@ class ReserveTestCase(TestCase):
                         'The reservation form should be displayed')
 
     def test_post_invalid_form_no_redirect(self):
-        # Build
-        client = Client()
-
         # Operate
-        response = client.post(reverse('rent:reserve'), {}, follow=True)
+        response = self.client.post(reverse('rent:reserve'), {}, follow=True)
 
         # Check
         self.assertEqual(response.redirect_chain,
@@ -68,11 +76,10 @@ class ReserveTestCase(TestCase):
 
     def test_post_invalid_form_redisplayed(self):
         # Build
-        client = Client()
         groupName = 'Invalid Form mslijzmleij'
 
         # Operate
-        response = client.post(reverse('rent:reserve'), {
+        response = self.client.post(reverse('rent:reserve'), {
             'groupName': groupName
         })
         content = str(response.content)
@@ -82,11 +89,8 @@ class ReserveTestCase(TestCase):
                         'When the form is invalid, it should be returned filled in')
 
     def test_post_invalid_form_error_messages(self):
-        # Build
-        client = Client()
-
         # Operate
-        response = client.post(reverse('rent:reserve'), {})
+        response = self.client.post(reverse('rent:reserve'), {})
         content = str(response.content)
 
         # Check
@@ -95,11 +99,8 @@ class ReserveTestCase(TestCase):
                          'When the form is invalid, errors should be shown')
 
     def test_post_invalid_form_not_saved(self):
-        # Build
-        client = Client()
-
         # Operate
-        client.post(reverse('rent:reserve'), {})
+        self.client.post(reverse('rent:reserve'), {})
         reservationCount = Reservation.objects.count()
 
         # Check
@@ -108,11 +109,8 @@ class ReserveTestCase(TestCase):
                          'When the form is invalid, no reservations should be saved')
 
     def test_post_invalid_event_not_saved(self):
-        # Build
-        client = Client()
-
         # Operate
-        client.post(reverse('rent:reserve'), {})
+        self.client.post(reverse('rent:reserve'), {})
         eventCount = Event.objects.count()
 
         # Check
@@ -122,12 +120,11 @@ class ReserveTestCase(TestCase):
 
     def test_post_valid_form_saved(self):
         # Build
-        client = Client()
         nextYear = datetime.now().year + 1
         testGroupName = 'Testgroup864568498'
 
         # Operate
-        client.post(reverse('rent:reserve'), {
+        self.client.post(reverse('rent:reserve'), {
             'groupName': testGroupName,
             'town': 'Testtown',
             'email': 'test@test.com',
@@ -147,11 +144,10 @@ class ReserveTestCase(TestCase):
 
     def test_post_valid_form_display_success_message(self):
         # Build
-        client = Client()
         nextYear = datetime.now().year + 1
 
         # Operate
-        response = client.post(reverse('rent:reserve'), {
+        response = self.client.post(reverse('rent:reserve'), {
             'groupName': 'Testgroup',
             'town': 'Testtown',
             'email': 'test@test.com',
@@ -171,11 +167,10 @@ class ReserveTestCase(TestCase):
 
     def test_valid_form_email_send_to_tenant(self):
         # Build
-        client = Client()
         nextYear = datetime.now().year + 1
 
         # Operate
-        client.post(reverse('rent:reserve'), {
+        self.client.post(reverse('rent:reserve'), {
             'groupName': 'TestgroupName',
             'town': 'Testtown',
             'email': 'testgroup@test.com',
@@ -216,11 +211,10 @@ class ReserveTestCase(TestCase):
 
     def test_valid_form_email_send_to_rental_address(self):
         # Build
-        client = Client()
         nextYear = datetime.now().year + 1
 
         # Operate
-        client.post(reverse('rent:reserve'), {
+        self.client.post(reverse('rent:reserve'), {
             'groupName': 'TestgroupName',
             'town': 'Testtown',
             'email': 'testgroup@test.com',
@@ -263,12 +257,11 @@ class ReserveTestCase(TestCase):
 
     def test_post_valid_form_event_saved(self):
         # Build
-        client = Client()
         nextYear = datetime.now().year + 1
         testGroupName = 'Testgroup864568498'
 
         # Operate
-        client.post(reverse('rent:reserve'), {
+        self.client.post(reverse('rent:reserve'), {
             'groupName': testGroupName,
             'town': 'Testtown',
             'email': 'test@test.com',
@@ -291,7 +284,6 @@ class ReserveTestCase(TestCase):
 
     def test_post_valid_form_correct_pricing_set(self):
         # Build
-        client = Client()
         nextYear = datetime.now().year + 1
         testGroupName = 'Testgroup864568498'
 
@@ -304,7 +296,7 @@ class ReserveTestCase(TestCase):
             gasPerDay=55,
             deposit=65
         )
-        client.post(reverse('rent:reserve'), {
+        self.client.post(reverse('rent:reserve'), {
             'groupName': testGroupName,
             'town': 'Testtown',
             'email': 'test@test.com',
@@ -324,14 +316,13 @@ class ReserveTestCase(TestCase):
 
     def test_post_valid_form_event_dates_set_correclty(self):
         # Build
-        client = Client()
         nextYear = datetime.now().year + 1
         testGroupName = 'Testgroup864568498'
         startDate = str(date(nextYear, 7, 1))
         endDate = str(date(nextYear, 7, 10))
 
         # Operate
-        client.post(reverse('rent:reserve'), {
+        self.client.post(reverse('rent:reserve'), {
             'groupName': testGroupName,
             'town': 'Testtown',
             'email': 'test@test.com',
@@ -354,13 +345,12 @@ class ReserveTestCase(TestCase):
 
     def test_post_valid_form_event_times_set_correclty(self):
         # Build
-        client = Client()
         nextYear = datetime.now().year + 1
         startDate = str(date(nextYear, 7, 1))
         endDate = str(date(nextYear, 7, 10))
 
         # Operate
-        client.post(reverse('rent:reserve'), {
+        self.client.post(reverse('rent:reserve'), {
             'groupName': 'Testgroup',
             'town': 'Testtown',
             'email': 'test@test.com',
@@ -383,11 +373,10 @@ class ReserveTestCase(TestCase):
 
     def test_post_valid_form_event_type_set_correclty(self):
         # Build
-        client = Client()
         nextYear = datetime.now().year + 1
 
         # Operate
-        client.post(reverse('rent:reserve'), {
+        self.client.post(reverse('rent:reserve'), {
             'groupName': 'Testgroup',
             'town': 'Testtown',
             'email': 'test@test.com',
@@ -407,12 +396,11 @@ class ReserveTestCase(TestCase):
 
     def test_post_valid_form_event_name_set_correclty(self):
         # Build
-        client = Client()
         nextYear = datetime.now().year + 1
         testGroupName = 'Testgroup864568498'
 
         # Operate
-        client.post(reverse('rent:reserve'), {
+        self.client.post(reverse('rent:reserve'), {
             'groupName': testGroupName,
             'town': 'Testtown',
             'email': 'test@test.com',
@@ -432,14 +420,13 @@ class ReserveTestCase(TestCase):
 
     def test_reserve_with_no_pricing_set(self):
         # Build
-        client = Client()
         nextYear = datetime.now().year + 1
         startDate = str(date(nextYear, 7, 1))
         endDate = str(date(nextYear, 7, 10))
 
         # Operate
         Pricing.objects.all().delete()
-        response = client.post(reverse('rent:reserve'), {
+        response = self.client.post(reverse('rent:reserve'), {
             'groupName': 'Testgroup',
             'town': 'Testtown',
             'email': 'test@test.com',
@@ -459,14 +446,13 @@ class ReserveTestCase(TestCase):
 
     def test_reserve_with_no_pricing_set_should_send_email_to_rental_responsible_and_group_leader(self):
         # Build
-        client = Client()
         nextYear = datetime.now().year + 1
         startDate = str(date(nextYear, 7, 1))
         endDate = str(date(nextYear, 7, 10))
 
         # Operate
         Pricing.objects.all().delete()
-        client.post(reverse('rent:reserve'), {
+        self.client.post(reverse('rent:reserve'), {
             'groupName': 'Testgroup',
             'town': 'Testtown',
             'email': 'test@test.com',

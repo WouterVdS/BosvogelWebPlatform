@@ -25,6 +25,17 @@ class PricingTestCase(TestCase):
         # Assert
         self.assertEqual(status_code, 200)
 
+    def test_using_base_html(self):
+        # Build
+        response = self.client.get(reverse('rent:pricing'))
+
+        # Operate
+        content = str(response.content)
+
+        # Check
+        self.assertTrue('<title>De Bosvogels' in content,
+                        'The view template should extend the base template')
+
     def test_title_suffix(self):
         # Build
         response = self.client.get(reverse('rent:pricing'))

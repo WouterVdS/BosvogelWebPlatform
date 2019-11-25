@@ -1,8 +1,8 @@
-from django.test import TestCase
+from django.test import SimpleTestCase
 from django.urls import reverse
 
 
-class ContractsTestCase(TestCase):
+class ContractsTestCase(SimpleTestCase):
 
     def test_status_code(self):
         # Build
@@ -24,3 +24,14 @@ class ContractsTestCase(TestCase):
         # Check
         self.assertTrue('<title>De Bosvogels - Verhuurcontract</title>' in content,
                         'The correct head title should be displayed')
+
+    def test_using_base_html(self):
+        # Build
+        response = self.client.get(reverse('rent:contracts'))
+
+        # Operate
+        content = str(response.content)
+
+        # Check
+        self.assertTrue('<title>De Bosvogels' in content,
+                        'The view template should extend the base template')

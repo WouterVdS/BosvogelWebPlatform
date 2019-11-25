@@ -1,6 +1,6 @@
 from datetime import datetime, timedelta, time, date
 
-from django.test import TestCase, Client
+from django.test import TestCase
 from django.urls import reverse
 
 from apps.agenda.models import Event
@@ -23,7 +23,7 @@ class TakOverviewVergaderingenTestCase(TestCase):
             )
 
             # Operate
-            response = Client().get(reverse('takken:tak', args=[Takken.TAKKEN[0][1]]))  # kapoenen
+            response = self.client.get(reverse('takken:tak', args=[Takken.TAKKEN[0][1]]))  # kapoenen
             content = str(response.content)
 
             # Check
@@ -105,7 +105,7 @@ class TakOverviewVergaderingenTestCase(TestCase):
         )
 
         # Operate
-        response = Client().get(reverse('takken:tak', args=[Takken.TAKKEN[0][1]]))  # kapoenen
+        response = self.client.get(reverse('takken:tak', args=[Takken.TAKKEN[0][1]]))  # kapoenen
         content = str(response.content)
 
         # Check
@@ -118,7 +118,7 @@ class TakOverviewVergaderingenTestCase(TestCase):
 
     def test_an_empty_inbox_message_is_displayed_when_no_events_are_ready_to_be_shown(self):
         # Operate
-        response = Client().get(reverse('takken:tak', args=[Takken.TAKKEN[0][1]]))  # kapoenen
+        response = self.client.get(reverse('takken:tak', args=[Takken.TAKKEN[0][1]]))  # kapoenen
         content = str(response.content)
 
         # Check
@@ -134,7 +134,7 @@ class TakOverviewVergaderingenTestCase(TestCase):
         )
 
         # Operate
-        response = Client().get(reverse('takken:tak', args=[Takken.TAKKEN[0][1]]))  # kapoenen
+        response = self.client.get(reverse('takken:tak', args=[Takken.TAKKEN[0][1]]))  # kapoenen
         content = str(response.content)
 
         # Check
@@ -163,7 +163,7 @@ class TakOverviewVergaderingenTestCase(TestCase):
         )
 
         # Operate
-        response = Client().get(reverse('takken:tak', args=[Takken.TAKKEN[0][1]]))  # kapoenen
+        response = self.client.get(reverse('takken:tak', args=[Takken.TAKKEN[0][1]]))  # kapoenen
         content = str(response.content)
 
         # Check
@@ -200,7 +200,7 @@ class TakOverviewVergaderingenTestCase(TestCase):
         )
 
         # Operate
-        response = Client().get(reverse('takken:tak', args=[Takken.TAKKEN[0][1]]))  # kapoenen
+        response = self.client.get(reverse('takken:tak', args=[Takken.TAKKEN[0][1]]))  # kapoenen
         content = str(response.content)
 
         expected = f'Zaterdag {start_date.day} januari {next_year} - zondag {start_date.day + 1} januari {next_year}'
@@ -219,7 +219,7 @@ class TakOverviewVergaderingenTestCase(TestCase):
         )
 
         # Operate
-        response = Client().get(reverse('takken:tak', args=[Takken.TAKKEN[0][1]]))  # kapoenen
+        response = self.client.get(reverse('takken:tak', args=[Takken.TAKKEN[0][1]]))  # kapoenen
         content = str(response.content)
         expected = f'1 januari {next_year}'
 
@@ -238,7 +238,7 @@ class TakOverviewVergaderingenTestCase(TestCase):
         )
 
         # Operate
-        response = Client().get(reverse('takken:tak', args=[Takken.TAKKEN[0][1]]))  # kapoenen
+        response = self.client.get(reverse('takken:tak', args=[Takken.TAKKEN[0][1]]))  # kapoenen
         content = str(response.content)
 
         # Check
@@ -249,7 +249,7 @@ class TakOverviewVergaderingenTestCase(TestCase):
         # Build
 
         # Operate
-        response = Client().get(reverse('takken:tak', args=[Takken.TAKKEN[9][1]]))  # groepsleiding
+        response = self.client.get(reverse('takken:tak', args=[Takken.TAKKEN[9][1]]))  # groepsleiding
         content = str(response.content)
 
         # Check
@@ -276,7 +276,7 @@ class TakOverviewVergaderingenTestCase(TestCase):
         )
 
         # Operate
-        response = Client().get(reverse('takken:tak', args=[Takken.TAKKEN[0][1]]))  # kapoenen
+        response = self.client.get(reverse('takken:tak', args=[Takken.TAKKEN[0][1]]))  # kapoenen
         content = str(response.content)
 
         # Check
@@ -299,7 +299,7 @@ class TakOverviewVergaderingenTestCase(TestCase):
         )
 
         # Operate
-        response = Client().get(reverse('takken:tak_all_vergaderingen', args=[Takken.TAKKEN[0][1]]))  # kapoenen
+        response = self.client.get(reverse('takken:tak_all_vergaderingen', args=[Takken.TAKKEN[0][1]]))  # kapoenen
         content = str(response.content)
 
         # Check
@@ -322,7 +322,7 @@ class TakOverviewVergaderingenTestCase(TestCase):
         )
 
         # Operate
-        response = Client().get(reverse('takken:tak_all_vergaderingen', args=[Takken.TAKKEN[0][1]]))  # kapoenen
+        response = self.client.get(reverse('takken:tak_all_vergaderingen', args=[Takken.TAKKEN[0][1]]))  # kapoenen
         content = str(response.content)
 
         # Check

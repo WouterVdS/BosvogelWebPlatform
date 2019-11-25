@@ -1,6 +1,6 @@
 from datetime import datetime, date, time, timedelta
 
-from django.test import Client, TestCase
+from django.test import TestCase
 from django.urls import reverse
 
 from apps.agenda.models import Event
@@ -13,10 +13,21 @@ class IndexViewTestCase(TestCase):
 
     def test_index_response_code(self):
         # Operate
-        response = Client().get(reverse('agenda:index'))
+        response = self.client.get(reverse('agenda:index'))
 
         # Check
         self.assertEqual(response.status_code, 200, 'Index should have a HTTP OK response')
+
+    def test_using_base_html(self):
+        # Build
+        response = self.client.get(reverse('agenda:index'))
+
+        # Operate
+        content = str(response.content)
+
+        # Check
+        self.assertTrue('<title>De Bosvogels' in content,
+                        'The view template should extend the base template')
 
     def test_order_of_displayed_events_by_date(self):
         # Build public events
@@ -58,7 +69,7 @@ class IndexViewTestCase(TestCase):
         )
 
         # Operate
-        response = Client().get(reverse('agenda:index'))
+        response = self.client.get(reverse('agenda:index'))
         content = str(response.content)
 
         # Check
@@ -116,7 +127,7 @@ class IndexViewTestCase(TestCase):
         )
 
         # Operate
-        response = Client().get(reverse('agenda:index'))
+        response = self.client.get(reverse('agenda:index'))
         content = str(response.content)
 
         # Check
@@ -156,7 +167,7 @@ class IndexViewTestCase(TestCase):
         )
 
         # Operate
-        response = Client().get(reverse('agenda:index'))
+        response = self.client.get(reverse('agenda:index'))
         content = str(response.content)
 
         # Check
@@ -179,7 +190,7 @@ class IndexViewTestCase(TestCase):
         )
 
         # Operate
-        response = Client().get(reverse('agenda:index'))
+        response = self.client.get(reverse('agenda:index'))
         content = str(response.content)
 
         # Check
@@ -207,7 +218,7 @@ class IndexViewTestCase(TestCase):
         )
 
         # Operate
-        response = Client().get(reverse('agenda:index'))
+        response = self.client.get(reverse('agenda:index'))
         content = str(response.content)
 
         # Check
@@ -232,7 +243,7 @@ class IndexViewTestCase(TestCase):
         )
 
         # Operate
-        response = Client().get(reverse('agenda:index'))
+        response = self.client.get(reverse('agenda:index'))
         content = str(response.content)
         # Check
         self.assertFalse('None' in content,
@@ -247,7 +258,7 @@ class IndexViewTestCase(TestCase):
         )
 
         # Operate
-        response = Client().get(reverse('agenda:index'))
+        response = self.client.get(reverse('agenda:index'))
         content = str(response.content)
 
         # Check
@@ -263,7 +274,7 @@ class IndexViewTestCase(TestCase):
         )
 
         # Operate
-        response = Client().get(reverse('agenda:index'))
+        response = self.client.get(reverse('agenda:index'))
         content = str(response.content)
 
         # Check
@@ -279,7 +290,7 @@ class IndexViewTestCase(TestCase):
         )
 
         # Operate
-        response = Client().get(reverse('agenda:index'))
+        response = self.client.get(reverse('agenda:index'))
         content = str(response.content)
 
         # Check
@@ -295,7 +306,7 @@ class IndexViewTestCase(TestCase):
         )
 
         # Operate
-        response = Client().get(reverse('agenda:index'))
+        response = self.client.get(reverse('agenda:index'))
         content = str(response.content)
 
         # Check
@@ -311,7 +322,7 @@ class IndexViewTestCase(TestCase):
         )
 
         # Operate
-        response = Client().get(reverse('agenda:index'))
+        response = self.client.get(reverse('agenda:index'))
         content = str(response.content)
 
         # Check
@@ -327,7 +338,7 @@ class IndexViewTestCase(TestCase):
         )
 
         # Operate
-        response = Client().get(reverse('agenda:index'))
+        response = self.client.get(reverse('agenda:index'))
         content = str(response.content)
 
         # Check
@@ -343,7 +354,7 @@ class IndexViewTestCase(TestCase):
         )
 
         # Operate
-        response = Client().get(reverse('agenda:index'))
+        response = self.client.get(reverse('agenda:index'))
         content = str(response.content)
 
         # Check
@@ -359,7 +370,7 @@ class IndexViewTestCase(TestCase):
         )
 
         # Operate
-        response = Client().get(reverse('agenda:index'))
+        response = self.client.get(reverse('agenda:index'))
         content = str(response.content)
 
         # Check
@@ -375,7 +386,7 @@ class IndexViewTestCase(TestCase):
         )
 
         # Operate
-        response = Client().get(reverse('agenda:index'))
+        response = self.client.get(reverse('agenda:index'))
         content = str(response.content)
 
         # Check
@@ -402,7 +413,7 @@ class IndexViewTestCase(TestCase):
         )
 
         # Operate
-        response = Client().get(reverse('agenda:index'))
+        response = self.client.get(reverse('agenda:index'))
         content = str(response.content)
 
         # Check
@@ -425,7 +436,7 @@ class IndexViewTestCase(TestCase):
         )
 
         # Operate
-        response = Client().get(reverse('agenda:index_all_vergaderingen'))
+        response = self.client.get(reverse('agenda:index_all_vergaderingen'))
         content = str(response.content)
 
         # Check
@@ -448,7 +459,7 @@ class IndexViewTestCase(TestCase):
         )
 
         # Operate
-        response = Client().get(reverse('agenda:index'))
+        response = self.client.get(reverse('agenda:index'))
         content = str(response.content)
 
         # Check
@@ -457,7 +468,7 @@ class IndexViewTestCase(TestCase):
 
     def test_it_should_contain_a_link_to_all_vergaderingen(self):
         # Operate
-        response = Client().get(reverse('agenda:index'))
+        response = self.client.get(reverse('agenda:index'))
         content = str(response.content)
 
         # Check

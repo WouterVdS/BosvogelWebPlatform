@@ -1,6 +1,6 @@
 import html
 
-from django.test import TestCase, Client
+from django.test import TestCase
 from django.urls import reverse
 
 from apps.home.constants import Takken
@@ -10,7 +10,7 @@ class TakOverviewGeneralTestCase(TestCase):
 
     def test_index_response_code(self):
         # Operate
-        response = Client().get(reverse('takken:index'))
+        response = self.client.get(reverse('takken:index'))
 
         # Check
         self.assertEqual(response.status_code, 200, 'Index should have a HTTP OK response')
@@ -18,7 +18,7 @@ class TakOverviewGeneralTestCase(TestCase):
     def test_tak_views_for_all_takken_response_code(self):
         for (abbreviation, tak) in Takken.TAKKEN:
             # Operate
-            response = Client().get(reverse('takken:tak', args=[tak.lower()]))
+            response = self.client.get(reverse('takken:tak', args=[tak.lower()]))
             content = str(response.content)
 
             # Check
@@ -27,10 +27,32 @@ class TakOverviewGeneralTestCase(TestCase):
             self.assertTrue('<title>De Bosvogels -  ' + tak + '</title>' in content,
                             'The right page should be displayed for ' + tak)
 
+    def test_using_base_html(self):
+        # Build
+        response = self.client.get(reverse('takken:index'))
+
+        # Operate
+        content = str(response.content)
+
+        # Check
+        self.assertTrue('<title>De Bosvogels' in content,
+                        'The template should extend the base template')
+
+    def test_using_base_html_for_tak(self):
+        # Build
+        response = self.client.get(reverse('takken:tak', args=[Takken.TAKKEN[0][1]]))
+
+        # Operate
+        content = str(response.content)
+
+        # Check
+        self.assertTrue('<title>De Bosvogels' in content,
+                        'The template should extend the base template')
+
     def test_tak_views_for_all_takken_should_have_tak_in_content(self):
         for (abbreviation, tak) in Takken.TAKKEN:
             # Operate
-            response = Client().get(reverse('takken:tak', args=[tak.lower()]))
+            response = self.client.get(reverse('takken:tak', args=[tak.lower()]))
             content = str(response.content)
 
             # Check
@@ -45,7 +67,7 @@ class TakOverviewGeneralTestCase(TestCase):
 
         for (abbreviation, tak) in Takken.TAKKEN:
             # Operate
-            response = Client().get(reverse('takken:tak', args=[tak.lower()]))
+            response = self.client.get(reverse('takken:tak', args=[tak.lower()]))
             content = str(response.content)
 
             age = ''
@@ -65,7 +87,7 @@ class TakOverviewGeneralTestCase(TestCase):
 
         for (abbreviation, tak) in Takken.TAKKEN:
             # Operate
-            response = Client().get(reverse('takken:tak', args=[tak.lower()]))
+            response = self.client.get(reverse('takken:tak', args=[tak.lower()]))
             content = str(response.content)
 
             tak_logo = ''
@@ -85,7 +107,7 @@ class TakOverviewGeneralTestCase(TestCase):
 
         for (abbreviation, tak) in Takken.TAKKEN:
             # Operate
-            response = Client().get(reverse('takken:tak', args=[tak.lower()]))
+            response = self.client.get(reverse('takken:tak', args=[tak.lower()]))
             content = html.unescape(str(response.content))
 
             description = ''
@@ -100,7 +122,7 @@ class TakOverviewGeneralTestCase(TestCase):
 
     def test_redirect_on_wrong_takname_in_url(self):
         # Operate
-        response = Client().get(reverse('takken:tak', args=['gibberish']))
+        response = self.client.get(reverse('takken:tak', args=['gibberish']))
 
         # Check
         self.assertEqual(response.status_code, 302,
@@ -110,14 +132,14 @@ class TakOverviewGeneralTestCase(TestCase):
 
     def test_after_leader_view_response_code(self):
         # Operate
-        response = Client().get(reverse('takken:afterleader'))
+        response = self.client.get(reverse('takken:afterleader'))
 
         # Check
         self.assertEqual(response.status_code, 200, 'Afterleader view should have a HTTP OK response')
 
     def test_it_should_contain_a_link_to_all_vergaderingen(self):
         # Operate
-        response = Client().get(reverse('takken:tak', args=[Takken.TAKKEN[0][1]]))
+        response = self.client.get(reverse('takken:tak', args=[Takken.TAKKEN[0][1]]))
         content = str(response.content)
 
         # Check
