@@ -1,4 +1,4 @@
-from django.test import TestCase, Client
+from django.test import TestCase
 from django.urls import reverse
 
 from apps.home.constants import Takken
@@ -8,7 +8,7 @@ from apps.profile.models.profile import Profile
 from apps.profile.tests.test_models.test_profile import ProfileTestCase
 
 
-class TakviewLeidingTestCase(TestCase):
+class TakOverviewLeidingTestCase(TestCase):
 
     def test_every_takpage_should_show_leaders(self):
         this_year = Werkjaar.objects.current_year()
@@ -26,7 +26,7 @@ class TakviewLeidingTestCase(TestCase):
             )
 
             # Operate
-            response = Client().get(reverse('takken:tak', args=[tak[1]]))
+            response = self.client.get(reverse('takken:tak', args=[tak[1]]))
             content = str(response.content)
 
             # Check
@@ -41,7 +41,7 @@ class TakviewLeidingTestCase(TestCase):
             if tak[1] == 'Leiding':
                 break
             # Operate
-            response = Client().get(reverse('takken:tak', args=[tak[1]]))
+            response = self.client.get(reverse('takken:tak', args=[tak[1]]))
             content = str(response.content)
 
             # Check
@@ -55,7 +55,7 @@ class TakviewLeidingTestCase(TestCase):
         errors = []
 
         # Operate
-        response = Client().get(reverse('takken:tak', args=['leiding']))
+        response = self.client.get(reverse('takken:tak', args=['leiding']))
         content = str(response.content)
 
         # Check
@@ -109,7 +109,7 @@ class TakviewLeidingTestCase(TestCase):
                                       first_name='Jeroenni'
                                   ))
         # Operate
-        response = Client().get(reverse('takken:tak', args=['kapoenen']))
+        response = self.client.get(reverse('takken:tak', args=['kapoenen']))
         content = str(response.content)
 
         # Check
@@ -133,7 +133,7 @@ class TakviewLeidingTestCase(TestCase):
                                   profile=Profile.objects.create())
 
         # Operate
-        response = Client().get(reverse('takken:tak', args=['kapoenen']))
+        response = self.client.get(reverse('takken:tak', args=['kapoenen']))
         content = str(response.content)
 
         # Check
@@ -156,7 +156,7 @@ class TakviewLeidingTestCase(TestCase):
         self.assertIsNotNone(Membership.objects.first())
 
         # Operate
-        response = Client().get(reverse('takken:tak', args=['jins']))
+        response = self.client.get(reverse('takken:tak', args=['jins']))
         content = str(response.content)
         # Check
         self.assertTrue(profile.first_name in content,
@@ -193,7 +193,7 @@ class TakviewLeidingTestCase(TestCase):
         )
 
         # Operate
-        response = Client().get(reverse('takken:tak', args=['kapoenen']))
+        response = self.client.get(reverse('takken:tak', args=['kapoenen']))
         content = str(response.content)
 
         # Check

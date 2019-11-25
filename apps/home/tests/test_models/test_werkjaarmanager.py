@@ -85,3 +85,20 @@ class WerkjaarManagerTestCase(TestCase):
             self.assertIn('which did not exist so a new one is created',
                           loggerWatcher.output[0],
                           'It should log the warning that a new werkjaar is created')
+
+    def test_current_year_for_date(self):
+        # Build
+        dates = [
+            [date(2019, 8, 31), 2018],
+            [date(2019, 9, 1), 2019],
+            [date(2019, 1, 1), 2018],
+            [date(2019, 12, 31), 2019],
+        ]
+
+        for test_line in dates:
+            # Operate
+            result = Werkjaar.objects.current_year(test_line[0]).year
+
+            # Check
+            self.assertEqual(result, test_line[1],
+                             f'{test_line[0]} should be in workyear {test_line[1] - 1} - {test_line[1]}')

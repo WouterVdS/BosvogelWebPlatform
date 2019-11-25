@@ -54,8 +54,8 @@ class GetActiveLeaderMembershipsTestCase(TestCase):
 
         # Assert
         for membership in memberships:
-            self.assertEqual(Werkjaar.objects.current_year(), membership.werkjaar,
-                             'Only leaders should be returned')
+            self.assertEqual(membership.werkjaar, Werkjaar.objects.current_year(),
+                             'Only memberships of this workyear should be returned')
 
     def test_it_should_return_leaders_of_all_takken(self):
         # Operate

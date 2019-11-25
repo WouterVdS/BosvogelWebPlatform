@@ -76,9 +76,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'debug_toolbar',
 ]
 
 MIDDLEWARE = [
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -114,6 +116,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'BosvogelWebPlatform.wsgi.application'
 
+INTERNAL_IPS = ['127.0.0.1']
 
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
@@ -159,3 +162,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
 STATIC_URL = '/static/'
+
+# Django Debug Toolbar
+# Fix for this problem: https://github.com/jazzband/django-debug-toolbar/issues/1035
+DEBUG_TOOLBAR_CONFIG = {
+    'SHOW_TOOLBAR_CALLBACK':
+        lambda r:
+            r.environ.get('SERVER_NAME', None) != 'testserver'and (r.META.get('REMOTE_ADDR', None) in INTERNAL_IPS)
+}

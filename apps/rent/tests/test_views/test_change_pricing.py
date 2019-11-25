@@ -1,10 +1,22 @@
 import logging
 
 from django.core import mail
-from django.test import TestCase, Client
+from django.test import TestCase
 from django.urls import reverse
 
-from apps.rent.models import Pricing, get_prices
+from apps.rent.models import Pricing
+from apps.rent.queries import get_prices
+
+
+def create_a_pricing():
+    Pricing.objects.create(
+        perPersonPerDay=1,
+        dailyMinimum=2,
+        electricitykWh=3,
+        waterSqM=4,
+        gasPerDay=5,
+        deposit=6
+    )
 
 
 class ChangePricingTestCase(TestCase):
@@ -36,6 +48,18 @@ class ChangePricingTestCase(TestCase):
         self.assertTrue('<title>De Bosvogels - Verhuur</title>' in content,
                         'The correct head title should be displayed')
 
+    def test_using_base_html(self):
+        # Build
+        response = self.client.get(reverse('rent:change_pricing'))
+
+        # Operate
+        content = str(response.content)
+
+        # Check
+        self.assertTrue('<title>De Bosvogels' in content,
+                        'The view template should extend the base template')
+
+
     # todo when userapp completed
 
     #    def test_page_inaccessible_when_not_logged_in(self):
@@ -48,7 +72,6 @@ class ChangePricingTestCase(TestCase):
     #    def test_TODO_USERS_access_restricted_to_grl_and_rental_managers(self):
     #        self.assertTrue(False, 'todo')
     #
-
 
     def test_get_all_null_values_in_form_when_database_empty(self):
         # Build
@@ -83,11 +106,8 @@ class ChangePricingTestCase(TestCase):
                          'The latest prices should be displayed')
 
     def test_post_valid_form_redirect(self):
-        # Build
-        client = Client()
-
         # Operate
-        response = client.post(reverse('rent:change_pricing'), {
+        response = self.client.post(reverse('rent:change_pricing'), {
             'perPersonPerDay': '12',
             'dailyMinimum': '12',
             'electricitykWh': '12',
@@ -102,11 +122,8 @@ class ChangePricingTestCase(TestCase):
                          'A successful change of price should redirect to the pricing page')
 
     def test_post_valid_pricing_changed(self):
-        # Build
-        client = Client()
-
         # Operate
-        client.post(reverse('rent:change_pricing'), {
+        self.client.post(reverse('rent:change_pricing'), {
             'perPersonPerDay': '12',
             'dailyMinimum': '12',
             'electricitykWh': '12',
@@ -124,10 +141,9 @@ class ChangePricingTestCase(TestCase):
 
     def test_post_valid_form_redirect_show_success_message(self):
         # Build
-        client = Client()
 
         # Operate
-        response = client.post(reverse('rent:change_pricing'), {
+        response = self.client.post(reverse('rent:change_pricing'), {
             'perPersonPerDay': '12',
             'dailyMinimum': '12',
             'electricitykWh': '12',
@@ -144,10 +160,9 @@ class ChangePricingTestCase(TestCase):
 
     def test_post_valid_form_redirect_show_correct_pricing(self):
         # Build
-        client = Client()
 
         # Operate
-        response = client.post(reverse('rent:change_pricing'), {
+        response = self.client.post(reverse('rent:change_pricing'), {
             'perPersonPerDay': '12',
             'dailyMinimum': '12',
             'electricitykWh': '12',
@@ -177,10 +192,9 @@ class ChangePricingTestCase(TestCase):
 
     def test_post_invalid_form_no_redirect(self):
         # Build
-        client = Client()
 
         # Operate
-        response = client.post(reverse('rent:change_pricing'), {
+        response = self.client.post(reverse('rent:change_pricing'), {
             'perPersonPerDay': '12',
         }, follow=True)
 
@@ -191,18 +205,10 @@ class ChangePricingTestCase(TestCase):
 
     def test_post_invalid_form_no_redirect_when_no_prices_changed(self):
         # Build
-        Pricing.objects.create(
-            perPersonPerDay=1,
-            dailyMinimum=2,
-            electricitykWh=3,
-            waterSqM=4,
-            gasPerDay=5,
-            deposit=6
-        )
-        client = Client()
+        create_a_pricing()
 
         # Operate
-        response = client.post(reverse('rent:change_pricing'), {
+        response = self.client.post(reverse('rent:change_pricing'), {
             'perPersonPerDay': '1',
             'dailyMinimum': '2',
             'electricitykWh': '3',
@@ -218,18 +224,10 @@ class ChangePricingTestCase(TestCase):
 
     def test_post_invalid_form_error_message_on_nothing_changed(self):
         # Build
-        Pricing.objects.create(
-            perPersonPerDay=1,
-            dailyMinimum=2,
-            electricitykWh=3,
-            waterSqM=4,
-            gasPerDay=5,
-            deposit=6
-        )
-        client = Client()
+        create_a_pricing()
 
         # Operate
-        response = client.post(reverse('rent:change_pricing'), {
+        response = self.client.post(reverse('rent:change_pricing'), {
             'perPersonPerDay': '1',
             'dailyMinimum': '2',
             'electricitykWh': '3',
@@ -249,17 +247,10 @@ class ChangePricingTestCase(TestCase):
 
     def test_email_send_when_prices_changed(self):
         # Build
-        client = Client()
-        Pricing.objects.create(
-            perPersonPerDay=1,
-            dailyMinimum=2,
-            electricitykWh=3,
-            waterSqM=4,
-            gasPerDay=5,
-            deposit=6
-        )
+        create_a_pricing()
+
         # Operate
-        client.post(reverse('rent:change_pricing'), {
+        self.client.post(reverse('rent:change_pricing'), {
             'perPersonPerDay': '12',
             'dailyMinimum': '12',
             'electricitykWh': '12',
@@ -276,7 +267,6 @@ class ChangePricingTestCase(TestCase):
 
     def test_email_has_correct_data_when_prices_changed(self):
         # Build
-        client = Client()
         Pricing.objects.create(
             perPersonPerDay=10,
             dailyMinimum=20,
@@ -294,7 +284,7 @@ class ChangePricingTestCase(TestCase):
             deposit=6
         )
         # Operate
-        client.post(reverse('rent:change_pricing'), {
+        self.client.post(reverse('rent:change_pricing'), {
             'perPersonPerDay': '12',
             'dailyMinimum': '12',
             'electricitykWh': '12',

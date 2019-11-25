@@ -1,6 +1,7 @@
 from django.test import TestCase
 
-from apps.profile.models.totem import Totem
+from apps.profile.models.profile import Profile
+from apps.profile.models.totem import Totem, dangling_totem_count
 
 
 class TotemTestCase(TestCase):
@@ -124,3 +125,32 @@ class TotemTestCase(TestCase):
             '',
             'String method should be something sensible'
         )
+
+    def test_dangling_totem_count_zero(self):
+        # Build
+        Profile.objects.create()
+        totem = Totem.objects.create(
+            totem='test'
+        )
+        Profile.objects.create(
+            totem=totem
+        )
+        # Operate
+        result = dangling_totem_count()
+
+        # Check
+        self.assertEqual(result,
+                         0,
+                         'No dangling totems should be found')
+
+    def test_dangling_totem_count(self):
+        # Build
+        Totem.objects.create()
+
+        # Operate
+        result = dangling_totem_count()
+
+        # Check
+        self.assertEqual(result,
+                         1,
+                         'There should be one dangling totem (totem not connected to a profile')

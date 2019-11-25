@@ -5,18 +5,40 @@ from apps.profile.models.profile import Profile
 from apps.profile.models.totem import Totem
 
 
+class MembershipInline(admin.TabularInline):
+    model = Membership
+    extra = 1
+
+
 @admin.register(Profile)
 class ProfileAdmin(admin.ModelAdmin):
     list_display = ['first_name', 'nickname', 'last_name', 'email', 'birthday', 'sex', 'phone_number',
                     'bank_account_number', 'totem']
+    inlines = [MembershipInline]
 
 
 @admin.register(Membership)
 class MembershipAdmin(admin.ModelAdmin):
     list_display = ['profile', 'werkjaar', 'is_leader', 'tak']
-    list_filter = ['werkjaar', 'tak', 'is_leader']
+    list_filter = ['is_leader', 'tak', 'werkjaar']
+
+
+class EmptyProfileFilter(admin.SimpleListFilter):
+
+    title = 'dangling totem'
+    parameter_name = 'has_profile'
+
+    def lookups(self, request, model_admin):  # pragma:no cover
+        return (
+            ('no', 'Is dangling'),
+        )
+
+    def queryset(self, request, queryset):  # pragma:no cover
+        if self.value() == 'no':
+            return queryset.filter(profile=None)
 
 
 @admin.register(Totem)
 class TotemAdmin(admin.ModelAdmin):
     list_display = ['kleurentotem', 'voortotem', 'totem']
+    list_filter = [EmptyProfileFilter]

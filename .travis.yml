@@ -14,6 +14,6 @@ install:
   - pip install python-coveralls
   - python manage.py makemigrations
 script:
-  - coverage run --omit="*/virtualenv*,BosvogelWebPlatform/wsgi.py" manage.py test
+  - coverage run manage.py test
 after_success:
   - coveralls

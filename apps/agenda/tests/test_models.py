@@ -2,8 +2,9 @@ from datetime import datetime, date, time
 
 from django.test import TestCase
 
-from apps.agenda.models import Event, Place
+from apps.agenda.models import Event, Place, dangling_rental_event_count
 from apps.home.constants import Takken, Events
+from apps.rent.models import Reservation
 
 
 class AgendaTestCase(TestCase):
@@ -257,3 +258,45 @@ class AgendaTestCase(TestCase):
                 # Check
                 self.assertFalse(available,
                                  f'{period} should not be available for rent because it overlaps with the existing one')
+
+    def test_dangling_rental_event_count_zero(self):
+        # Build
+        for event_type in Events.EVENT_TYPES:
+            if event_type[0] == Events.RENTAL:
+                break
+            Event.objects.create(
+                type=event_type[0],
+                startDate=date.today(),
+            )
+
+        # Operate
+        result = dangling_rental_event_count()
+
+        # Check
+        self.assertEqual(result,
+                         0,
+                         'No dangling rental events should be found')
+
+    def test_dangling_rental_event_count(self):
+        # Build
+        for event_type in Events.EVENT_TYPES:
+            Event.objects.create(
+                type=event_type[0],
+                startDate=date.today(),
+            )
+        rental_event = Event.objects.create(
+            type=Events.RENTAL,
+            startDate=date.today(),
+        )
+        Reservation.objects.create(
+            period=rental_event,
+            numberOfPeople=20
+        )
+
+        # Operate
+        result = dangling_rental_event_count()
+
+        # Check
+        self.assertEqual(result,
+                         1,
+                         'Only one dangling event should be returned, the one created without reservation')

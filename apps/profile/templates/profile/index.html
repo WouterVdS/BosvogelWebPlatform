@@ -1,0 +1,8 @@
+{% extends 'home/base.html' %}
+
+{% block content %}
+    leiding:
+{% for leader in leaders %}
+    <h3>{{ leader }}</h3>
+    {% endfor %}
+{% endblock content %}

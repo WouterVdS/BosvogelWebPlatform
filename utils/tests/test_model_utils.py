@@ -3,7 +3,7 @@ import shutil
 from io import BytesIO
 
 from PIL import Image
-from django.test import TestCase, override_settings
+from django.test import SimpleTestCase, override_settings
 
 from BosvogelWebPlatform.settings import BASE_DIR
 from utils.model_utils import OverwriteOnSameNameStorage
@@ -12,7 +12,7 @@ TEST_IMAGE_NAME = 'test_image.png'
 
 
 @override_settings(MEDIA_ROOT=os.path.join(BASE_DIR, 'test_media_root'))
-class ModelUtilsTestCase(TestCase):
+class ModelUtilsTestCase(SimpleTestCase):
 
     test_dir = os.path.join(BASE_DIR, 'test_media_root')
 

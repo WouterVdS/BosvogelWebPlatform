@@ -46,9 +46,9 @@ class ReservationFormTestCase(TestCase):
         ]
 
         for field in fields:
-            invalidData = self.formData.copy()
-            invalidData[field] = ''
-            form = ReservationForm(invalidData)
+            invalid_data = self.formData.copy()
+            invalid_data[field] = ''
+            form = ReservationForm(invalid_data)
 
             # Operate
             valid = form.is_valid()

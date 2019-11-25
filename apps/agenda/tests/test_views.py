@@ -1,10 +1,11 @@
-from datetime import datetime, date, time
+from datetime import datetime, date, time, timedelta
 
-from django.test import Client, TestCase
+from django.test import TestCase
 from django.urls import reverse
 
 from apps.agenda.models import Event
 from apps.home.constants import Events, Takken
+from apps.home.models import Werkjaar, get_workyear
 from apps.place.models import Place
 
 
@@ -12,10 +13,21 @@ class IndexViewTestCase(TestCase):
 
     def test_index_response_code(self):
         # Operate
-        response = Client().get(reverse('agenda:index'))
+        response = self.client.get(reverse('agenda:index'))
 
         # Check
         self.assertEqual(response.status_code, 200, 'Index should have a HTTP OK response')
+
+    def test_using_base_html(self):
+        # Build
+        response = self.client.get(reverse('agenda:index'))
+
+        # Operate
+        content = str(response.content)
+
+        # Check
+        self.assertTrue('<title>De Bosvogels' in content,
+                        'The view template should extend the base template')
 
     def test_order_of_displayed_events_by_date(self):
         # Build public events
@@ -57,7 +69,7 @@ class IndexViewTestCase(TestCase):
         )
 
         # Operate
-        response = Client().get(reverse('agenda:index'))
+        response = self.client.get(reverse('agenda:index'))
         content = str(response.content)
 
         # Check
@@ -115,7 +127,7 @@ class IndexViewTestCase(TestCase):
         )
 
         # Operate
-        response = Client().get(reverse('agenda:index'))
+        response = self.client.get(reverse('agenda:index'))
         content = str(response.content)
 
         # Check
@@ -128,19 +140,18 @@ class IndexViewTestCase(TestCase):
 
     def test_it_should_not_display_passed_events(self):
         # Build
-        year = datetime.now().year
-        month = datetime.now().month
+        today = datetime.now()
+        hour = today.hour
         Event.objects.create(
             name='Past event',
-            startDate=date(year, month - 1, 1),
+            startDate=today - timedelta(weeks=4),
             type=Events.WEEKLY_ACTIVITY
         )
         Event.objects.create(
             name='Past event',
-            startDate=date(year, month - 1, 1),
+            startDate=today - timedelta(weeks=4),
             type=Events.PUBLIC_ACTIVITY
         )
-        hour = datetime.now().hour
         Event.objects.create(
             name='Event currently busy timewise',
             startDate=datetime.now().date(),
@@ -148,16 +159,15 @@ class IndexViewTestCase(TestCase):
             endTime=time(min(23, hour + 1), 0, 0),
             type=Events.PUBLIC_ACTIVITY
         )
-        day = datetime.now().day
         Event.objects.create(
             name='Event currently busy datewise',
-            startDate=date(year, month - 1, day),
-            endDate=date(year, month, day + 2),
+            startDate=today - timedelta(days=2),
+            endDate=today + timedelta(days=2),
             type=Events.PUBLIC_ACTIVITY
         )
 
         # Operate
-        response = Client().get(reverse('agenda:index'))
+        response = self.client.get(reverse('agenda:index'))
         content = str(response.content)
 
         # Check
@@ -180,7 +190,7 @@ class IndexViewTestCase(TestCase):
         )
 
         # Operate
-        response = Client().get(reverse('agenda:index'))
+        response = self.client.get(reverse('agenda:index'))
         content = str(response.content)
 
         # Check
@@ -208,7 +218,7 @@ class IndexViewTestCase(TestCase):
         )
 
         # Operate
-        response = Client().get(reverse('agenda:index'))
+        response = self.client.get(reverse('agenda:index'))
         content = str(response.content)
 
         # Check
@@ -233,7 +243,7 @@ class IndexViewTestCase(TestCase):
         )
 
         # Operate
-        response = Client().get(reverse('agenda:index'))
+        response = self.client.get(reverse('agenda:index'))
         content = str(response.content)
         # Check
         self.assertFalse('None' in content,
@@ -248,7 +258,7 @@ class IndexViewTestCase(TestCase):
         )
 
         # Operate
-        response = Client().get(reverse('agenda:index'))
+        response = self.client.get(reverse('agenda:index'))
         content = str(response.content)
 
         # Check
@@ -264,7 +274,7 @@ class IndexViewTestCase(TestCase):
         )
 
         # Operate
-        response = Client().get(reverse('agenda:index'))
+        response = self.client.get(reverse('agenda:index'))
         content = str(response.content)
 
         # Check
@@ -280,7 +290,7 @@ class IndexViewTestCase(TestCase):
         )
 
         # Operate
-        response = Client().get(reverse('agenda:index'))
+        response = self.client.get(reverse('agenda:index'))
         content = str(response.content)
 
         # Check
@@ -296,7 +306,7 @@ class IndexViewTestCase(TestCase):
         )
 
         # Operate
-        response = Client().get(reverse('agenda:index'))
+        response = self.client.get(reverse('agenda:index'))
         content = str(response.content)
 
         # Check
@@ -312,7 +322,7 @@ class IndexViewTestCase(TestCase):
         )
 
         # Operate
-        response = Client().get(reverse('agenda:index'))
+        response = self.client.get(reverse('agenda:index'))
         content = str(response.content)
 
         # Check
@@ -328,7 +338,7 @@ class IndexViewTestCase(TestCase):
         )
 
         # Operate
-        response = Client().get(reverse('agenda:index'))
+        response = self.client.get(reverse('agenda:index'))
         content = str(response.content)
 
         # Check
@@ -344,7 +354,7 @@ class IndexViewTestCase(TestCase):
         )
 
         # Operate
-        response = Client().get(reverse('agenda:index'))
+        response = self.client.get(reverse('agenda:index'))
         content = str(response.content)
 
         # Check
@@ -360,7 +370,7 @@ class IndexViewTestCase(TestCase):
         )
 
         # Operate
-        response = Client().get(reverse('agenda:index'))
+        response = self.client.get(reverse('agenda:index'))
         content = str(response.content)
 
         # Check
@@ -376,9 +386,91 @@ class IndexViewTestCase(TestCase):
         )
 
         # Operate
-        response = Client().get(reverse('agenda:index'))
+        response = self.client.get(reverse('agenda:index'))
         content = str(response.content)
 
         # Check
         self.assertFalse('Testevent' in content,
                          'Groupmeetings should not be displayed')
+
+    def test_weekdays_displayed(self):
+        # Build
+        saturday = date.today()
+        while saturday.weekday() != 5:
+            saturday = saturday + timedelta(days=1)
+        sunday = date.today()
+        while sunday.weekday() != 6:
+            sunday = sunday + timedelta(days=1)
+
+        Event.objects.create(
+            startDate=saturday,
+            type=Events.JINCAFE
+        )
+        Event.objects.create(
+            startDate=sunday,
+            type=Events.WEEKLY_ACTIVITY,
+            tak=Takken.KAPOENEN
+        )
+
+        # Operate
+        response = self.client.get(reverse('agenda:index'))
+        content = str(response.content)
+
+        # Check
+        self.assertTrue('Zaterdag' in content,
+                        f'The day of the week should be displayed with meetings. Expected "Zaterdag", '
+                        f'but got: \n{content}')
+        self.assertTrue('Zondag' in content,
+                        f'The day of the week should be displayed with meetings. Expected "Zondag", '
+                        f'but got: \n{content}')
+
+    def test_passed_events_displayed_when_accessing_all_vergaderingen(self):
+        # Build
+        last_week = date.today() - timedelta(weeks=1)
+        name = 'Event which was past week'
+        Event.objects.create(
+            startDate=last_week,
+            type=Events.WEEKLY_ACTIVITY,
+            tak=Takken.KAPOENEN,
+            name=name
+        )
+
+        # Operate
+        response = self.client.get(reverse('agenda:index_all_vergaderingen'))
+        content = str(response.content)
+
+        # Check
+        self.assertTrue(name in content,
+                        'When accessing all vergaderingen, the past ones should be displayed also.'
+                        f'Expected an event with name "{name}",'
+                        f'but got: \n\n{content}')
+
+    def test_if_vergaderingen_for_the_next_year_are_displayed(self):
+        # Build
+        name = 'future event'
+
+        current_year = get_workyear()
+
+        Event.objects.create(
+            name=name,
+            type=Events.WEEKLY_ACTIVITY,
+            tak=Takken.KAPOENEN,
+            startDate=date(year=current_year+1, month=9, day=20)
+        )
+
+        # Operate
+        response = self.client.get(reverse('agenda:index'))
+        content = str(response.content)
+
+        # Check
+        self.assertTrue(name in content,
+                        'Events from the next workyear should be displayed, this can be useful at the end of august')
+
+    def test_it_should_contain_a_link_to_all_vergaderingen(self):
+        # Operate
+        response = self.client.get(reverse('agenda:index'))
+        content = str(response.content)
+
+        # Check
+        self.assertTrue('agenda/alle-vergaderingen' in content,
+                        'The agenda page should contain the link to view all (passed) vergaderingen')

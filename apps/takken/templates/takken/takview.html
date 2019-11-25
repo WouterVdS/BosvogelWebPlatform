@@ -11,29 +11,47 @@
     {% if takmail %}<a href="mailto:{{ takmail }}">Mail naar {{ takmail }}</a>{% endif %}
     {% for membership in memberships %}
         <p>
-            {% if membership.tak_leader_name %}{{ membership.tak_leader_name }}{% else %}
-                {{ membership.profile }}{% endif %}
-            {% if membership.profile.public_email %}<a href="mailto:{{ membership.profile.public_email }}">Mail
-                naar {{ membership.profile.public_email }}</a>{% endif %}
+            {% if membership.tak_leader_name %}
+                {{ membership.tak_leader_name }}
+            {% else %}
+                {{ membership.profile }}
+            {% endif %}
+            {% if membership.profile.public_email %}
+                <a href="mailto:{{ membership.profile.public_email }}">Mail
+                    naar {{ membership.profile.public_email }}</a>
+            {% endif %}
         </p>
     {% endfor %}
-    <h2>Vergaderingen</h2>
-    {# todo vergaderingen #}
-    {# todo test wat gedisplayed wordt, check ook weekends enzo #}
-    {# todo test op de juiste volgorde #}
-    {# todo nen empty inbox voorzien voor als er geen vergaderingen zijn #}
-    {# todo link voorzien om afgelopen vergaderingen voor dat jaar (!) op te halen #}
-    {% for vergadering in vergaderingen %}
+    {% if tak != "Groepsleiding" %}
+        <h2>Vergaderingen</h2>
         <p>
-            <b>{{ vergadering.name }}</b> <br>
-            {{ vergadering.place }} <br>
-            {{ vergadering.startDate }} - {{ vergadering.endDate }} <br>
-            {{ vergadering.startTime }} - {{ vergadering.endTime }} <br>
-            {{ vergadering.description }} <br>
+            <a href="{% url 'takken:tak_all_vergaderingen' tak|lower %}">Bekijk de afgelopen vergaderingen.</a>
         </p>
-    {% endfor %}
-    {% if vergaderingen.count == 0 %}
-        <p>Momenteel nog geen vergaderingen gepland!</p>
+        {% for vergadering in vergaderingen %}
+            <p>
+                <b>
+                    {% if vergadering.name %}
+                        {{ vergadering.name }}
+                    {% else %}
+                        Vergadering
+                    {% endif %}
+                </b>
+                <br>
+                {% if vergadering.place %}
+                    {{ vergadering.place }} <br>
+                {% endif %}
+                {{ vergadering.startDate | date:"l" | capfirst }} {{ vergadering.startDate }}{% if vergadering.endDate %} - {{ vergadering.endDate | date:"l" }} {{ vergadering.endDate }}{% endif %}
+                <br>
+
+                {% if vergadering.startTime %}{{ vergadering.startTime }}{% endif %}{% if vergadering.endTime %}- {{ vergadering.endTime }} <br>{% endif %}
+
+                {% if vergadering.description %}
+                    {{ vergadering.description }} <br>
+                {% endif %}
+            </p>
+        {% empty %}
+            <p>Momenteel nog geen vergaderingen gepland!</p>
+        {% endfor %}
     {% endif %}
-    <img src="{% static taklogo %}" alt="Takteken {{ tak }}"> {# todo test #}
+    <img src="{% static taklogo %}" alt="Takteken {{ tak }}">
 {% endblock content %}

@@ -1,0 +1,7 @@
+[run]
+omit =
+    */virtualenv*
+    BosvogelWebPlatform/wsgi.py
+    *generate_test_data.py
+    *MockBuilder.py
+    *check_dangling_objects.py

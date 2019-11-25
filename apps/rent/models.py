@@ -1,15 +1,10 @@
-import logging
-
-from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django.dispatch import receiver
-from django.urls import reverse
 
 from apps.agenda.models import Event
 from apps.home.validators import validate_phone_number, validate_iban_format
 from apps.place.models import Place
 
-logger = logging.getLogger(__name__)
 
 NEW_REQUEST = 'NR'
 COMMUNICATING = 'CO'
@@ -42,6 +37,7 @@ DEPOSIT_STATUSES = (
 )
 
 
+# todo verboden maken om te verwijderen! of verwijderen blokkeren
 class Pricing(models.Model):
     perPersonPerDay = models.DecimalField(max_digits=5, decimal_places=2)
     dailyMinimum = models.DecimalField(max_digits=5, decimal_places=2)
@@ -88,20 +84,7 @@ class Reservation(models.Model):
         return self.groupName + ' (' + self.town + ')'
 
 
-# todo managment functie maken die checkt of er periods zijn waar geen reservation meer aanhangt
-# dit zou niet mogen, maar signals worden soms overgeslagen (bij bulk operaties)
-# let op dat type van period wel rent moet zijn
-# test schrijven die bulk delete doet
 @receiver(models.signals.post_delete, sender=Reservation)
 def handle_deleted_reservation(sender, instance, **kwargs):
     if instance.period:
         instance.period.delete()
-
-
-def get_prices():
-    try:
-        prices = Pricing.objects.latest('pricesSetOn')
-    except ObjectDoesNotExist:
-        prices = Pricing(perPersonPerDay=0, dailyMinimum=0, electricitykWh=0, waterSqM=0, gasPerDay=0, deposit=0)
-        logger.error('No rent prices set! Go to ' + reverse('rent:manage_rentals') + ' and set pricing for rent!')
-    return prices

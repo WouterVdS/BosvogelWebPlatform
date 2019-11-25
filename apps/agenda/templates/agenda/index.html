@@ -9,19 +9,22 @@
         <p>
             <b>{% if event.name %}{{ event.name }}</b> <br>{% endif %}
             {% if event.place %}{{ event.place }} <br>{% endif %}
-            {% if event.startDate %}{{ event.startDate }}{% endif %}{% if event.endDate %} - {{ event.endDate }} <br>{% endif %}
+            {% if event.startDate %}{{ event.startDate | date:"l" | capfirst }} {{ event.startDate }}{% endif %}{% if event.endDate %} - {{ event.startDate | date:"l" }} {{ event.endDate }} <br>{% endif %}
             {% if event.startTime %}{{ event.startTime }}{% endif %}
             {% if event.endTime %}- {{ event.endTime }} <br>{% endif %}
             {% if event.description %}{{ event.description }} <br>{% endif %}
         </p>
     {% endfor %}
     <h2>Vergaderingen</h2>
+    <p>
+        <a href="{% url 'agenda:index_all_vergaderingen' %}">Bekijk de afgelopen vergaderingen.</a>
+    </p>
     {% for vergadering in vergaderingen %}
         <p>
             <b>{% if vergadering.tak %}{{ vergadering.get_tak_display }} - {% endif %}
                 {% if vergadering.name %}{{ vergadering.name }}</b> <br>{% endif %}
             {% if vergadering.place %}{{ vergadering.place }} <br> {% endif %}
-            {{ vergadering.startDate }}{% if vergadering.endDate %} - {{ vergadering.endDate }} <br> {% endif %}
+            {{ vergadering.startDate | date:"l" | capfirst }} {{ vergadering.startDate }}{% if vergadering.endDate %} - {{ vergadering.startDate | date:"l" }} {{ vergadering.endDate }} <br> {% endif %}
             {% if vergadering.startTime %}{{ vergadering.startTime }}{% endif %}
             {% if vergadering.endTime %} - {{ vergadering.endTime }} <br>{% endif %}
             {% if vergadering.description %}{{ vergadering.description }} <br>{% endif %}

@@ -37,6 +37,7 @@ class Events:
     DEFAULT_RENT_START_TIME = time(13, 0, 0)
     DEFAULT_RENT_ENDING_TIME = time(12, 0, 0)
 
+
 class Takken:
     KAPOENEN = 'KAP'
     WELPEN = 'WEL'

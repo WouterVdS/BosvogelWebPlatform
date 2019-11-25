@@ -197,3 +197,27 @@ class MembershipTestCase(TestCase):
         # Check
         self.assertFalse(is_leader,
                          'By default, the profile must have is_leader set to false')
+
+    def test_CurrentYearMembershipManager(self):
+        # Build
+        current_year = Werkjaar.objects.current_year()
+        years = [
+            current_year,
+            current_year.previous_year(),
+            current_year.next_year()
+        ]
+        profile = Profile.objects.create()
+        for year in years:
+            Membership.objects.create(
+                werkjaar=year,
+                profile=profile,
+            )
+
+        # Operate
+        results = Membership.current_year.all()
+
+        # Check
+        for result in results:
+            self.assertEqual(result.werkjaar,
+                             current_year,
+                             'All returned memberships must be current year')
