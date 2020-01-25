@@ -1,10 +1,11 @@
 from datetime import date
 
-from django.test import SimpleTestCase
+from django.test import TestCase
 from django.urls import reverse
 
 
-class IndexYearViewTestCase(SimpleTestCase):
+# todo tests uitbereiden
+class IndexYearViewTestCase(TestCase):
 
     def test_index_year_response_code(self):
         # Build

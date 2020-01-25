@@ -1,6 +1,5 @@
 from apps.home.models import get_workyear, Werkjaar
 from apps.profile.models.membership import Membership
-from apps.profile.models.profile import Profile
 
 
 def get_active_leader_memberships(tak=None):
@@ -11,10 +10,12 @@ def get_active_leader_memberships(tak=None):
     return result.prefetch_related()
 
 
-def get_leader_profiles(year=None):
+def get_leader_memberships(year=None):
     # todo test
-    if year is not None:
+    if year is None:
         year = get_workyear()
-    workyear = Werkjaar.objects.get(year=year)
+    workyear = Werkjaar.objects.filter(year=year).first()
+    if workyear is None:
+        return None
     return Membership.objects.filter(is_leader=True, werkjaar=workyear)
 

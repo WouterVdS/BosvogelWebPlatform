@@ -1,13 +1,12 @@
-from django.http.response import HttpResponse
 from django.shortcuts import render
 
-from apps.profile.queries import get_leader_profiles
+from apps.profile.queries import get_leader_memberships
 
 
 def index(request, year=None):
     # todo ook voor andere werkjaren een overzicht kunnen zien --> wat met leidingsprofielen? Toch geen profielen van leiding van 20j terug laten zien?
 
-    leaders = get_leader_profiles(year)
+    leaders = get_leader_memberships(year)
     context = {
         'title_suffix': ' - Leiding',
         'leaders': leaders

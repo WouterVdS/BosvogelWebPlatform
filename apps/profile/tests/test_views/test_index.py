@@ -1,10 +1,10 @@
-from django.test import SimpleTestCase
+from django.test import TestCase
 from django.urls import reverse
 
 
 # todo refactor test cases dat deze drie tests gestandaardiseerd kunnen worden, dus de profile:index en argumenten in variabelen steken
 # todo deze eerste drie tests in alles steken, of iets van inheritance doen dat ik overerf van standaard ViewTestCases om duplicatie tegen te gaan
-class IndexViewTestCase(SimpleTestCase):
+class IndexViewTestCase(TestCase):
 
     VIEW_NAME = 'profile:index'
     VIEW_ARGS = None
