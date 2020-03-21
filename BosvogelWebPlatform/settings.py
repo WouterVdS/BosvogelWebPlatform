@@ -65,6 +65,7 @@ MEDIA_URL = '/media/'
 INSTALLED_APPS = [
     'apps.home',
     'apps.profile',
+    'apps.leiding',
     'apps.place',
     'apps.agenda',
     'apps.rent',
