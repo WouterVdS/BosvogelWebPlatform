@@ -11,11 +11,10 @@ def get_active_leader_memberships(tak=None):
 
 
 def get_leader_memberships(year=None):
-    # todo test
     if year is None:
         year = get_workyear()
     workyear = Werkjaar.objects.filter(year=year).first()
     if workyear is None:
-        return None
+        return Membership.objects.none()
     return Membership.objects.filter(is_leader=True, werkjaar=workyear)
 
