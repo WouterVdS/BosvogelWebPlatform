@@ -1,21 +1,19 @@
 from datetime import date, timedelta, time
+from random import randint, choice
 
 from django.db import IntegrityError
+from faker import Faker
+from faker.providers import person, bank, color, date_time, internet, job, lorem, phone_number, address
 
 from apps.agenda.models import Event
 from apps.home.constants import Takken, Sex, Events
 from apps.home.models import Werkjaar
-
-from random import randint, choice
-from faker import Faker
-from faker.providers import person, bank, color, date_time, internet, job, lorem, phone_number, address
-
 from apps.place.models import Place
 from apps.profile.models.membership import Membership
 from apps.profile.models.profile import Profile
 from apps.profile.models.totem import Totem
-
-from apps.rent.models import Pricing, Reservation, get_prices
+from apps.rent.models import Pricing, Reservation
+from apps.rent.queries import get_prices
 
 
 class MockBuilder:

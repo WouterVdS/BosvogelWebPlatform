@@ -16,5 +16,5 @@ def get_leader_memberships(year=None):
     workyear = Werkjaar.objects.filter(year=year).first()
     if workyear is None:
         return Membership.objects.none()
-    return Membership.objects.filter(is_leader=True, werkjaar=workyear)
-
+    result = Membership.objects.filter(is_leader=True, werkjaar=workyear)
+    return result.select_related('profile', 'werkjaar')
