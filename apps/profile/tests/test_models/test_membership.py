@@ -98,7 +98,7 @@ class MembershipTestCase(TestCase):
                          'String method should display something meaningful')
 
         self.assertEqual(str(membership_tak_leader_name),
-                         '2016 - 2017: Jos \'Jakke\' Testermans aka Akela (leiding) - Welpen',
+                         '2016 - 2017: Jos \'Jakke\' Testermans als Akela (leiding) - Welpen',
                          'String method should display something meaningful')
 
     def test_profile_should_still_exist_if_membership_is_deleted(self):
@@ -221,3 +221,66 @@ class MembershipTestCase(TestCase):
             self.assertEqual(result.werkjaar,
                              current_year,
                              'All returned memberships must be current year')
+
+    def test_leader_name_should_return_tak_leader_name_if_it_has_one(self):
+        # Build
+        profile = Profile.objects.create(first_name='Jos')
+        membership = Membership.objects.create(
+            werkjaar=Werkjaar.objects.current_year(),
+            profile=profile,
+            tak_leader_name='taknaam'
+        )
+        # Operate
+        leader_name = membership.leader_name()
+
+        # Check
+        self.assertEqual('taknaam',
+                         leader_name,
+                         'When a takname is set on the membership, it should be returned by leader_name()')
+
+    def test_leader_name_should_return_first_name_when_no_tak_leader_name(self):
+        # Build
+        profile = Profile.objects.create(first_name='Jos', last_name='achternaam')
+        membership = Membership.objects.create(
+            werkjaar=Werkjaar.objects.current_year(),
+            profile=profile,
+        )
+        # Operate
+        leader_name = membership.leader_name()
+
+        # Check
+        self.assertEqual('Jos',
+                         leader_name,
+                         'When no takname is set on the membership, leader_name() should only return the firstname')
+
+    def test_leader_name_should_return_empty_string_when_no_name_set(self):
+        # Build
+        profile = Profile.objects.create()
+        membership = Membership.objects.create(
+            werkjaar=Werkjaar.objects.current_year(),
+            profile=profile,
+        )
+        # Operate
+        leader_name = membership.leader_name()
+
+        # Check
+        self.assertEqual('',
+                         leader_name,
+                         'When no profile name or tak leader name is set, leader_name should return an empty string')
+
+    def test_leader_name_should_log_warning_when_returning_empty_string(self):
+        with self.assertLogs(level='WARNING') as loggerWatcher:
+            # Build
+            profile = Profile.objects.create()
+            membership = Membership.objects.create(
+                werkjaar=Werkjaar.objects.current_year(),
+                profile=profile,
+            )
+            # Operate
+            leader_name = membership.leader_name()
+
+            # Check
+            self.assertIn('Function leader_name() is called on a membership and this returned an empty string.',
+                          loggerWatcher.output[1],
+                          'When an empty string is returned, it should log this. '
+                          'This means a profile with no name is used.')

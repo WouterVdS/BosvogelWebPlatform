@@ -45,3 +45,17 @@ class IndexTestCase(SimpleTestCase):
         # Check
         self.assertTrue('debug' not in content,
                         'No mention of debug mode should be shown to the user')
+
+    def test_correct_links_should_be_shown(self):
+        # Build
+        response = self.client.get(reverse('home:index'))
+
+        # Operate
+        content = str(response.content)
+
+        # Check
+        self.assertTrue('Landing</a></li>' in content)
+        self.assertTrue('Agenda</a></li>' in content)
+        self.assertTrue('Leiding</a></li>' in content)
+        self.assertTrue('Takken</a></li>' in content)
+        self.assertTrue('Verhuur</a></li>' in content)
