@@ -1,9 +1,12 @@
+import logging
+
 from django.db import models
 
 from apps.home.constants import Takken
 from apps.home.models import Werkjaar, get_workyear
 from apps.profile.models.profile import Profile
 
+logger = logging.getLogger(__name__)
 
 class CurrentYearMembershipManager(models.Manager):
     def get_queryset(self):
@@ -26,9 +29,21 @@ class Membership(models.Model):
     def __str__(self):
         result = f'{self.werkjaar}: {self.profile}'
         if self.tak_leader_name:
-            result += f' aka {self.tak_leader_name}'
+            result += f' als {self.tak_leader_name}'
         if self.is_leader:
             result += ' (leiding)'
         if self.tak:
             result += f' - {self.get_tak_display()}'
         return result
+
+    def leader_name(self):  # todo test
+        if self.tak_leader_name:
+            return self.tak_leader_name
+        elif self.profile.first_name:
+            return self.profile.first_name
+        else:
+            logger.warning('Function leader_name() is called on a membership and this returned an empty string.'
+                           'This means the profile does not have a first_name set and the membership does not have a '
+                           f'tak_leader_name set. Details of the membership: '
+                           f'id={self.id}, profile_id={self.profile_id}')
+            return ''

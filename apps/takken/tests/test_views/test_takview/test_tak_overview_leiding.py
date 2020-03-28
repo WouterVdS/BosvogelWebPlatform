@@ -138,7 +138,7 @@ class TakOverviewLeidingTestCase(TestCase):
 
         # Check
         self.assertFalse('None' in content,
-                         'The word "None" should never be displayed')
+                         f'The word "None" should never be displayed, but is displayed:\n\n\n{content}')
 
     def test_only_necessary_info_on_leaders_should_be_displayed(self):
         # Build
@@ -161,10 +161,10 @@ class TakOverviewLeidingTestCase(TestCase):
         # Check
         self.assertTrue(profile.first_name in content,
                         'The first name should be displayed')
-        self.assertTrue(profile.nickname in content,
+        self.assertTrue(profile.nickname not in content,
+                        'The nickname should not be displayed')
+        self.assertTrue(profile.last_name not in content,
                         'The last name should be displayed')
-        self.assertTrue(profile.last_name in content,
-                        'The nickname should be displayed')
         self.assertTrue(profile.public_email in content,
                         'The public email should be displayed')
         self.assertFalse(profile.email in content,

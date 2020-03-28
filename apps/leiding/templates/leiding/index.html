@@ -1,0 +1,10 @@
+{% extends 'home/base.html' %}
+
+{% block content %}
+    {% for tak, leiding in takken %}
+        <h1>{{ tak }}</h1>
+        {% for leider in leiding %}
+            <p>{{ leider.leader_name }}</p> {# todo link to profile #}
+        {% endfor %}
+    {% endfor %}
+{% endblock content %}

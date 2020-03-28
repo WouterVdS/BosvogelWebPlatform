@@ -11,11 +11,7 @@
     {% if takmail %}<a href="mailto:{{ takmail }}">Mail naar {{ takmail }}</a>{% endif %}
     {% for membership in memberships %}
         <p>
-            {% if membership.tak_leader_name %}
-                {{ membership.tak_leader_name }}
-            {% else %}
-                {{ membership.profile }}
-            {% endif %}
+            {{ membership.leader_name }}
             {% if membership.profile.public_email %}
                 <a href="mailto:{{ membership.profile.public_email }}">Mail
                     naar {{ membership.profile.public_email }}</a>
