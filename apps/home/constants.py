@@ -204,5 +204,8 @@ class Takken:
         'age': '21+',
         'takmail': 'groepsleiding@bosvogels.be',
         'takteken': 'takken/img/taktekens/takteken_grl.png',
-        'description': ''
+        'description': 'Groepsleiding is de eindverantwoordelijke voor het spel van scouting in de groep en in de '
+                       'takken, en in het bijzonder voor het pedagogisch beleid van de groep en de begeleiding van '
+                       'de leiding. Kortom, de taak van groepsleiding is ervoor te zorgen dat de groep goed '
+                       'functioneert.'
     }

@@ -5,20 +5,21 @@
     <h1>Pagina van de {{ tak|lower }}!</h1>
 
     <h2>Leeftijd ({{ age }} jaar)</h2>
-    <h2>Tekstje</h2>
     <p>{{ description }}</p>
-    <h2>Leiding</h2>
-    {% if takmail %}<a href="mailto:{{ takmail }}">Mail naar {{ takmail }}</a>{% endif %}
-    {% for membership in memberships %}
-        <p>
-            {{ membership.leader_name }}
-            {% if membership.profile.public_email %}
-                <a href="mailto:{{ membership.profile.public_email }}">Mail
-                    naar {{ membership.profile.public_email }}</a>
-            {% endif %}
-        </p>
-    {% endfor %}
-    {% if tak != "Groepsleiding" %}
+    {% if tak != "Leiding" %}
+        <h2>Leiding</h2>
+        {% if takmail %}<a href="mailto:{{ takmail }}">Mail naar {{ takmail }}</a>{% endif %}
+        {% for membership in memberships %}
+            <p>
+                {{ membership.leader_name }}
+                {% if membership.profile.public_email %}
+                    <a href="mailto:{{ membership.profile.public_email }}">Mail
+                        naar {{ membership.profile.public_email }}</a>
+                {% endif %}
+            </p>
+        {% endfor %}
+    {% endif %}
+    {% if tak != "Groepsleiding" and tak != "Leiding" %}
         <h2>Vergaderingen</h2>
         <p>
             <a href="{% url 'takken:tak_all_vergaderingen' tak|lower %}">Bekijk de afgelopen vergaderingen.</a>

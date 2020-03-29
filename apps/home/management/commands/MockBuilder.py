@@ -79,6 +79,8 @@ class MockBuilder:
         total_memberships = 0
         for year in self.years:
             for tak in Takken.TAKKEN:
+                if tak[0] is Takken.LEIDING:
+                    continue
                 current_leader_count = Membership.objects.filter(werkjaar=year, tak=tak[0], is_leader=True).count()
                 if current_leader_count > 5:
                     # if a tak already has 5 leaders, stop creating new ones

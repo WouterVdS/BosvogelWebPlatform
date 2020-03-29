@@ -36,7 +36,7 @@ class Membership(models.Model):
             result += f' - {self.get_tak_display()}'
         return result
 
-    def leader_name(self):  # todo test
+    def leader_name(self):
         if self.tak_leader_name:
             return self.tak_leader_name
         elif self.profile.first_name:

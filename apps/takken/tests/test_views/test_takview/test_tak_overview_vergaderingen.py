@@ -245,9 +245,16 @@ class TakOverviewVergaderingenTestCase(TestCase):
         self.assertTrue('ditmagjenietzien' not in content,
                         'Past events should not be displayed')
 
-    def test_groepsleiding_should_not_have_vergaderingen_section(self):
-        # Build
+    def test_leiding_should_not_have_vergaderingen_section(self):
+        # Operate
+        response = self.client.get(reverse('takken:tak', args=[Takken.TAKKEN[8][1]]))  # leiding
+        content = str(response.content)
 
+        # Check
+        self.assertTrue('Vergaderingen' not in content,
+                        'The section "Vergaderingen" should not be shown/exist for leiding')
+
+    def test_groepsleiding_should_not_have_vergaderingen_section(self):
         # Operate
         response = self.client.get(reverse('takken:tak', args=[Takken.TAKKEN[9][1]]))  # groepsleiding
         content = str(response.content)
@@ -255,6 +262,15 @@ class TakOverviewVergaderingenTestCase(TestCase):
         # Check
         self.assertTrue('Vergaderingen' not in content,
                         'The section "Vergaderingen" should not be shown/exist for groepsleiding')
+
+    def test_leiding_should_not_have_leiding_section(self):
+        # Operate
+        response = self.client.get(reverse('takken:tak', args=[Takken.TAKKEN[8][1]]))  # leiding
+        content = str(response.content)
+
+        # Check
+        self.assertTrue('>Leiding<h' not in content,
+                        'The section "Leiding" should not be shown/exist for leiding')
 
     def test_day_of_the_week_should_be_displayed(self):
         # Build
