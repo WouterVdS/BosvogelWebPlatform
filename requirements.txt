@@ -1,6 +1,6 @@
 django==2.2.10
 coverage==5.0.4
-pillow==7.0.0
+pillow==7.1.0
 rules==2.2
 django-debug-toolbar==2.2
 django-environ==0.4.5
