@@ -1,4 +1,4 @@
-django==2.2.10
+django==2.2.13
 coverage==5.3.1
 pillow==8.1.0
 rules==2.2
