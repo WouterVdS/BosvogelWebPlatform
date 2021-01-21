@@ -30,7 +30,7 @@ class TakOverviewLeidingTestCase(TestCase):
             content = str(response.content)
 
             # Check
-            if f'Loewieke{tak[1]}' not in content:  # pragma: no cover
+            if f'Loewieke{tak[1]}' not in content and tak[1] != 'Leiding':  # pragma: no cover
                 errors.append(tak[1])
 
         self.assertEqual(0, len(errors), 'Leaders should be displayed for ' + ', '.join(x for x in errors))
