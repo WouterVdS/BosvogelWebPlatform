@@ -2,6 +2,6 @@ django==2.2.13
 coverage==5.5
 pillow==8.2.0
 rules==2.2
-django-debug-toolbar==3.2
+django-debug-toolbar==3.2.1
 django-environ==0.4.5
 faker==8.0.0
