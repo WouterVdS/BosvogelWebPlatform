@@ -4,4 +4,4 @@ pillow==8.2.0
 rules==2.2
 django-debug-toolbar==3.2.1
 django-environ==0.4.5
-faker==8.1.1
+faker==8.1.2
