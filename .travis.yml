@@ -11,7 +11,7 @@ notifications:
   email: false
 install:
   - pip install -r requirements.txt
-  - pip install python-coveralls
+  - pip install coveralls
   - python manage.py makemigrations
 script:
   - coverage run manage.py test
